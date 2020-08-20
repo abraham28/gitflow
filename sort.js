@@ -4,7 +4,7 @@ const sorter = (array) => {
         (a, b) => {
             console.log(a, b)
             // return a.age - b.age;
-            return a.age > b.age ? 1 : a.age === b.age ? 0 : -1
+            return a.name > b.name ? 1 : a.name === b.name ? 0 : -1
         }
     )
     return newArr;
