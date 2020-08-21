@@ -3,18 +3,10 @@ import "./app.scss";
 import Timer from "./components/Timer/timer";
 
 class App extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showTimer: true,
-    };
-  }
-
   render() {
-    const showTimer = this.state.showTimer;
     return (
       <div>
-        {showTimer && <Timer />}
+        <Timer />
         <div className="red">
           <p className="textContainer">
             clicked <br />
@@ -23,13 +15,7 @@ class App extends PureComponent {
           </p>
         </div>
         <div className="button">
-          <button
-            onClick={() => {
-              this.setState({ showTimer: !showTimer });
-            }}
-          >
-            Add
-          </button>
+          <button>Add</button>
         </div>
       </div>
     );
