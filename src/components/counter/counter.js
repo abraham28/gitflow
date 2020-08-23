@@ -1,5 +1,7 @@
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
+import Clicked from '../button/button';
+
 
 class Counter extends PureComponent {
     static propTypes = {
@@ -17,7 +19,7 @@ class Counter extends PureComponent {
             </p>
           </div>
           <div className="button">
-            <button>Add</button>
+            <Clicked />
             <p>Click add to vote {name} </p>
           </div>
         </div>
