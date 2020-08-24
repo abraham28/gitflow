@@ -36,3 +36,23 @@ button {
 p {
     text-align: center;
 }
+form {
+    margin: 0 auto;
+    width: 190px;
+    text-align: center;
+}
+input[type=submit] {
+    width: 128px;
+    padding: 10px 0;
+    margin: 12px 0;
+    font-size: 20px;
+    background: #0014ff4d;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    border-radius: 17px;
+}
+input[type=submit]:hover {
+    opacity: 0.9;
+}
+

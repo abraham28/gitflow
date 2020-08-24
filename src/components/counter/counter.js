@@ -5,14 +5,29 @@ class Counter extends PureComponent {
   static propTypes = {
     name: PropTypes.string,
   };
-
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       count: 0,
-      message: '',
+      message: "",
+      name: "",
+      display: true,
     };
   }
+  NameHandler = (e) => {
+    let NewName = e.target.value;
+    this.setState({ name: NewName });
+    localStorage.setItem("NewName", NewName);
+    console.log(NewName);
+  };
+
+  SubmitHandler = (e) => {
+  e.preventDefault();
+   this.setState({
+     display: false,
+   });
+ };
+
 
   getClick() {
     const count = this.state.count;
@@ -21,6 +36,7 @@ class Counter extends PureComponent {
         count: count + 1,
         message: count + 1 === 10 ? "Congratulations" : null,
       });
+      localStorage.setItem("Increment", count);
     }
   }
 
@@ -30,7 +46,7 @@ class Counter extends PureComponent {
   }
 
   render() {
-    const name = this.props.name;
+    const name = this.state.name;
     return (
       <div>
         <div className="red">
@@ -43,8 +59,25 @@ class Counter extends PureComponent {
         <div className="button">
           <button onClick={this.getClick.bind(this)}>Add </button>
           <sub className="error">{this.state.message}</sub>
-          <p>Click add to vote {name} </p>
+
+          {<p>Click add to vote {name}</p>}
         </div>
+        
+        {
+        this.state.display?
+        <div className="forms">
+          <form onSubmit={this.SubmitHandler}>
+            <input
+              type="text"
+              name="name"
+              onChange={this.NameHandler}
+              value={name}
+            />
+            <input type="submit" onClick={this.SubmitHandler} />
+          </form>
+        </div> 
+        :null 
+        }
       </div>
     );
   }
