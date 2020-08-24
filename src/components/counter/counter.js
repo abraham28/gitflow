@@ -21,12 +21,11 @@ class Counter extends PureComponent {
   };
 
   SubmitHandler = (e) => {
-  e.preventDefault();
-   this.setState({
-     display: false,
-   });
- };
-
+    e.preventDefault();
+    this.setState({
+      display: false,
+    });
+  };
 
   getClick() {
     const count = this.state.count;
@@ -61,22 +60,20 @@ class Counter extends PureComponent {
 
           {<p>Click add to vote {name}</p>}
         </div>
-        
-        {
-        this.state.display?
-        <div className="forms">
-          <form onSubmit={this.SubmitHandler}>
-            <input
-              type="text"
-              name="name"
-              onChange={this.NameHandler}
-              value={name}
-            />
-            <input type="submit" onClick={this.SubmitHandler} />
-          </form>
-        </div> 
-        :null 
-        }
+
+        {this.state.display ? (
+          <div className="forms">
+            <form onSubmit={this.SubmitHandler}>
+              <input
+                type="text"
+                name="name"
+                onChange={this.NameHandler}
+                value={name}
+              />
+              <input type="submit" onClick={this.SubmitHandler} />
+            </form>
+          </div>
+        ) : null}
       </div>
     );
   }
