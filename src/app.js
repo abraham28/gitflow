@@ -8,7 +8,7 @@ class App extends PureComponent {
     return (
       <div>
         <Timer />
-        <Counter name="James" age={10251} />
+        <Counter name="James" />
       </div>
     );
   }
