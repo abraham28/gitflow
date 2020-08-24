@@ -18,7 +18,6 @@ class Counter extends PureComponent {
     let NewName = e.target.value;
     this.setState({ name: NewName });
     localStorage.setItem("NewName", NewName);
-    console.log(NewName);
   };
 
   SubmitHandler = (e) => {
