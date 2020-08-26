@@ -12,13 +12,14 @@
 .textContainer {
     text-align: center;
     font-size: 29px;
+    color: black;
 }
 .button {
     width: 182px;
     padding: 13px 0;
     margin: 0 auto;
 }
-button {
+.button button {
     background: #00a2e8;
     border: 0;
     width: 172px;
@@ -34,14 +35,18 @@ button {
     text-align: center;
 }
 p {
+    font-size: 12px;
     text-align: center;
 }
-form {
+.forms form {
     margin: 0 auto;
     width: 190px;
     text-align: center;
 }
-input[type=submit] {
+.forms form input[type="text"] {
+    width: 191px;
+}
+.forms form input[type=submit] {
     width: 128px;
     padding: 10px 0;
     margin: 12px 0;
@@ -52,7 +57,15 @@ input[type=submit] {
     outline: none;
     border-radius: 17px;
 }
-input[type=submit]:hover {
+.forms input[type=submit]:hover {
     opacity: 0.9;
 }
+.wrap {
+    width: 100%;
+}
+.inner {
+    width: 450px;
+    margin: 0 auto;
+}
+
 

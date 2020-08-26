@@ -1,0 +1,67 @@
+.todo {
+    font-family: 'Roboto', sans-serif;
+    background: #ff4a4f;
+    position: relative;
+    overflow:hidden;
+    padding-bottom: 30px;
+}
+.todo form {
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 33px;
+    text-align: center;
+}
+.todo h2 {
+    color: #fff;
+    text-align: center;
+    font-size: 30px;
+}
+.todo button {
+    background: #fff;
+    width: 30px;
+    padding: 4px 0;
+    border: 0;
+    margin: 0 auto;
+    color: #00a2e8;
+    cursor: pointer;
+    font-size: 18px;
+    position: absolute;
+    right: 72px;
+    top: 86px;
+    outline: none;
+}
+.todoSection01 input[type='text'] {
+    height: 30px;
+    width: 333px;
+    border: none;
+    outline: none;
+}
+.todo ::placeholder {
+    font-size: 20px;
+    padding: 10px 0;
+}
+.todoSection01 ul {
+    background: #fff;
+    padding: 0;
+    width: 300px;
+    margin: 0 auto;
+    list-style: none;
+}
+.todoSection01 li {
+     border-bottom: 1px solid #00a2e8 ;
+     padding: 12px 15px;
+}
+.todoSection01 li::before{
+    content:"x";
+    background: #ff4a4f;
+    color: #fff;
+}
+.todo .blue {
+    font-size: 20px;
+    width: 240px;
+    padding: 12px 30px;
+    text-align: right;
+    margin: 0 auto;
+    background: #fff;
+    color: #ffa0a1;
+}
