@@ -175,6 +175,11 @@ export function createCompany(companyModel) {
             count
           }
         }
+        divisions_aggregate {
+          aggregate {
+            count
+          }
+        }
       }
     }
   `;
