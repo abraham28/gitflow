@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import "./login.scss";
-import { login, getUsers } from "../../graphqlAPI";
+import { login } from "../../graphqlAPI";
 import Header from "../header/header";
 
 class Login extends PureComponent {
