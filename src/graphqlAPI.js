@@ -278,6 +278,24 @@ export function getDivisions() {
   return fetchGraphQL(getDivisionsQuery, "getDivisions", {});
 }
 
+export function getGroups() {
+  const getGroupsQuery = `
+  query getGroups {
+    groups {
+      id
+      name
+      company {
+        name
+      }
+      division {
+        name
+      }
+    }
+  }
+  `;
+  return fetchGraphQL(getGroupsQuery, "getGroups", {});
+}
+
 // export function updateCompany(companyId, updateValues) {
 //   const operationsDoc = `
 //     mutation updateCompany {
