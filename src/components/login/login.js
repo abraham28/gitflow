@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import "./login.scss";
 import { login } from "../../graphqlAPI";
 import Header from "../header/header";
+import paths from "../../resources/paths";
 
 class Login extends PureComponent {
   constructor(props) {
@@ -14,7 +15,7 @@ class Login extends PureComponent {
     };
     const userJSON = localStorage.getItem("user");
     if (userJSON !== null) {
-      window.location.href = "/";
+      window.location.href = paths.root;
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -39,7 +40,7 @@ class Login extends PureComponent {
         alert("incorrect email/password");
       } else {
         localStorage.setItem("user", JSON.stringify(data.users[0]));
-        window.location.href = "/";
+        window.location.href = paths.root;
       }
     } else {
       const message = this.state.message;

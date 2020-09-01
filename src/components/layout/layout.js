@@ -2,13 +2,14 @@ import React, { PureComponent } from "react";
 import { Link, NavLink } from "react-router-dom";
 import "./layout.scss";
 import { login } from "../../graphqlAPI";
+import paths from "../../resources/paths";
 
 class Layout extends PureComponent {
   constructor(props) {
     super(props);
     const userJSON = localStorage.getItem("user");
     if (!userJSON) {
-      window.location.href = "/login";
+      window.location.href = paths.login;
     }
     this.state = {
       loggedInStatus: "NOT_LOGGED_IN",

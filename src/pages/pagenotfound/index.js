@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { Redirect } from "react-router-dom";
 import "./index.scss";
+import paths from "../../resources/paths";
 
 class PageNotFound extends PureComponent {
   render() {
@@ -9,7 +10,7 @@ class PageNotFound extends PureComponent {
         <h1>404 page not found</h1>
         <button
           onClick={() => {
-            window.location.href = "/";
+            window.location.href = paths.root;
           }}
         >
           go to home

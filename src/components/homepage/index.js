@@ -1,11 +1,12 @@
 import React, { PureComponent } from "react";
+import paths from "../../resources/paths";
 
 class Homepage extends PureComponent {
   constructor(props) {
     super(props);
     const userJSON = localStorage.getItem("user");
     if (!userJSON) {
-      window.location.href("/login");
+      window.location.href = paths.login;
     }
     this.state = {
       user: JSON.parse(userJSON),
