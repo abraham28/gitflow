@@ -31,7 +31,6 @@ class Layout extends PureComponent {
   async componentDidMount() {
     const { users } = this.props;
     await login(users).then((data) => {
-      console.log(data);
       this.setState({ userLogin: data.data.users });
     });
   }

@@ -8,6 +8,7 @@ export const divisions = "/divisions";
 export const groups = "/groups";
 export const users = "/users";
 export const companiesForm = "/companies/form"
+export const divisionsForm = "/divisions/form"
 export default {
   root,
   login,
@@ -19,4 +20,5 @@ export default {
   users,
   adminsForm,
   companiesForm,
+  divisionsForm,
 };

@@ -6,6 +6,7 @@ import Layout from "./components/layout/layout";
 import PageNotFound, { RedirectNotFound } from "./pages/pagenotfound";
 import Admins from "./pages/admins";
 import Companies from "./pages/companies";
+import Divisions from "./pages/divisions";
 import paths from "./resources/paths";
 
 
@@ -32,7 +33,7 @@ class App extends PureComponent {
                   </div>
                 </Route>
                 <Route path={paths.divisions}>
-                  <div>divisions</div>
+                  <div><Divisions/></div>
                 </Route>
                 <Route path={paths.groups}>
                   <div>groups</div>

@@ -1,22 +1,22 @@
 import React, { PureComponent } from "react";
 import { NavLink, Route, Switch, Redirect } from "react-router-dom";
 import "../pages.scss";
-import { getCompanies, deleteUser } from "../../graphqlAPI";
-import CompanyForm from "./company-form";
-import paths from "../../resources/paths";
+import { getDivisions, deleteUser } from "../../graphqlAPI";
+import DivisionForm from "./division-form";
+import paths, { users } from "../../resources/paths";
 
-class Admins extends PureComponent {
+class Divisions extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       tableUser: [
         {
-          id: "",
-          name: "",
-          divisions: 0,
-          created_at: "",
-          updated_at: "",
+          id: '',
+          name: '',
+          updated_at: '',
+          companyName: '',
           users: 0,
+          
         },
       ],
       selectedUser: null,
@@ -25,14 +25,13 @@ class Admins extends PureComponent {
   }
 
   async componentDidMount() {
-    await getCompanies().then((result) => {
-      this.setState({
-        tableUser: result.data.companies.map((val) => ({
-          ...val,
-          users: val.users_aggregate.aggregate.count,
-          divisions: val.divisions_aggregate.aggregate.count,
-        })),
-      });
+    await getDivisions().then((result) => {
+      this.setState({ tableUser: result.data.divisions.map((val) => ({
+        ...val,
+        companyName: val.company.name,
+        users: val.users_aggregate.aggregate.count,
+      }))
+    });
     });
   }
 
@@ -46,13 +45,16 @@ class Admins extends PureComponent {
             this.setState({ redirect: null });
             return <Redirect to={this.state.redirect} push />;
           })()}
-        <Route path={paths.companiesForm}>
-          <CompanyForm user={this.state.selectedUser} />
+        <Route path={paths.divisionsForm}>
+          <DivisionForm user={this.state.selectedUser} />
         </Route>
         <Route>
           <div className="super-container">
-            <h2>Companies</h2>
-            <NavLink to={paths.companiesForm}>
+            <h2>Division</h2>
+            <NavLink
+              to={paths.divisionsForm}
+              onClick={() => this.setState({ selectedUser: null })}
+            >
               <button type="button" className="btn btn-info">
                 Add
               </button>
@@ -62,31 +64,30 @@ class Admins extends PureComponent {
               <table id="usersdata">
                 <thead>
                   <tr>
-                    <th>Company Name</th>
                     <th>Division</th>
+                    <th>Company Name</th>
                     <th>Users</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
+                    <th>Updated at</th>
                     <th>Actions</th>
+                   
                   </tr>
                 </thead>
                 <tbody>
                   {tableUser.length > 0 ? (
-                    tableUser.map((companies, index) => {
+                    tableUser.map((divisions, index) => {
                       return (
                         <tr key={index}>
-                          <td>{companies.name}</td>
-                          <td>{companies.divisions}</td>
-                          <td>{companies.users.toString()}</td>
-                          <td>{companies.created_at}</td>
-                          <td>{companies.updated_at}</td>
+                          <td>{divisions.name}</td>
+                          <td> {divisions.companyName} </td>
+                          <td>{divisions.users.toString()}</td>
+                          <td>{divisions.updated_at}</td>
                           <td className="btn-container">
                             <button
                               className="edit"
                               onClick={() => {
                                 this.setState({
-                                  selectedUser: companies,
-                                  redirect: paths.companiesForm,
+                                  selectedUser: divisions,
+                                  redirect: paths.divisionsForm,
                                 });
                               }}
                             >
@@ -96,10 +97,10 @@ class Admins extends PureComponent {
                               className="delete"
                               onClick={async () => {
                                 const confirmed = window.confirm(
-                                  `are you sure you want to delete ${companies.email}`
+                                  `are you sure you want to delete ${divisions.email}`
                                 );
                                 if (confirmed) {
-                                  deleteUser(companies.email).then((result) => {
+                                  deleteUser(divisions.email).then((result) => {
                                     if (result.errors) {
                                       alert(result.errors);
                                     } else if (
@@ -141,4 +142,4 @@ class Admins extends PureComponent {
   }
 }
 
-export default Admins;
+export default Divisions;

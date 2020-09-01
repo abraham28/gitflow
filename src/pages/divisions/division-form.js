@@ -30,7 +30,7 @@ const roleLevels = [
   { value: "division_admin", label: "Division Admin" },
 ];
 
-class CompanyForm extends PureComponent {
+class DivisionForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -120,7 +120,7 @@ class CompanyForm extends PureComponent {
               }
             } else {
               alert("user Created");
-              window.location.href = paths.companies;
+              window.location.href = paths.admins;
               console.log(result);
             }
           })
@@ -299,11 +299,11 @@ class CompanyForm extends PureComponent {
             </Fragment>
           )}
           <button type="submit">submit</button>
-          <Link to={paths.companies}>cancel</Link>
+          <Link to={paths.admins}>cancel</Link>
         </form>
       </div>
     );
   }
 }
 
-export default CompanyForm;
+export default DivisionForm;
