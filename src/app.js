@@ -1,16 +1,10 @@
 import React, { PureComponent } from "react";
 import Login from "./components/login/login";
-import Register from "./components/register/register";
 import "./App.css";
 import { Switch, Route, Redirect } from "react-router-dom";
-// import HomePage from "./components/homepage";
-import Layout from "./pages/layout/layout";
+import Layout from "./components/layout/layout";
 import PageNotFound, { RedirectNotFound } from "./pages/pagenotfound";
-// import UserPage from "./pages/userpage/userpage";
-import Admins from "./pages/superadmin/superadmin";
-// import Company from "./pages/companyadmin/companyadmin";
-// import Division from "./pages/divisionadmin/divisionadmin";
-// import System from "./pages/systemadmin/systemadmin";
+import Admins from "./pages/admins";
 
 class App extends PureComponent {
   render() {
