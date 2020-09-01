@@ -37,6 +37,9 @@ class App extends PureComponent {
             <Route path="/register">
               <Register />
             </Route>
+            <Route path="/superadmin">
+              <div>hello</div>
+            </Route>
             <Route path="/" exact>
               <DashBoard />
             </Route>
