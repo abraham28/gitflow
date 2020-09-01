@@ -1,0 +1,83 @@
+.create-form {
+  width: 500px;
+  margin: 0 auto;
+}
+.register-form {
+  margin: 50px 0;
+  border: 1px solid #417f9754;
+  background: #9d98b040;
+  box-shadow: 0px 0px 12px 3px rgba(145, 139, 145, 1);
+}
+.register-form h1 {
+  text-align: center;
+  color: #215097c2;
+}
+.register-flex {
+  display: flex;
+  box-sizing: border-box;
+}
+.register-flex form {
+  width: 100%;
+  border-bottom: 18px solid #ba80c1a3;
+  padding-bottom: 27px;
+}
+.register-flex input[type="email"] {
+  width: 60%;
+  margin: 0 97px 10px;
+  height: 30px;
+  border: 1px solid #8cb3ee;
+}
+.register-flex input[type="text"] {
+  width: 60%;
+  margin: 0 97px 10px;
+  height: 30px;
+  border: 1px solid #8cb3ee;
+}
+.register-flex ::placeholder {
+  text-align: center;
+}
+.register-flex input[type="password"] {
+  width: 60%;
+  margin: 0 97px 10px;
+  height: 30px;
+  border: 1px solid #8cb3ee;
+}
+.register-flex button {
+  margin: 0 167px;
+  width: 166px;
+  outline: none;
+  cursor: pointer;
+  font-size: 13px;
+  background: #707febbd;
+  color: #fff;
+  border: none;
+  padding: 13px 6px;
+}
+.register-flex button:hover {
+    background: #0d6e2b;
+}
+.register-form h2 {
+    text-align: center;
+    color: #2a2d53;
+}
+.register-form a:hover {
+    color: salmon;
+}
+.register-form select {
+  margin: 0 188px 29px;
+}
+.Login {
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 39px;
+}
+.Login a {
+    text-decoration: none;
+    color:black;
+}
+.errorMessage {
+  color: red;
+  position: relative;
+  left: 150px;
+  top: -12px;
+}

@@ -1,15 +1,19 @@
 {
-  "name": "gitflow",
+  "name": "admin-management",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/runtime": "^7.11.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "moment-timezone": "^0.5.31",
+    "element-react": "^1.4.34",
+    "element-ui": "^2.13.2",
+    "i": "^0.3.6",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3"
   },
   "scripts": {
@@ -32,5 +36,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-hot-loader": "^4.5.3"
   }
 }
