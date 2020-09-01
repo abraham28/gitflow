@@ -35,9 +35,8 @@ class Login extends PureComponent {
       } else if (!data || data.users.length < 1) {
         alert("incorrect email/password");
       } else {
-        alert(JSON.stringify(data.users[0]));
         localStorage.setItem("user", JSON.stringify(data.users[0]));
-        window.location.href = "/dashboard";
+        window.location.href = "/";
       }
     } else {
       const message = this.state.message;
@@ -46,7 +45,6 @@ class Login extends PureComponent {
   };
   async componentDidMount() {
     const users = await getUsers();
-    console.log(users);
   }
   render() {
     const { email, password, submitted } = this.state;
@@ -90,10 +88,6 @@ class Login extends PureComponent {
 
                   <button type="submit">Login</button>
                 </form>
-              </div>
-              <h2>Not Register yet?</h2>
-              <div className="Register">
-                <Link to="/register">Click Here</Link>
               </div>
             </div>
           </div>

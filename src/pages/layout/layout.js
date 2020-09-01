@@ -6,6 +6,10 @@ import { login } from "../../graphqlAPI";
 class Layout extends PureComponent {
   constructor(props) {
     super(props);
+    const userJSON = localStorage.getItem("user");
+    if (!userJSON) {
+      window.location.href = "/login";
+    }
     this.state = {
       loggedInStatus: "NOT_LOGGED_IN",
       userLogin: {},
@@ -45,7 +49,9 @@ class Layout extends PureComponent {
           </div>
           <ul className="nav-link">
             <li>
-              <Link to="/login">Logout</Link>
+              <Link to="/login" onClick={() => localStorage.removeItem("user")}>
+                Logout
+              </Link>
             </li>
           </ul>
         </div>

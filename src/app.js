@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import Login from "./components/login/login";
 import Register from "./components/register/register";
 import "./App.css";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 // import HomePage from "./components/homepage";
 import Layout from "./pages/layout/layout";
 import PageNotFound, { RedirectNotFound } from "./pages/pagenotfound";
@@ -13,19 +13,6 @@ import Admins from "./pages/superadmin/superadmin";
 // import System from "./pages/systemadmin/systemadmin";
 
 class App extends PureComponent {
-  constructor(props) {
-    super(props);
-    const userJSON = localStorage.getItem("user");
-    if (!userJSON) {
-      window.location.href("/login");
-    }
-    this.state = {
-      user: JSON.parse(userJSON),
-    };
-  }
-
-  componentDidMount() {}
-
   render() {
     return (
       <div className="wrap">
@@ -33,9 +20,6 @@ class App extends PureComponent {
           <Switch>
             <Route path="/login">
               <Login />
-            </Route>
-            <Route path="/register">
-              <Register />
             </Route>
             <Route path="/404">
               <PageNotFound />
@@ -59,7 +43,7 @@ class App extends PureComponent {
                     <div>users</div>
                   </Route>
                   <Route path="/" exact>
-                    <div>dashboard</div>
+                    <Redirect to="/admins" />
                   </Route>
                   <Route>
                     <RedirectNotFound />
