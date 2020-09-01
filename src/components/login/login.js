@@ -1,7 +1,6 @@
 import React, { PureComponent } from "react";
 import "./login.scss";
-import { Route, Link } from "react-router-dom";
-import Register from "../register/register";
+import { Link } from "react-router-dom";
 import { login, getUsers } from "../../graphqlAPI";
 import Header from "../header/header";
 
@@ -95,9 +94,6 @@ class Login extends PureComponent {
               <h2>Not Register yet?</h2>
               <div className="Register">
                 <Link to="/register">Click Here</Link>
-                <Route path="/register">
-                  <Register />
-                </Route>
               </div>
             </div>
           </div>
