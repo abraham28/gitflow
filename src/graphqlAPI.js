@@ -175,11 +175,6 @@ export function createCompany(companyModel) {
             count
           }
         }
-        divisions_aggregate {
-          aggregate {
-            count
-          }
-        }
       }
     }
   `;
@@ -194,6 +189,11 @@ export function getCompanies() {
       name
       updated_at
       created_at
+      divisions_aggregate {
+        aggregate {
+          count
+        }
+      }
       users_aggregate {
         aggregate {
           count
