@@ -4,8 +4,8 @@ import Register from "./components/register/register";
 import "./App.css";
 import { Switch, Route } from "react-router-dom";
 // import HomePage from "./components/homepage";
-import DashBoard from "./pages/dashboard/dashboard";
-import PageNotFound from "./components/pagenotfound";
+import Layout from "./pages/layout/layout";
+import PageNotFound, { RedirectNotFound } from "./pages/pagenotfound";
 // import UserPage from "./pages/userpage/userpage";
 // import SuperAdmin from "./pages/superadmin/superadmin";
 // import Company from "./pages/companyadmin/companyadmin";
@@ -37,9 +37,12 @@ class App extends PureComponent {
             <Route path="/register">
               <Register />
             </Route>
-            <Route>
-              <Switch>
-                <div>
+            <Route path="/404">
+              <PageNotFound />
+            </Route>
+            <div>
+              <Layout>
+                <Switch>
                   <Route path="/admins">
                     <div>admins</div>
                   </Route>
@@ -56,14 +59,14 @@ class App extends PureComponent {
                     <div>users</div>
                   </Route>
                   <Route path="/" exact>
-                    <DashBoard />
+                    <div>dashboard</div>
                   </Route>
-                </div>
-                <Route>
-                  <PageNotFound />
-                </Route>
-              </Switch>
-            </Route>
+                  <Route>
+                    <RedirectNotFound />
+                  </Route>
+                </Switch>
+              </Layout>
+            </div>
           </Switch>
         </div>
       </div>

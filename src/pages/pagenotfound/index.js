@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import { Redirect } from "react-router-dom";
 
 class PageNotFound extends PureComponent {
   render() {
@@ -18,3 +19,5 @@ class PageNotFound extends PureComponent {
 }
 
 export default PageNotFound;
+
+export const RedirectNotFound = () => <Redirect to="/404" />;

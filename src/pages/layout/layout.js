@@ -1,14 +1,9 @@
 import React, { PureComponent } from "react";
-import { Route, Link, NavLink } from "react-router-dom";
-import "./dashboard.scss";
-import UserPage from "../userpage/userpage";
-import SuperAdmin from "../superadmin/superadmin";
-import Company from "../companyadmin/companyadmin";
-import Division from "../divisionadmin/divisionadmin";
-import System from "../systemadmin/systemadmin";
+import { Link, NavLink } from "react-router-dom";
+import "./layout.scss";
 import { login } from "../../graphqlAPI";
 
-class DashBoard extends PureComponent {
+class Layout extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -61,46 +56,40 @@ class DashBoard extends PureComponent {
               className={activeClasses[0] ? "active" : "inactive"}
               onClick={() => this.addActiveClass(0)}
             >
-              <NavLink exact to="/companyadmin">
-                Company Admin Page
+              <NavLink exact to="/admins">
+                Admins
               </NavLink>
             </li>
             <li
               className={activeClasses[1] ? "active" : "inactive"}
               onClick={() => this.addActiveClass(1)}
             >
-              <NavLink to="/divisionadmin">Division Admin Page</NavLink>
+              <NavLink to="/companies">Companies</NavLink>
             </li>
             <li
               className={activeClasses[2] ? "active" : "inactive"}
               onClick={() => this.addActiveClass(2)}
             >
-              <NavLink to="/superadmin">Super Admin Page</NavLink>
+              <NavLink to="/divisions">Divisions</NavLink>
             </li>
             <li
               className={activeClasses[3] ? "active" : "inactive"}
               onClick={() => this.addActiveClass(3)}
             >
-              <NavLink to="/systemadmin">System Admin Page</NavLink>
+              <NavLink to="/groups">Groups</NavLink>
             </li>
             <li
               className={activeClasses[4] ? "active" : "inactive"}
               onClick={() => this.addActiveClass(4)}
             >
-              <NavLink to="/userpage">User Page</NavLink>
+              <NavLink to="/users">Users</NavLink>
             </li>
           </ul>
         </div>
-        <div className="content">
-          <Route path="/companyadmin" component={Company} />
-          <Route path="/divisionadmin" component={Division} />
-          <Route path="/superadmin" component={SuperAdmin} />
-          <Route path="/systemadmin" component={System} />
-          <Route path="/userpage" component={UserPage} />
-        </div>
+        <div className="content">{this.props.children}</div>
       </div>
     );
   }
 }
 
-export default DashBoard;
+export default Layout;
