@@ -165,7 +165,7 @@ export function getRoles() {
 export function createCompany(companyModel) {
   const createCompanyMutation = `
     mutation createCompany {
-      insert_users_one(object: {${createGqlObj(companyModel)}}) {
+      insert_companies_one(object: {${createGqlObj(companyModel)}}) {
         id
         name
         created_at
