@@ -1,72 +1,101 @@
 .super-form {
-    width: 61%;
-    margin: 0 auto;
-    display: flex;
-    padding-top: 23px;
-  }
-  .super-form form {
-    box-sizing: border-box;
-    height: 540px;
-  }
-  .super-form input {
-    text-align: center;
-    width: 100%;
-    display: block;
-    height: 8%;
-    padding: 0 163px;
-    margin-bottom: 19px;
-  }
-  .super-form select {
-      width: 300px;
-  }
-  #title {
-    text-align: center;
-    font-family: arial, sans-serif;
-  }
-  
-  #usersdata {
-    text-align: center;
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    border: 3px solid #ddd;
-    width: 100%;
-  }
-  
-  #usersdata td, #usersdata th {
-    border: 1px solid #ddd;
-    padding: 8px;
-    background: #fff;
-  }
-  
-  #usersdata tr:nth-child(even){background-color: #f2f2f2;}
-  
-  #usersdata tr:hover {background-color: #ddd;}
-  
-  #usersdata th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: center;
-    background-color: #4CAF50;
-    color: white;
-  }
-  .tableData {
-    width: 100%;
-  }
-  .delete {
-    color: #fff;
-    padding: 10px 13px;
-    margin: 10px;
-    cursor: pointer;
-    outline: none;
-    border: 1px solid #d9534f;
-    background: #d9534f;
-  }
-  .edit {
-    color: #fff;
-    padding: 10px 23px;
-    margin: 10px;
-    cursor: pointer;
-    outline: none;
-    border: 1px solid #5cb85c;
-    background: #5cb85c;
-  }
+  width: 70%;
+  margin: 0 auto;
+  padding-top: 23px;
+  overflow: hidden;
+}
+.form-container {
+  width: 44.7%;
+  margin: 0 auto;
+}
+.super-form form {
+  height: 540px;
+}
+.super-form input {
+  text-align: center;
+  display: block;
+  height: 8%;
+  padding: 0 163px;
+  margin-bottom: 19px;
+}
+.super-form select {
+  width: 300px;
+}
+#title {
+  text-align: center;
+  font-family: arial, sans-serif;
+}
+
+#usersdata {
+  text-align: center;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  border: 3px solid #ddd;
+  width: 100%;
+}
+
+#usersdata td,
+#usersdata th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  background: #fff;
+}
+
+#usersdata tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#usersdata tr:hover {
+  background-color: #ddd;
+}
+
+#usersdata th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #4caf50;
+  color: white;
+}
+.tableData {
+  width: 100%;
+}
+.delete {
+  color: #fff;
+  padding: 10px 13px;
+  margin: 10px;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid #d9534f;
+  background: #d9534f;
+}
+.edit {
+  color: #fff;
+  padding: 10px 21px;
+  margin: 10px;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid #5cb85c;
+  background: #5cb85c;
+}
+.delete:hover,
+.edit:hover {
+  background: #1a7eae;
+}
+.btn-container {
+  width: 200px;
+}
+.btn {
+  background: #1286b2ad;
+  color: #fff;
+  outline: none;
+  border: 1px solid;
+  margin: 0 5px;
+  padding: 5px 9px;
+}
+.btn-info {
+  font-size: 13px;
+  cursor: pointer;
+}
+.btn-info:hover {
+  background:green;
+}

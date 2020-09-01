@@ -138,6 +138,7 @@ class superForm extends PureComponent {
   render() {
     const { formErrors } = this.state;
     return (
+      <div className="form-container">
       <form onSubmit={this.handleSubmit} noValidate>
         <input
           placeholder="Email Address"
@@ -230,6 +231,7 @@ class superForm extends PureComponent {
 
         <button type="submit">submit</button>
       </form>
+      </div>
     );
   }
 }
