@@ -5,7 +5,9 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Layout from "./components/layout/layout";
 import PageNotFound, { RedirectNotFound } from "./pages/pagenotfound";
 import Admins from "./pages/admins";
+import Companies from "./pages/companies";
 import paths from "./resources/paths";
+
 
 class App extends PureComponent {
   render() {
@@ -25,7 +27,7 @@ class App extends PureComponent {
                   <Admins />
                 </Route>
                 <Route path={paths.companies}>
-                  <div>companies</div>
+                  <div><Companies /></div>
                 </Route>
                 <Route path={paths.divisions}>
                   <div>divisions</div>

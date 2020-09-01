@@ -1,0 +1,137 @@
+import React, { PureComponent } from "react";
+import { NavLink, Route, Switch, Redirect } from "react-router-dom";
+import "../pages.scss";
+import { getUsers, deleteUser } from "../../graphqlAPI";
+import CompanyForm from "./company-form";
+import paths from "../../resources/paths";
+
+class Admins extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tableUser: [
+        {
+          email: "",
+          first_name: "",
+          last_name: "",
+          role: "",
+          created_at: "",
+          updated_at: "",
+        },
+      ],
+      selectedUser: null,
+      redirect: null,
+    };
+  }
+
+  async componentDidMount() {
+    const { users } = this.props;
+    await getUsers(users).then((data) => {
+      this.setState({ tableUser: data.data.users });
+    });
+  }
+
+  render() {
+    const { tableUser } = this.state;
+    return (
+      <Switch>
+        {this.state.redirect &&
+          window.location.href !== this.state.redirect &&
+          (() => {
+            this.setState({ redirect: null });
+            return <Redirect to={this.state.redirect} push />;
+          })()}
+        <Route path={paths.companiesForm}>
+          <CompanyForm user={this.state.selectedUser} />
+        </Route>
+        <Route>
+          <div className="super-container">
+            <h2>Companies</h2>
+            <NavLink to={paths.companiesForm}>
+              <button type="button" className="btn btn-info">
+                Add
+              </button>
+            </NavLink>
+            <div className="tableData">
+              <h1 id="title">Table Data</h1>
+              <table id="usersdata">
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Full Name</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tableUser.length > 0 ? (
+                    tableUser.map((user, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>{user.email}</td>
+                          <td>
+                            {user.first_name} {user.last_name}
+                          </td>
+                          <td>{user.role}</td>
+                          <td className="btn-container">
+                            <button
+                              className="edit"
+                              onClick={() => {
+                                this.setState({
+                                  selectedUser: user,
+                                  redirect: paths.adminsForm,
+                                });
+                              }}
+                            >
+                              edit
+                            </button>
+                            <button
+                              className="delete"
+                              onClick={async () => {
+                                const confirmed = window.confirm(
+                                  `are you sure you want to delete ${user.email}`
+                                );
+                                if (confirmed) {
+                                  deleteUser(user.email).then((result) => {
+                                    if (result.errors) {
+                                      alert(result.errors);
+                                    } else if (
+                                      result.data.delete_users_by_pk === null
+                                    ) {
+                                      alert("no user has been deleted");
+                                    } else if (
+                                      result.data.delete_users_by_pk.email
+                                    ) {
+                                      this.componentDidMount();
+                                      alert(
+                                        `${result.data.delete_users_by_pk.email} has been deleted`
+                                      );
+                                    } else {
+                                      alert("unknown error");
+                                    }
+                                  });
+                                }
+                              }}
+                            >
+                              delete
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan="5">Loading...</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Route>
+      </Switch>
+    );
+  }
+}
+
+export default Admins;
