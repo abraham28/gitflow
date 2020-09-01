@@ -127,16 +127,9 @@ export function updateUser(email, updateValues) {
 
 export function deleteUser(email) {
   const deleteUserMutation = `
-    mutation deleteUsers {
-      delete_users(where: {email: {_eq: ${email}}}) {
-        returning {
-          email
-          first_name
-          last_name
-          role
-          created_at
-          updated_at
-        }
+    mutation deleteUser {
+      delete_users_by_pk(email: "${email}") {
+        email
       }
     }
   `;

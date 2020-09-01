@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from "react";
 import { getUsers, getRoles, createUser } from "../../graphqlAPI";
 import { Link } from "react-router-dom";
+import paths from "../../resources/paths";
 
 const emailRegex = RegExp(
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -33,12 +34,12 @@ class AdminForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      email: null,
-      first_name: null,
-      last_name: null,
-      role: null,
-      companies: null,
-      divisions: null,
+      email: props.user && props.user.email,
+      first_name: props.user && props.user.first_name,
+      last_name: props.user && props.user.last_name,
+      role: props.user && props.user.role,
+      companies: props.user && props.user.companies,
+      divisions: props.user && props.user.divisions,
       password: null,
       confirmpassword: null,
       formErrors: {
@@ -73,7 +74,6 @@ class AdminForm extends PureComponent {
         divisions: ${this.state.divisions}
         Password: ${this.state.password}
       `);
-      alert("user Created");
       await createUser({
         first_name: this.state.first_name,
         last_name: this.state.last_name,
@@ -83,7 +83,20 @@ class AdminForm extends PureComponent {
         companies: this.state.companies,
         divisions: this.state.divisions,
       })
-        .then((result) => console.log(result))
+        .then((result) => {
+          if (result.errors) {
+            const uniq = new RegExp("Uniqueness violation");
+            if (uniq.test(result.errors[0].message)) {
+              alert("Email already exists");
+            } else {
+              alert(result.errors[0].message);
+            }
+          } else {
+            alert("user Created");
+            window.location.href = paths.admins;
+            console.log(result);
+          }
+        })
         .catch((e) => console.log(e));
     } else {
       alert("FORM INVALID COMPLETE THE FORM");
@@ -148,7 +161,11 @@ class AdminForm extends PureComponent {
     return (
       <div className="form-container">
         <form onSubmit={this.handleSubmit} noValidate>
-          <select onChange={this.handleChange} name="role">
+          <select
+            onChange={this.handleChange}
+            name="role"
+            value={this.state.role}
+          >
             <option selected hidden disabled>
               ---Please Select---
             </option>
@@ -164,6 +181,7 @@ class AdminForm extends PureComponent {
             name="email"
             required
             noValidate
+            value={this.state.email}
             onChange={this.handleChange}
           />
           {formErrors.email.length > 0 && (
@@ -176,6 +194,7 @@ class AdminForm extends PureComponent {
             type="password"
             name="password"
             noValidate
+            value={this.state.password}
             onChange={this.handleChange}
           />
           {formErrors.password.length > 0 && (
@@ -187,6 +206,7 @@ class AdminForm extends PureComponent {
             type="password"
             name="confirmpassword"
             noValidate
+            value={this.state.confirmpassword}
             onChange={this.handleChange}
           />
           {formErrors.password !== formErrors.confirmpassword && (
@@ -198,6 +218,7 @@ class AdminForm extends PureComponent {
             placeholder="First Name"
             name="first_name"
             noValidate
+            value={this.state.first_name}
             onChange={this.handleChange}
           />
           {formErrors.first_name.length > 0 && (
@@ -209,6 +230,7 @@ class AdminForm extends PureComponent {
             type="text"
             name="last_name"
             noValidate
+            value={this.state.last_name}
             onChange={this.handleChange}
           />
           {formErrors.last_name.length > 0 && (
@@ -223,6 +245,7 @@ class AdminForm extends PureComponent {
                 placeholder="Company Name"
                 name="companies"
                 noValidate
+                value={this.state.companies}
                 onChange={this.handleChange}
               />
               {formErrors.companies.length > 0 && (
@@ -239,6 +262,7 @@ class AdminForm extends PureComponent {
                 type="text"
                 name="divisions"
                 noValidate
+                value={this.state.divisions}
                 onChange={this.handleChange}
               />
               {formErrors.divisions.length > 0 && (
@@ -247,7 +271,7 @@ class AdminForm extends PureComponent {
             </Fragment>
           )}
           <button type="submit">submit</button>
-          <Link to="/admins">cancel</Link>
+          <Link to={paths.admins}>cancel</Link>
         </form>
       </div>
     );

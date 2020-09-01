@@ -1,8 +1,9 @@
 import React, { PureComponent } from "react";
-import { NavLink, Route, Switch } from "react-router-dom";
+import { NavLink, Route, Switch, Redirect } from "react-router-dom";
 import "../pages.scss";
-import { getUsers } from "../../graphqlAPI";
+import { getUsers, deleteUser } from "../../graphqlAPI";
 import AdminForm from "./admin-form";
+import paths from "../../resources/paths";
 
 class Admins extends PureComponent {
   constructor(props) {
@@ -18,6 +19,8 @@ class Admins extends PureComponent {
           updated_at: "",
         },
       ],
+      selectedUser: null,
+      redirect: null,
     };
   }
 
@@ -32,13 +35,19 @@ class Admins extends PureComponent {
     const { tableUser } = this.state;
     return (
       <Switch>
-        <Route path="/admins/add">
-          <AdminForm />
+        {this.state.redirect &&
+          window.location.href !== this.state.redirect &&
+          (() => {
+            this.setState({ redirect: null });
+            return <Redirect to={this.state.redirect} push />;
+          })()}
+        <Route path={paths.adminsForm}>
+          <AdminForm user={this.state.selectedUser} />
         </Route>
         <Route>
           <div className="super-container">
             <h2>Admins</h2>
-            <NavLink to="/admins/add">
+            <NavLink to={paths.adminsForm}>
               <button type="button" className="btn btn-info">
                 Add
               </button>
@@ -65,8 +74,47 @@ class Admins extends PureComponent {
                           </td>
                           <td>{user.role}</td>
                           <td className="btn-container">
-                            <button className="edit">edit</button>
-                            <button className="delete">delete</button>
+                            <button
+                              className="edit"
+                              onClick={() => {
+                                this.setState({
+                                  selectedUser: user,
+                                  redirect: paths.adminsForm,
+                                });
+                              }}
+                            >
+                              edit
+                            </button>
+                            <button
+                              className="delete"
+                              onClick={async () => {
+                                const confirmed = window.confirm(
+                                  `are you sure you want to delete ${user.email}`
+                                );
+                                if (confirmed) {
+                                  deleteUser(user.email).then((result) => {
+                                    if (result.errors) {
+                                      alert(result.errors);
+                                    } else if (
+                                      result.data.delete_users_by_pk === null
+                                    ) {
+                                      alert("no user has been deleted");
+                                    } else if (
+                                      result.data.delete_users_by_pk.email
+                                    ) {
+                                      this.componentDidMount();
+                                      alert(
+                                        `${result.data.delete_users_by_pk.email} has been deleted`
+                                      );
+                                    } else {
+                                      alert("unknown error");
+                                    }
+                                  });
+                                }
+                              }}
+                            >
+                              delete
+                            </button>
                           </td>
                         </tr>
                       );
