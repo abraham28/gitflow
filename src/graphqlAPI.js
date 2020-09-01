@@ -168,8 +168,13 @@ export function createCompany(companyModel) {
       insert_companies_one(object: {${createGqlObj(companyModel)}}) {
         id
         name
-        created_at
         updated_at
+        created_at
+        users_aggregate {
+          aggregate {
+            count
+          }
+        }
       }
     }
   `;
@@ -182,8 +187,13 @@ export function getCompanies() {
     companies {
       id
       name
-      created_at
       updated_at
+      created_at
+      users_aggregate {
+        aggregate {
+          count
+        }
+      }
     }
   }
   `;
@@ -199,8 +209,13 @@ export function updateCompany(companyId, updateValues) {
       ) {
         id
         name
-        created_at
         updated_at
+        created_at
+        users_aggregate {
+          aggregate {
+            count
+          }
+        }
       }
     }
   `;
@@ -217,3 +232,63 @@ export function deleteCompany(companyId) {
   `;
   return fetchGraphQL(deleteCompanyMutation, "deleteCompany", {});
 }
+
+export function createDivision(divisionModel) {
+  const createDivisionMutation = `
+    mutation createDivision {
+      insert_companies_one(object: {${createGqlObj(divisionModel)}}) {
+        id
+        name
+        updated_at
+        created_at
+        company {
+          id
+          name
+        }
+      }
+    }
+  `;
+  return fetchGraphQL(createDivisionMutation, "createDivision", {});
+}
+
+// export function getCompanies() {
+//   const getCompaniesQuery = `
+//   query getCompanies {
+//     companies {
+//       id
+//       name
+//       created_at
+//       updated_at
+//     }
+//   }
+//   `;
+//   return fetchGraphQL(getCompaniesQuery, "getCompanies", {});
+// }
+
+// export function updateCompany(companyId, updateValues) {
+//   const operationsDoc = `
+//     mutation updateCompany {
+//       update_companies_by_pk(
+//         pk_columns: {id: "${companyId}"},
+//         _set: {${createGqlObj(updateValues)}}
+//       ) {
+//         id
+//         name
+//         created_at
+//         updated_at
+//       }
+//     }
+//   `;
+//   return fetchGraphQL(operationsDoc, "updateCompany", {});
+// }
+
+// export function deleteCompany(companyId) {
+//   const deleteCompanyMutation = `
+//     mutation deleteCompany {
+//       delete_companies_by_pk(id: "${companyId}") {
+//         name
+//       }
+//     }
+//   `;
+//   return fetchGraphQL(deleteCompanyMutation, "deleteCompany", {});
+// }
