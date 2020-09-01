@@ -256,19 +256,27 @@ export function createDivision(divisionModel) {
   return fetchGraphQL(createDivisionMutation, "createDivision", {});
 }
 
-// export function getCompanies() {
-//   const getCompaniesQuery = `
-//   query getCompanies {
-//     companies {
-//       id
-//       name
-//       created_at
-//       updated_at
-//     }
-//   }
-//   `;
-//   return fetchGraphQL(getCompaniesQuery, "getCompanies", {});
-// }
+export function getDivisions() {
+  const getDivisionsQuery = `
+  query getDivisions {
+    divisions {
+      id
+      name
+      updated_at
+      created_at
+      company {
+        name
+      }
+      users_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+  `;
+  return fetchGraphQL(getDivisionsQuery, "getDivisions", {});
+}
 
 // export function updateCompany(companyId, updateValues) {
 //   const operationsDoc = `

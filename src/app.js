@@ -27,7 +27,9 @@ class App extends PureComponent {
                   <Admins />
                 </Route>
                 <Route path={paths.companies}>
-                  <div><Companies /></div>
+                  <div>
+                    <Companies />
+                  </div>
                 </Route>
                 <Route path={paths.divisions}>
                   <div>divisions</div>
