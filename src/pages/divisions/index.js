@@ -4,6 +4,7 @@ import "../pages.scss";
 import { getDivisions, deleteUser } from "../../graphqlAPI";
 import DivisionForm from "./division-form";
 import paths from "../../resources/paths";
+import { formatDate } from "../../helpers";
 
 class Divisions extends PureComponent {
   constructor(props) {
@@ -79,7 +80,7 @@ class Divisions extends PureComponent {
                           <td>{divisions.name}</td>
                           <td> {divisions.companyName} </td>
                           <td>{divisions.users.toString()}</td>
-                          <td>{divisions.updated_at}</td>
+                          <td>{formatDate(divisions.updated_at)}</td>
                           <td className="btn-container">
                             <button
                               className="edit"

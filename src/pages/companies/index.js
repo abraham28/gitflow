@@ -4,6 +4,7 @@ import "../pages.scss";
 import { getCompanies, deleteUser } from "../../graphqlAPI";
 import CompanyForm from "./company-form";
 import paths from "../../resources/paths";
+import { formatDate } from "../../helpers";
 
 class Admins extends PureComponent {
   constructor(props) {
@@ -78,8 +79,8 @@ class Admins extends PureComponent {
                           <td>{companies.name}</td>
                           <td>{companies.divisions}</td>
                           <td>{companies.users.toString()}</td>
-                          <td>{companies.created_at}</td>
-                          <td>{companies.updated_at}</td>
+                          <td>{formatDate(companies.created_at)}</td>
+                          <td>{formatDate(companies.updated_at)}</td>
                           <td className="btn-container">
                             <button
                               className="edit"
