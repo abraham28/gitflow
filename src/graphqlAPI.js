@@ -77,27 +77,6 @@ export function getUsers() {
 }
 
 /**
- * check user
- */
-export function login(email, password) {
-  const getUsersQuery = `
-  query login {
-    users(where: {email: {_eq: "${email}"}, password: {_eq: "${password}"}}) {
-      role
-      updated_at
-      created_at
-      email
-      first_name
-      last_name
-      company_id
-      division_id
-    }
-  }
-  `;
-  return fetchGraphQL(getUsersQuery, "login", {});
-}
-
-/**
  * For updating users
  */
 export function updateUser(email, updateValues) {
@@ -123,7 +102,6 @@ export function updateUser(email, updateValues) {
 /**
  * For deleting users
  */
-
 export function deleteUser(email) {
   const deleteUserMutation = `
     mutation deleteUser {
@@ -133,6 +111,27 @@ export function deleteUser(email) {
     }
   `;
   return fetchGraphQL(deleteUserMutation, "deleteUser", {});
+}
+
+/**
+ * check user
+ */
+export function login(email, password) {
+  const getUsersQuery = `
+  query login {
+    users(where: {email: {_eq: "${email}"}, password: {_eq: "${password}"}}) {
+      role
+      updated_at
+      created_at
+      email
+      first_name
+      last_name
+      company_id
+      division_id
+    }
+  }
+  `;
+  return fetchGraphQL(getUsersQuery, "login", {});
 }
 
 export function getRoles() {
@@ -162,3 +161,59 @@ export function getRoles() {
  * console.log(data);
  * }
  */
+
+export function createCompany(companyModel) {
+  const createCompanyMutation = `
+    mutation createCompany {
+      insert_users_one(object: {${createGqlObj(companyModel)}}) {
+        id
+        name
+        created_at
+        updated_at
+      }
+    }
+  `;
+  return fetchGraphQL(createCompanyMutation, "createCompany", {});
+}
+
+export function getCompanies() {
+  const getCompaniesQuery = `
+  query getCompanies {
+    companies {
+      id
+      name
+      created_at
+      updated_at
+    }
+  }
+  `;
+  return fetchGraphQL(getCompaniesQuery, "getCompanies", {});
+}
+
+export function updateCompany(companyId, updateValues) {
+  const operationsDoc = `
+    mutation updateCompany {
+      update_companies_by_pk(
+        pk_columns: {id: "${companyId}"}, 
+        _set: {${createGqlObj(updateValues)}}
+      ) {
+        id
+        name
+        created_at
+        updated_at
+      }
+    }
+  `;
+  return fetchGraphQL(operationsDoc, "updateCompany", {});
+}
+
+export function deleteCompany(companyId) {
+  const deleteCompanyMutation = `
+    mutation deleteCompany {
+      delete_companies_by_pk(id: "${companyId}") {
+        name
+      }
+    }
+  `;
+  return fetchGraphQL(deleteCompanyMutation, "deleteCompany", {});
+}
