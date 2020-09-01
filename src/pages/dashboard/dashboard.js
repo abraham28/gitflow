@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import {  Route, Link,NavLink } from "react-router-dom";
+import { Route, Link, NavLink } from "react-router-dom";
 import "./dashboard.scss";
 import UserPage from "../userpage/userpage";
 import SuperAdmin from "../superadmin/superadmin";
@@ -8,14 +8,13 @@ import Division from "../divisionadmin/divisionadmin";
 import System from "../systemadmin/systemadmin";
 import { login } from "../../graphqlAPI";
 
-
 class DashBoard extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       loggedInStatus: "NOT_LOGGED_IN",
-      userLogin:{},
-      activeClasses: [false, false, false] 
+      userLogin: {},
+      activeClasses: [false, false, false],
     };
     this.addActiveClass = this.addActiveClass.bind(this);
   }
@@ -29,18 +28,15 @@ class DashBoard extends PureComponent {
     this.setState({ activeClasses });
   }
 
- async componentDidMount() {
-  const {users} = this.props;
-  await login(users)
-   .then (data => {
-     console.log(data)
-       this.setState({userLogin: data.data.users})
-   })
+  async componentDidMount() {
+    const { users } = this.props;
+    await login(users).then((data) => {
+      console.log(data);
+      this.setState({ userLogin: data.data.users });
+    });
   }
 
-  checkLoginStatus() {
-    
-  }
+  checkLoginStatus() {}
 
   render() {
     const activeClasses = this.state.activeClasses.slice();
@@ -65,7 +61,9 @@ class DashBoard extends PureComponent {
               className={activeClasses[0] ? "active" : "inactive"}
               onClick={() => this.addActiveClass(0)}
             >
-              <NavLink exact to="/companyadmin">Company Admin Page</NavLink>
+              <NavLink exact to="/companyadmin">
+                Company Admin Page
+              </NavLink>
             </li>
             <li
               className={activeClasses[1] ? "active" : "inactive"}
@@ -77,7 +75,7 @@ class DashBoard extends PureComponent {
               className={activeClasses[2] ? "active" : "inactive"}
               onClick={() => this.addActiveClass(2)}
             >
-                <NavLink to="/superadmin">Super Admin Page</NavLink>
+              <NavLink to="/superadmin">Super Admin Page</NavLink>
             </li>
             <li
               className={activeClasses[3] ? "active" : "inactive"}
@@ -88,20 +86,17 @@ class DashBoard extends PureComponent {
             <li
               className={activeClasses[4] ? "active" : "inactive"}
               onClick={() => this.addActiveClass(4)}
-            ><NavLink to="/userpage">User Page</NavLink></li>
+            >
+              <NavLink to="/userpage">User Page</NavLink>
+            </li>
           </ul>
         </div>
         <div className="content">
-            <Route path="/companyadmin" 
-            component={Company} />
-            <Route path="/divisionadmin" 
-            component= {Division} />    
-            <Route path="/superadmin" 
-            component = {SuperAdmin} />
-            <Route path="/systemadmin" 
-            component= {System} />
-            <Route path="/userpage" 
-            component= {UserPage} />
+          <Route path="/companyadmin" component={Company} />
+          <Route path="/divisionadmin" component={Division} />
+          <Route path="/superadmin" component={SuperAdmin} />
+          <Route path="/systemadmin" component={System} />
+          <Route path="/userpage" component={UserPage} />
         </div>
       </div>
     );

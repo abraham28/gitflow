@@ -40,14 +40,15 @@ class SuperTable extends PureComponent {
               <th></th>
             </tr>
           </thead>
-
           <tbody>
             {tableUser.length > 0 ? (
               tableUser.map((user, index) => {
                 return (
                   <tr key={index}>
                     <td>{user.email}</td>
-                    <td>{user.first_name} {user.last_name}</td>
+                    <td>
+                      {user.first_name} {user.last_name}
+                    </td>
                     <td>{user.companies}</td>
                     <td>{user.divisions}</td>
                     <td>{user.updated_at}</td>
