@@ -47,7 +47,10 @@ class Admins extends PureComponent {
         <Route>
           <div className="super-container">
             <h2>Admins</h2>
-            <NavLink to={paths.adminsForm}>
+            <NavLink
+              to={paths.adminsForm}
+              onClick={() => this.setState({ selectedUser: null })}
+            >
               <button type="button" className="btn btn-info">
                 Add
               </button>
