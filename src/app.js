@@ -7,7 +7,7 @@ import { Switch, Route } from "react-router-dom";
 import Layout from "./pages/layout/layout";
 import PageNotFound, { RedirectNotFound } from "./pages/pagenotfound";
 // import UserPage from "./pages/userpage/userpage";
- import SuperAdmin from "./pages/superadmin/superadmin";
+import Admins from "./pages/superadmin/superadmin";
 // import Company from "./pages/companyadmin/companyadmin";
 // import Division from "./pages/divisionadmin/divisionadmin";
 // import System from "./pages/systemadmin/systemadmin";
@@ -44,7 +44,7 @@ class App extends PureComponent {
               <Layout>
                 <Switch>
                   <Route path="/admins">
-                    <div><SuperAdmin /></div>
+                    <Admins />
                   </Route>
                   <Route path="/companies">
                     <div>companies</div>
