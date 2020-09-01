@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, Fragment } from "react";
 import { getUsers, getRoles, createUser } from "../../graphqlAPI";
 import { Link } from "react-router-dom";
 
@@ -21,6 +21,13 @@ const formValid = ({ formErrors, ...rest }) => {
 
   return valid;
 };
+
+const roleLevels = [
+  { value: "super_admin", label: "Super Admin" },
+  { value: "system_admin", label: "System Admin" },
+  { value: "company_admin", label: "Company Admin" },
+  { value: "division_admin", label: "Division Admin" },
+];
 
 class AdminForm extends PureComponent {
   constructor(props) {
@@ -141,6 +148,15 @@ class AdminForm extends PureComponent {
     return (
       <div className="form-container">
         <form onSubmit={this.handleSubmit} noValidate>
+          <select onChange={this.handleChange} name="role">
+            <option selected hidden disabled>
+              ---Please Select---
+            </option>
+            {roleLevels.map(({ value, label }) => (
+              <option value={value}>{label}</option>
+            ))}
+          </select>
+
           <input
             placeholder="Email Address"
             text="Email Address"
@@ -154,48 +170,6 @@ class AdminForm extends PureComponent {
             <span className="errorMessage">{formErrors.email}</span>
           )}
 
-          <input
-            type="text"
-            placeholder="Company Name"
-            name="companies"
-            noValidate
-            onChange={this.handleChange}
-          />
-          {formErrors.companies.length > 0 && (
-            <span className="errorMessage">{formErrors.companies}</span>
-          )}
-
-          <input
-            type="text"
-            placeholder="First Name"
-            name="first_name"
-            noValidate
-            onChange={this.handleChange}
-          />
-          {formErrors.first_name.length > 0 && (
-            <span className="errorMessage">{formErrors.first_name}</span>
-          )}
-
-          <input
-            placeholder="Last Name"
-            type="text"
-            name="last_name"
-            noValidate
-            onChange={this.handleChange}
-          />
-          {formErrors.last_name.length > 0 && (
-            <span className="errorMessage">{formErrors.last_name}</span>
-          )}
-          <input
-            placeholder="Division"
-            type="text"
-            name="divisions"
-            noValidate
-            onChange={this.handleChange}
-          />
-          {formErrors.divisions.length > 0 && (
-            <span className="errorMessage">{formErrors.divisions}</span>
-          )}
           <input
             placeholder="Password"
             text="Password"
@@ -219,15 +193,59 @@ class AdminForm extends PureComponent {
             <span className="errorMessage">{formErrors.confirmpassword}</span>
           )}
 
-          <select onChange={this.handleChange} name="role">
-            <option>---Please Select---</option>
-            <option value="super_admin">Super Admin</option>
-            <option value="system_admin">System Admin</option>
-            <option value="company_admin">Company admin</option>
-            <option value="division_admin">Division Admin</option>
-            <option value="user">Users</option>
-          </select>
+          <input
+            type="text"
+            placeholder="First Name"
+            name="first_name"
+            noValidate
+            onChange={this.handleChange}
+          />
+          {formErrors.first_name.length > 0 && (
+            <span className="errorMessage">{formErrors.first_name}</span>
+          )}
 
+          <input
+            placeholder="Last Name"
+            type="text"
+            name="last_name"
+            noValidate
+            onChange={this.handleChange}
+          />
+          {formErrors.last_name.length > 0 && (
+            <span className="errorMessage">{formErrors.last_name}</span>
+          )}
+
+          {roleLevels.findIndex(({ value }) => this.state.role === value) >
+            1 && (
+            <Fragment>
+              <input
+                type="text"
+                placeholder="Company Name"
+                name="companies"
+                noValidate
+                onChange={this.handleChange}
+              />
+              {formErrors.companies.length > 0 && (
+                <span className="errorMessage">{formErrors.companies}</span>
+              )}
+            </Fragment>
+          )}
+
+          {roleLevels.findIndex(({ value }) => this.state.role === value) >
+            2 && (
+            <Fragment>
+              <input
+                placeholder="Division"
+                type="text"
+                name="divisions"
+                noValidate
+                onChange={this.handleChange}
+              />
+              {formErrors.divisions.length > 0 && (
+                <span className="errorMessage">{formErrors.divisions}</span>
+              )}
+            </Fragment>
+          )}
           <button type="submit">submit</button>
           <Link to="/admins">cancel</Link>
         </form>
