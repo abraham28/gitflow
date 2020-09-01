@@ -3,7 +3,7 @@ import { NavLink, Route, Switch, Redirect } from "react-router-dom";
 import "../pages.scss";
 import { getDivisions, deleteUser } from "../../graphqlAPI";
 import DivisionForm from "./division-form";
-import paths, { users } from "../../resources/paths";
+import paths from "../../resources/paths";
 
 class Divisions extends PureComponent {
   constructor(props) {
@@ -11,12 +11,11 @@ class Divisions extends PureComponent {
     this.state = {
       tableUser: [
         {
-          id: '',
-          name: '',
-          updated_at: '',
-          companyName: '',
+          id: "",
+          name: "",
+          updated_at: "",
+          companyName: "",
           users: 0,
-          
         },
       ],
       selectedUser: null,
@@ -26,12 +25,13 @@ class Divisions extends PureComponent {
 
   async componentDidMount() {
     await getDivisions().then((result) => {
-      this.setState({ tableUser: result.data.divisions.map((val) => ({
-        ...val,
-        companyName: val.company.name,
-        users: val.users_aggregate.aggregate.count,
-      }))
-    });
+      this.setState({
+        tableUser: result.data.divisions.map((val) => ({
+          ...val,
+          companyName: val.company.name,
+          users: val.users_aggregate.aggregate.count,
+        })),
+      });
     });
   }
 
@@ -69,7 +69,6 @@ class Divisions extends PureComponent {
                     <th>Users</th>
                     <th>Updated at</th>
                     <th>Actions</th>
-                   
                   </tr>
                 </thead>
                 <tbody>
