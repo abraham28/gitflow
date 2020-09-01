@@ -1,6 +1,5 @@
 import React, { PureComponent } from "react";
 import "./login.scss";
-import { Link } from "react-router-dom";
 import { login, getUsers } from "../../graphqlAPI";
 import Header from "../header/header";
 
@@ -13,6 +12,10 @@ class Login extends PureComponent {
       message: "Please fill up email and password",
       submitted: false,
     };
+    const userJSON = localStorage.getItem("user");
+    if (userJSON !== null) {
+      window.location.href = "/";
+    }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
@@ -43,9 +46,7 @@ class Login extends PureComponent {
       alert(message);
     }
   };
-  async componentDidMount() {
-    const users = await getUsers();
-  }
+
   render() {
     const { email, password, submitted } = this.state;
     return (
