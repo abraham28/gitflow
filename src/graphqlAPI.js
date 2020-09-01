@@ -101,20 +101,19 @@ export function login(email, password) {
  * For updating users
  */
 export function updateUser(email, updateValues) {
+  const { role, ...rest } = updateValues;
   const operationsDoc = `
     mutation updateUser {
-      update_users(
-        where: {email: {_eq: ${email}}}, 
-        _set: {${createGqlObj(updateValues)}}
+      update_users_by_pk(
+        pk_columns: {email: "${email}"}, 
+        _set: {${createGqlObj(rest)}, role:${role}}
       ) {
-        returning {
-          email
-          first_name
-          last_name
-          role
-          created_at
-          updated_at
-        }
+        email
+        first_name
+        last_name
+        role
+        created_at
+        updated_at
       }
     }
   `;

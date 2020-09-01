@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from "react";
-import { getUsers, getRoles, createUser } from "../../graphqlAPI";
+import { getUsers, getRoles, createUser, updateUser } from "../../graphqlAPI";
 import { Link } from "react-router-dom";
 import paths from "../../resources/paths";
 
@@ -52,6 +52,7 @@ class AdminForm extends PureComponent {
         divisions: "",
         companies: "",
       },
+      isUpdate: Boolean(props.user),
     };
   }
   async componentDidMount() {
@@ -74,30 +75,57 @@ class AdminForm extends PureComponent {
         divisions: ${this.state.divisions}
         Password: ${this.state.password}
       `);
-      await createUser({
-        first_name: this.state.first_name,
-        last_name: this.state.last_name,
-        email: this.state.email,
-        password: this.state.password,
-        role: this.state.role,
-        companies: this.state.companies,
-        divisions: this.state.divisions,
-      })
-        .then((result) => {
-          if (result.errors) {
-            const uniq = new RegExp("Uniqueness violation");
-            if (uniq.test(result.errors[0].message)) {
-              alert("Email already exists");
-            } else {
-              alert(result.errors[0].message);
-            }
-          } else {
-            alert("user Created");
-            window.location.href = paths.admins;
-            console.log(result);
-          }
+      if (this.state.isUpdate) {
+        await updateUser(this.state.email, {
+          first_name: this.state.first_name,
+          last_name: this.state.last_name,
+          email: this.state.email,
+          password: this.state.password,
+          role: this.state.role,
+          companies: this.state.companies,
+          divisions: this.state.divisions,
         })
-        .catch((e) => console.log(e));
+          .then((result) => {
+            if (result.errors) {
+              const uniq = new RegExp("Uniqueness violation");
+              if (uniq.test(result.errors[0].message)) {
+                alert("Email already exists");
+              } else {
+                alert(result.errors[0].message);
+              }
+            } else {
+              alert(`${this.state.email} Updated!`);
+              window.location.href = paths.admins;
+              console.log(result);
+            }
+          })
+          .catch((e) => console.log(e));
+      } else {
+        await createUser({
+          first_name: this.state.first_name,
+          last_name: this.state.last_name,
+          email: this.state.email,
+          password: this.state.password,
+          role: this.state.role,
+          companies: this.state.companies,
+          divisions: this.state.divisions,
+        })
+          .then((result) => {
+            if (result.errors) {
+              const uniq = new RegExp("Uniqueness violation");
+              if (uniq.test(result.errors[0].message)) {
+                alert("Email already exists");
+              } else {
+                alert(result.errors[0].message);
+              }
+            } else {
+              alert("user Created");
+              window.location.href = paths.admins;
+              console.log(result);
+            }
+          })
+          .catch((e) => console.log(e));
+      }
     } else {
       alert("FORM INVALID COMPLETE THE FORM");
     }
