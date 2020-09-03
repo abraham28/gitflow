@@ -34,7 +34,7 @@ async function fetchGraphQL(operationsDoc, operationName, variables) {
  * roles: [super_admin,system_admin,company_admin,division_admin,user]
  * password can be sanitized on front-end
  */
-export function createUser(userModel) {
+export function createAdmin(userModel) {
   const { role, ...rest } = userModel;
   const createUserMutation = `
     mutation createUser {
@@ -241,7 +241,7 @@ export function deleteCompany(companyId) {
 export function createDivision(divisionModel) {
   const createDivisionMutation = `
     mutation createDivision {
-      insert_companies_one(object: {${createGqlObj(divisionModel)}}) {
+      insert_divisions_one(object: {${createGqlObj(divisionModel)}}) {
         id
         name
         updated_at
@@ -323,3 +323,31 @@ export function deleteDivision(divisionId) {
   `;
   return fetchGraphQL(deleteDivisionMutation, "deleteDivision", {});
 }
+
+export function createUser(userModel) {
+  const { role, ...rest } = userModel;
+  const createUserMutation = `
+    mutation createUser {
+      insert_users_one(object: {${createGqlObj(rest)},role:user}) {
+        email
+        first_name
+        last_name
+        password
+        role
+        created_at
+        updated_at
+        company {
+          name
+        }
+        division {
+          name
+        }
+        group {
+          name
+        }
+      }
+    }
+  `;
+  return fetchGraphQL(createUserMutation, "createUser", {});
+}
+

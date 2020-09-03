@@ -11,7 +11,9 @@ import paths from "./resources/paths";
 
 
 class App extends PureComponent {
+  
   render() {
+    
     return (
       <div className="wrap">
         <div className="inner">
@@ -33,7 +35,9 @@ class App extends PureComponent {
                   </div>
                 </Route>
                 <Route path={paths.divisions}>
-                  <div><Divisions/></div>
+                  <div>
+                    <Divisions />
+                  </div>
                 </Route>
                 <Route path={paths.groups}>
                   <div>groups</div>

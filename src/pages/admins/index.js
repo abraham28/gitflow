@@ -69,13 +69,14 @@ class Admins extends PureComponent {
                 <tbody>
                   {tableUser.length > 0 ? (
                     tableUser.map((user, index) => {
+                      const { email, first_name, last_name, role } = user;
                       return (
                         <tr key={index}>
-                          <td>{user.email}</td>
+                          <td>{email}</td>
                           <td>
-                            {user.first_name} {user.last_name}
+                            {first_name} {last_name}
                           </td>
-                          <td>{user.role}</td>
+                          <td>{role}</td>
                           <td className="btn-container">
                             <button
                               className="edit"

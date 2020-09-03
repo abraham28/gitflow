@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { NavLink, Route, Switch, Redirect } from "react-router-dom";
 import "../pages.scss";
-import { getDivisions, deleteUser } from "../../graphqlAPI";
+import { getDivisions, deleteDivision } from "../../graphqlAPI";
 import DivisionForm from "./division-form";
 import paths from "../../resources/paths";
 import { formatDate } from "../../helpers";
@@ -38,6 +38,7 @@ class Divisions extends PureComponent {
 
   render() {
     const { tableUser } = this.state;
+    console.log(tableUser);
     return (
       <Switch>
         {this.state.redirect &&
@@ -75,12 +76,18 @@ class Divisions extends PureComponent {
                 <tbody>
                   {tableUser.length > 0 ? (
                     tableUser.map((divisions, index) => {
+                      const {
+                        name,
+                        companyName,
+                        users,
+                        updated_at,
+                      } = divisions;
                       return (
                         <tr key={index}>
-                          <td>{divisions.name}</td>
-                          <td> {divisions.companyName} </td>
-                          <td>{divisions.users.toString()}</td>
-                          <td>{formatDate(divisions.updated_at)}</td>
+                          <td>{name}</td>
+                          <td> {companyName} </td>
+                          <td>{users.toString()}</td>
+                          <td>{formatDate(updated_at)}</td>
                           <td className="btn-container">
                             <button
                               className="edit"
@@ -97,22 +104,22 @@ class Divisions extends PureComponent {
                               className="delete"
                               onClick={async () => {
                                 const confirmed = window.confirm(
-                                  `are you sure you want to delete ${divisions.email}`
+                                  `are you sure you want to delete ${divisions.name}`
                                 );
                                 if (confirmed) {
-                                  deleteUser(divisions.email).then((result) => {
+                                  deleteDivision(divisions.id).then((result) => {
                                     if (result.errors) {
                                       alert(result.errors);
                                     } else if (
-                                      result.data.delete_users_by_pk === null
+                                      result.data.delete_divisions_by_pk === null
                                     ) {
                                       alert("no user has been deleted");
                                     } else if (
-                                      result.data.delete_users_by_pk.email
+                                      result.data.delete_divisions_by_pk.name
                                     ) {
                                       this.componentDidMount();
                                       alert(
-                                        `${result.data.delete_users_by_pk.email} has been deleted`
+                                        `${result.data.delete_divisions_by_pk.name} has been deleted`
                                       );
                                     } else {
                                       alert("unknown error");

@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from "react";
-import { getUsers, getRoles, createUser, updateUser } from "../../graphqlAPI";
+import { getUsers, getRoles, createAdmin, updateUser } from "../../graphqlAPI";
 import { Link } from "react-router-dom";
 import paths from "../../resources/paths";
 
@@ -101,7 +101,7 @@ class AdminForm extends PureComponent {
           })
           .catch((e) => console.log(e));
       } else {
-        await createUser({
+        await createAdmin({
           first_name: this.state.first_name,
           last_name: this.state.last_name,
           email: this.state.email,
@@ -282,6 +282,7 @@ class AdminForm extends PureComponent {
             </Fragment>
           )}
 
+            {/* for divisions permission */}
           {roleLevels.findIndex(({ value }) => this.state.role === value) >
             2 && (
             <Fragment>

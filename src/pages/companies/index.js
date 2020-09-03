@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { NavLink, Route, Switch, Redirect } from "react-router-dom";
 import "../pages.scss";
-import { getCompanies, deleteUser } from "../../graphqlAPI";
+import { getCompanies, deleteCompany } from "../../graphqlAPI";
 import CompanyForm from "./company-form";
 import paths from "../../resources/paths";
 import { formatDate } from "../../helpers";
@@ -74,13 +74,20 @@ class Admins extends PureComponent {
                 <tbody>
                   {tableUser.length > 0 ? (
                     tableUser.map((companies, index) => {
+                      const {
+                        name,
+                        divisions,
+                        users,
+                        created_at,
+                        updated_at,
+                      } = companies;
                       return (
                         <tr key={index}>
-                          <td>{companies.name}</td>
-                          <td>{companies.divisions}</td>
-                          <td>{companies.users.toString()}</td>
-                          <td>{formatDate(companies.created_at)}</td>
-                          <td>{formatDate(companies.updated_at)}</td>
+                          <td>{name}</td>
+                          <td>{divisions}</td>
+                          <td>{users.toString()}</td>
+                          <td>{formatDate(created_at)}</td>
+                          <td>{formatDate(updated_at)}</td>
                           <td className="btn-container">
                             <button
                               className="edit"
@@ -97,22 +104,22 @@ class Admins extends PureComponent {
                               className="delete"
                               onClick={async () => {
                                 const confirmed = window.confirm(
-                                  `are you sure you want to delete ${companies.email}`
+                                  `are you sure you want to delete ${companies.name}`
                                 );
                                 if (confirmed) {
-                                  deleteUser(companies.email).then((result) => {
+                                  deleteCompany(companies.id).then((result) => {
                                     if (result.errors) {
                                       alert(result.errors);
                                     } else if (
-                                      result.data.delete_users_by_pk === null
+                                      result.data.delete_companies_by_pk === null
                                     ) {
                                       alert("no user has been deleted");
                                     } else if (
-                                      result.data.delete_users_by_pk.email
+                                      result.data.delete_companies_by_pk.name
                                     ) {
                                       this.componentDidMount();
                                       alert(
-                                        `${result.data.delete_users_by_pk.email} has been deleted`
+                                        `${result.data.delete_companies_by_pk.name} has been deleted`
                                       );
                                     } else {
                                       alert("unknown error");
