@@ -313,13 +313,13 @@ export function getGroups() {
 //   return fetchGraphQL(operationsDoc, "updateCompany", {});
 // }
 
-// export function deleteCompany(companyId) {
-//   const deleteCompanyMutation = `
-//     mutation deleteCompany {
-//       delete_companies_by_pk(id: "${companyId}") {
-//         name
-//       }
-//     }
-//   `;
-//   return fetchGraphQL(deleteCompanyMutation, "deleteCompany", {});
-// }
+export function deleteDivision(divisionId) {
+  const deleteDivisionMutation = `
+    mutation deleteDivision {
+      delete_divisions_by_pk(id: "${divisionId}") {
+        name
+      }
+    }
+  `;
+  return fetchGraphQL(deleteDivisionMutation, "deleteDivision", {});
+}
