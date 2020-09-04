@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { NavLink, Route, Switch, Redirect } from "react-router-dom";
 import "../pages.scss";
-import { getUsers, deleteUser } from "../../graphqlAPI";
+import { getAdmin, deleteUser } from "../../graphqlAPI";
 import AdminForm from "./admin-form";
 import paths from "../../resources/paths";
 
@@ -9,6 +9,7 @@ class Admins extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+
       tableUser: [
         {
           email: "",
@@ -25,9 +26,9 @@ class Admins extends PureComponent {
   }
 
   async componentDidMount() {
-    const { users } = this.props;
-    await getUsers(users).then((data) => {
-      this.setState({ tableUser: data.data.users });
+    const users = await getAdmin();
+    await getAdmin(users).then((result) => {
+      this.setState({ tableUser: result.data.users });
     });
   }
 

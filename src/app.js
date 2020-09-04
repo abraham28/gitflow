@@ -7,6 +7,7 @@ import PageNotFound, { RedirectNotFound } from "./pages/pagenotfound";
 import Admins from "./pages/admins";
 import Companies from "./pages/companies";
 import Divisions from "./pages/divisions";
+import Users from "./pages/users";
 import paths from "./resources/paths";
 
 
@@ -43,7 +44,7 @@ class App extends PureComponent {
                   <div>groups</div>
                 </Route>
                 <Route path={paths.users}>
-                  <div>users</div>
+                  <div><Users /></div>
                 </Route>
                 <Route path={paths.root} exact>
                   <Redirect to="/admins" />

@@ -1,5 +1,5 @@
-import React, { PureComponent, Fragment } from "react";
-import { getCompanies, createDivision, updateUser } from "../../graphqlAPI";
+import React, { PureComponent } from "react";
+import { getCompanies,createDivision, updateDivision } from "../../graphqlAPI";
 import { Link } from "react-router-dom";
 import paths from "../../resources/paths";
 
@@ -19,33 +19,29 @@ const formValid = ({ formErrors, ...rest }) => {
   return valid;
 };
 
-const roleLevels = [
-  { value: "super_admin", label: "Super Admin" },
-  { value: "system_admin", label: "System Admin" },
-  { value: "company_admin", label: "Company Admin" },
-  { value: "division_admin", label: "Division Admin" },
-];
-
 class DivisionForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       companies: [],
       name: props.user && props.user.name,
-      company_id: props.user && props.user.company_id,
+      company_id: props.company && props.company.company_id,
       formErrors: {
-        name: "",
-        company_id: "",
+        name: '',
+        company_id: '',
       },
-      isUpdate: Boolean(props.user),
+      isUpdate: Boolean(props.division,props.company),
     };
   }
   
+  //check if company data didMount
   async componentDidMount() {
     const result = await getCompanies();
     this.setState({ companies: result.data.companies });
-    console.log(result);
+  console.log(result);
+  
   }
+
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,35 +49,24 @@ class DivisionForm extends PureComponent {
     if (formValid(this.state)) {
       console.log(`
         --SUBMITTING--
-        First Name: ${this.state.first_name}
-        Last Name: ${this.state.last_name}
-        Email: ${this.state.email}
-        role: ${this.state.role}
-        companies: ${this.state.companies}
-        divisions: ${this.state.divisions}
-        Password: ${this.state.password}
+        Division Name: ${this.state.name}
       `);
       if (this.state.isUpdate) {
-        await updateUser(this.state.email, {
-          first_name: this.state.first_name,
-          last_name: this.state.last_name,
-          email: this.state.email,
-          password: this.state.password,
-          role: this.state.role,
-          companies: this.state.companies,
-          divisions: this.state.divisions,
+        await updateDivision(this.props.division_id,  {
+          name: this.state.name,
+          company_id: this.state.company_id,
         })
           .then((result) => {
             if (result.errors) {
               const uniq = new RegExp("Uniqueness violation");
               if (uniq.test(result.errors[0].message)) {
-                alert("Email already exists");
+                alert("Division already exists");
               } else {
                 alert(result.errors[0].message);
               }
             } else {
-              alert(`${this.state.email} Updated!`);
-              window.location.href = paths.admins;
+              alert(`${this.state.name} Updated!`);
+              window.location.href = paths.divisions;
               console.log(result);
             }
           })
@@ -101,7 +86,7 @@ class DivisionForm extends PureComponent {
               }
             } else {
               alert("Division Created");
-              window.location.href = paths.admins;
+              window.location.href = paths.divisions;
               console.log(result);
             }
           })
@@ -137,7 +122,7 @@ class DivisionForm extends PureComponent {
           {/* Name field */}
           <input
             type="text"
-            placeholder="Name"
+            placeholder="Division Name"
             name="name"
             noValidate
             value={this.state.name}
@@ -160,10 +145,10 @@ class DivisionForm extends PureComponent {
               <option value={id}>{name}</option>
             ))}
           </select>
-            
+          
 
           <button type="submit">submit</button>
-          <Link to={paths.admins}>cancel</Link>
+          <Link to={paths.divisions}>cancel</Link>
         </form>
       </div>
     );

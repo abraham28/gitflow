@@ -2,13 +2,14 @@ export const root = "/";
 export const login = "/login";
 export const pageNotFound = "/404";
 export const admins = "/admins";
-export const adminsForm = "/admins/form";
 export const companies = "/companies";
 export const divisions = "/divisions";
 export const groups = "/groups";
 export const users = "/users";
+export const adminsForm = "/admins/form";
 export const companiesForm = "/companies/form"
 export const divisionsForm = "/divisions/form"
+export const usersForm = "/users/form"
 export default {
   root,
   login,
@@ -21,4 +22,5 @@ export default {
   adminsForm,
   companiesForm,
   divisionsForm,
+  usersForm,
 };

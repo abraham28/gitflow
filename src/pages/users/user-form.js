@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from "react";
-import { getAdmin, getRoles, createAdmin, updateAdmin } from "../../graphqlAPI";
+import {  createUser, getUsers, getRoles, updateAdmin } from "../../graphqlAPI";
 import { Link } from "react-router-dom";
 import paths from "../../resources/paths";
 
@@ -24,13 +24,10 @@ const formValid = ({ formErrors, ...rest }) => {
 };
 
 const roleLevels = [
-  { value: "super_admin", label: "Super Admin" },
-  { value: "system_admin", label: "System Admin" },
-  { value: "company_admin", label: "Company Admin" },
-  { value: "division_admin", label: "Division Admin" },
+  { value: "user", label: "Users" },
 ];
 
-class AdminForm extends PureComponent {
+class UserForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +36,7 @@ class AdminForm extends PureComponent {
       last_name: props.user && props.user.last_name,
       role: props.user && props.user.role,
       company: props.company && props.company.name,
-      division: props.user && props.user.division,
+      division: props.division && props.division.division,
       password: null,
       confirmpassword: null,
       formErrors: {
@@ -56,7 +53,7 @@ class AdminForm extends PureComponent {
     };
   }
   async componentDidMount() {
-    const users = await getAdmin();
+    const users = await getUsers();
     const roles = await getRoles();
     console.log(users);
     console.log(roles);
@@ -101,7 +98,7 @@ class AdminForm extends PureComponent {
           })
           .catch((e) => console.log(e));
       } else {
-        await createAdmin({
+        await createUser({
           first_name: this.state.first_name,
           last_name: this.state.last_name,
           email: this.state.email,
@@ -200,7 +197,7 @@ class AdminForm extends PureComponent {
             {roleLevels.map(({ value, label }) => (
               <option value={value}>{label}</option>
             ))}
-          </select>
+          </select> 
 
           <input
             placeholder="Email Address"
@@ -265,7 +262,7 @@ class AdminForm extends PureComponent {
             <span className="errorMessage">{formErrors.last_name}</span>
           )}
 
-          {roleLevels.findIndex(({ value }) => this.state.role === value) >
+          {/* {roleLevels.findIndex(({ value }) => this.state.role === value) >
             1 && (
             <Fragment>
               <input
@@ -280,9 +277,9 @@ class AdminForm extends PureComponent {
                 <span className="errorMessage">{formErrors.company}</span>
               )}
             </Fragment>
-          )}
+          )} */}
 
-          {roleLevels.findIndex(({ value }) => this.state.role === value) >
+          {/* {roleLevels.findIndex(({ value }) => this.state.role === value) >
             2 && (
             <Fragment>
               <input
@@ -297,13 +294,13 @@ class AdminForm extends PureComponent {
                 <span className="errorMessage">{formErrors.division}</span>
               )}
             </Fragment>
-          )}
+          )} */}
           <button type="submit">submit</button>
-          <Link to={paths.admins}>cancel</Link>
+          <Link to={paths.users}>cancel</Link>
         </form>
       </div>
     );
   }
 }
 
-export default AdminForm;
+export default UserForm;

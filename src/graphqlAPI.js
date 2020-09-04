@@ -37,35 +37,38 @@ async function fetchGraphQL(operationsDoc, operationName, variables) {
 export function createAdmin(userModel) {
   const { role, ...rest } = userModel;
   const createUserMutation = `
-    mutation createUser {
+    mutation createAdmin {
       insert_users_one(object: {${createGqlObj(rest)},role:${role}}) {
         email
         first_name
         last_name
         password
-        companies
-        divisions
+        company {
+          name
+        }
+        division {
+          name
+        }
         role
         created_at
         updated_at
+        
       }
     }
   `;
-  return fetchGraphQL(createUserMutation, "createUser", {});
+  return fetchGraphQL(createUserMutation, "createAdmin", {});
 }
 
 /**
  * For getting all users
  */
-export function getUsers() {
+export function getAdmin() {
   const getUsersQuery = `
-  query getUsers {
+  query getAdmin {
     users {
       email
       first_name
       last_name
-      companies
-      divisions
       role
       created_at
       updated_at
@@ -73,16 +76,16 @@ export function getUsers() {
     }
   }
   `;
-  return fetchGraphQL(getUsersQuery, "getUsers", {});
+  return fetchGraphQL(getUsersQuery, "getAdmin", {});
 }
 
 /**
  * For updating users
  */
-export function updateUser(email, updateValues) {
+export function updateAdmin(email, updateValues) {
   const { role, ...rest } = updateValues;
   const operationsDoc = `
-    mutation updateUser {
+    mutation updateAdmin {
       update_users_by_pk(
         pk_columns: {email: "${email}"}, 
         _set: {${createGqlObj(rest)}, role:${role}}
@@ -90,13 +93,15 @@ export function updateUser(email, updateValues) {
         email
         first_name
         last_name
+        company
+        division
         role
         created_at
         updated_at
       }
     }
   `;
-  return fetchGraphQL(operationsDoc, "updateUser", {});
+  return fetchGraphQL(operationsDoc, "updateAdmin", {});
 }
 
 /**
@@ -278,6 +283,39 @@ export function getDivisions() {
   return fetchGraphQL(getDivisionsQuery, "getDivisions", {});
 }
 
+export function deleteDivision(divisionId) {
+  const deleteDivisionMutation = `
+    mutation deleteDivision {
+      delete_divisions_by_pk(id: "${divisionId}") {
+        name
+      }
+    }
+  `;
+  return fetchGraphQL(deleteDivisionMutation, "deleteDivision", {});
+}
+
+export function updateDivision(divisionId, updateValues) {
+  const operationsDoc = `
+    mutation updateDivision {
+      update_divisions_by_pk(
+        pk_columns: {id: "${divisionId}"}, 
+        _set: {${createGqlObj(updateValues)}}
+      ) {
+        id
+        name
+        updated_at
+        created_at
+        users_aggregate {
+          aggregate {
+            count
+          }
+        }
+      }
+    }
+  `;
+  return fetchGraphQL(operationsDoc, "updateDivision", {});
+}
+
 export function getGroups() {
   const getGroupsQuery = `
   query getGroups {
@@ -313,16 +351,7 @@ export function getGroups() {
 //   return fetchGraphQL(operationsDoc, "updateCompany", {});
 // }
 
-export function deleteDivision(divisionId) {
-  const deleteDivisionMutation = `
-    mutation deleteDivision {
-      delete_divisions_by_pk(id: "${divisionId}") {
-        name
-      }
-    }
-  `;
-  return fetchGraphQL(deleteDivisionMutation, "deleteDivision", {});
-}
+
 
 export function createUser(userModel) {
   const { role, ...rest } = userModel;
@@ -349,5 +378,25 @@ export function createUser(userModel) {
     }
   `;
   return fetchGraphQL(createUserMutation, "createUser", {});
+}
+
+/**
+ * For getting all users
+ */
+export function getUsers() {
+  const getUsersQuery = `
+  query getUsers {
+    users {
+      email
+      first_name
+      last_name
+      role
+      created_at
+      updated_at
+
+    }
+  }
+  `;
+  return fetchGraphQL(getUsersQuery, "getUsers", {});
 }
 

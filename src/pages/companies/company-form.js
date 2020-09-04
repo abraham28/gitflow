@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { getUsers, getRoles, createCompany, updateUser } from "../../graphqlAPI";
+import { createCompany, updateCompany } from "../../graphqlAPI";
 import { Link } from "react-router-dom";
 import paths from "../../resources/paths";
 
@@ -24,22 +24,20 @@ class CompanyForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      
+      name: props.company && props.company.name,
       formErrors: {
         id: '',
         name: '',
         updated_at: '',
         created_at: '',
       },
-      isUpdate: Boolean(props.user),
+      isUpdate: Boolean(props.company),
+
     };
+    console.log(props);
   }
-  async componentDidMount() {
-    const users = await getUsers();
-    const roles = await getRoles();
-    console.log(users);
-    console.log(roles);
-  }
+
+
   handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -49,26 +47,20 @@ class CompanyForm extends PureComponent {
           Name: ${this.state.name}
       `);
       if (this.state.isUpdate) {
-        await updateUser(this.state.email, {
-          first_name: this.state.first_name,
-          last_name: this.state.last_name,
-          email: this.state.email,
-          password: this.state.password,
-          role: this.state.role,
-          companies: this.state.companies,
-          divisions: this.state.divisions,
+        await updateCompany(this.props.company.id, {
+          name: this.state.name,
         })
           .then((result) => {
             if (result.errors) {
               const uniq = new RegExp("Uniqueness violation");
               if (uniq.test(result.errors[0].message)) {
-                alert("Email already exists");
+                alert("Company Name already exists");
               } else {
                 alert(result.errors[0].message);
               }
             } else {
-              alert(`${this.state.email} Updated!`);
-              window.location.href = paths.admins;
+              alert(`${this.state.name} Updated!`);
+              window.location.href = paths.companies;
               console.log(result);
             }
           })
@@ -81,12 +73,12 @@ class CompanyForm extends PureComponent {
             if (result.errors) {
               const uniq = new RegExp("Uniqueness violation");
               if (uniq.test(result.errors[0].message)) {
-                alert("Email already exists");
+                alert("Company Name already exists");
               } else {
                 alert(result.errors[0].message);
               }
             } else {
-              alert("user Created");
+              alert("Company Created");
               window.location.href = paths.companies;
               console.log(result);
             }
