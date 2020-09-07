@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from "react";
-import { getAdmin, getRoles, createAdmin, updateAdmin } from "../../graphqlAPI";
+import { getAdmin, getRoles, createAdmin, updateAdmin,getCompanies,getDivisions } from "../../graphqlAPI";
 import { Link } from "react-router-dom";
 import paths from "../../resources/paths";
 
@@ -24,6 +24,7 @@ const formValid = ({ formErrors, ...rest }) => {
 };
 
 const roleLevels = [
+  { value: "user", label: "Users" },
   { value: "super_admin", label: "Super Admin" },
   { value: "system_admin", label: "System Admin" },
   { value: "company_admin", label: "Company Admin" },
@@ -34,12 +35,14 @@ class AdminForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      companies: [],
+      divisions: [],
       email: props.user && props.user.email,
       first_name: props.user && props.user.first_name,
       last_name: props.user && props.user.last_name,
       role: props.user && props.user.role,
-      company: props.company && props.company.name,
-      division: props.user && props.user.division,
+      company_id: props.user && props.user.company_id,
+      division_id: props.user && props.user.division_id,
       password: null,
       confirmpassword: null,
       formErrors: {
@@ -49,31 +52,37 @@ class AdminForm extends PureComponent {
         password: "",
         confirmpassword: "",
         role: "",
-        division: "",
-        company: "",
+        company_id: '',
+        division_id: '',
       },
       isUpdate: Boolean(props.user),
     };
   }
   async componentDidMount() {
     const users = await getAdmin();
+    console.log(users)
     const roles = await getRoles();
-    console.log(users);
     console.log(roles);
+    const result = await getCompanies();
+    this.setState({ companies: result.data.companies });
+    console.log(result);
+    const divisionResult = await getDivisions();
+    this.setState({ divisions: divisionResult.data.divisions });
+    console.log(divisionResult);
   }
   handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formValid(this.state)) {
       console.log(`
-        --SUBMITTING--
-        First Name: ${this.state.first_name}
-        Last Name: ${this.state.last_name}
-        Email: ${this.state.email}
-        role: ${this.state.role}
-        companies: ${this.state.company}
-        divisions: ${this.state.division}
-        Password: ${this.state.password}
+      --SUBMITTING--
+      First Name: ${this.state.first_name}
+      Last Name: ${this.state.last_name}
+      Email: ${this.state.email}
+      role: ${this.state.role}
+      companies: ${this.state.company_id}
+      divisions: ${this.state.division_id}
+      Password: ${this.state.password}
       `);
       if (this.state.isUpdate) {
         await updateAdmin(this.state.email, {
@@ -82,8 +91,8 @@ class AdminForm extends PureComponent {
           email: this.state.email,
           password: this.state.password,
           role: this.state.role,
-          company: this.state.company,
-          division: this.state.division,
+          company_id: this.state.company_id,
+          division_id: this.state.division_id,
         })
           .then((result) => {
             if (result.errors) {
@@ -107,8 +116,8 @@ class AdminForm extends PureComponent {
           email: this.state.email,
           password: this.state.password,
           role: this.state.role,
-          company: this.state.company,
-          division: this.state.division,
+          company_id: this.state.company_id,
+          division_id: this.state.division_id,
         })
           .then((result) => {
             if (result.errors) {
@@ -148,11 +157,11 @@ class AdminForm extends PureComponent {
         break;
 
       case "company":
-        formErrors.company = value.length > 0 ? "" : "please input companies";
+        formErrors.company_id = value.length > 0 ? "" : "please input companies";
         break;
 
       case "division":
-        formErrors.division = value.length > 0 ? "" : "please input division";
+        formErrors.division_id = value.length > 0 ? "" : "please input division";
         break;
 
       case "email":
@@ -192,7 +201,7 @@ class AdminForm extends PureComponent {
           <select
             onChange={this.handleChange}
             name="role"
-            value={this.state.role}
+            defaultValue={this.state.role}
           >
             <option selected hidden disabled>
               ---Please Select---
@@ -265,39 +274,43 @@ class AdminForm extends PureComponent {
             <span className="errorMessage">{formErrors.last_name}</span>
           )}
 
-          {roleLevels.findIndex(({ value }) => this.state.role === value) >
-            1 && (
+           {roleLevels.findIndex(({ value }) => this.state.role === value) >
+            2 && ( 
             <Fragment>
-              <input
-                type="text"
-                placeholder="Company Name"
-                name="companies"
-                noValidate
-                value={this.state.name}
-                onChange={this.handleChange}
-              />
-              {formErrors.company.length > 0 && (
-                <span className="errorMessage">{formErrors.company}</span>
-              )}
+              
+          <select
+            onChange={this.handleChange}
+            name="company_id"
+            value={this.state.company_id}
+          >
+            <option selected hidden disabled>
+              ---Select Company---
+            </option>
+            {this.state.companies.map(({ id, name }) => (
+              <option value={id}>{name}</option>
+            ))}
+          </select>
             </Fragment>
-          )}
+            )} 
 
-          {roleLevels.findIndex(({ value }) => this.state.role === value) >
-            2 && (
+           {roleLevels.findIndex(({ value }) => this.state.role === value) >
+            3 && ( 
             <Fragment>
-              <input
-                placeholder="Division"
-                type="text"
-                name="divisions"
-                noValidate
-                value={this.state.division}
-                onChange={this.handleChange}
-              />
-              {formErrors.division.length > 0 && (
-                <span className="errorMessage">{formErrors.division}</span>
-              )}
+        
+          <select
+            onChange={this.handleChange}
+            name="division_id"
+            value={this.state.division_id}
+          >
+            <option selected hidden disabled>
+              ---Select Division---
+            </option>
+            {this.state.divisions.map(({ id, name }) => (
+              <option value={id}>{name}</option>
+            ))}
+          </select>
             </Fragment>
-          )}
+           )}
           <button type="submit">submit</button>
           <Link to={paths.admins}>cancel</Link>
         </form>

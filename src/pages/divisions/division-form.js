@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { getCompanies,createDivision, updateDivision } from "../../graphqlAPI";
+import { getCompanies, createDivision, updateDivision } from "../../graphqlAPI";
 import { Link } from "react-router-dom";
 import paths from "../../resources/paths";
 
@@ -24,17 +24,17 @@ class DivisionForm extends PureComponent {
     super(props);
     this.state = {
       companies: [],
-      name: props.user && props.user.name,
-      company_id: props.company && props.company.company_id,
+      name: props.division && props.division.name,
+      company_id: props.division && props.division.company_id,
       formErrors: {
         name: '',
         company_id: '',
       },
-      isUpdate: Boolean(props.division,props.company),
+      isUpdate: Boolean(props.division),
     };
   }
   
-  //check if company data didMount
+  // check if company data didMount
   async componentDidMount() {
     const result = await getCompanies();
     this.setState({ companies: result.data.companies });
@@ -50,11 +50,12 @@ class DivisionForm extends PureComponent {
       console.log(`
         --SUBMITTING--
         Division Name: ${this.state.name}
+        Company Name: ${this.state.company_id}
       `);
       if (this.state.isUpdate) {
-        await updateDivision(this.props.division_id,  {
+        await updateDivision(this.props.division.id,  {
           name: this.state.name,
-          company_id: this.state.company_id,
+           company_id: this.state.company_id,
         })
           .then((result) => {
             if (result.errors) {
@@ -132,7 +133,7 @@ class DivisionForm extends PureComponent {
             <span className="errorMessage">{formErrors.name}</span>
           )}
 
-          {/* option field */}
+           {/* option field */}
           <select
             onChange={this.handleChange}
             name="company_id"
@@ -144,7 +145,7 @@ class DivisionForm extends PureComponent {
             {this.state.companies.map(({ id, name }) => (
               <option value={id}>{name}</option>
             ))}
-          </select>
+          </select> 
           
 
           <button type="submit">submit</button>

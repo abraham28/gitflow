@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { NavLink, Route, Switch, Redirect } from "react-router-dom";
 import "../pages.scss";
-import { getAdmin, deleteUser } from "../../graphqlAPI";
+import { getUsers, deleteUser } from "../../graphqlAPI";
 import paths from "../../resources/paths";
 import UserForm from "./user-form";
 
@@ -9,13 +9,14 @@ class Users extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-
       tableUser: [
         {
           email: "",
           first_name: "",
           last_name: "",
           role: "",
+          companyName: "",
+          divisionName: "",
           created_at: "",
           updated_at: "",
         },
@@ -26,9 +27,20 @@ class Users extends PureComponent {
   }
 
   async componentDidMount() {
-    const users = await getAdmin();
-    await getAdmin(users).then((result) => {
-      this.setState({ tableUser: result.data.users });
+    // const users = await getUsers();
+    // await getUsers(users).then((result) => {
+    //   this.setState({ tableUser: result.data.users });
+    // });
+
+    await getUsers().then((result) => {
+      console.log(result);
+      this.setState({
+        tableUser: result.data.users.map((val) => ({
+          ...val,
+          companyName: val.company.name,
+          divisionName: val.division.name,
+        })),
+      });
     });
   }
 
@@ -63,6 +75,8 @@ class Users extends PureComponent {
                   <tr>
                     <th>Email</th>
                     <th>Full Name</th>
+                    <th>Company</th>
+                    <th>Division</th>
                     <th>Role</th>
                     <th>Actions</th>
                   </tr>
@@ -70,13 +84,22 @@ class Users extends PureComponent {
                 <tbody>
                   {tableUser.length > 0 ? (
                     tableUser.map((user, index) => {
-                      const { email, first_name, last_name, role } = user;
+                      const {
+                        email,
+                        first_name,
+                        last_name,
+                        role,
+                        companyName,
+                        divisionName,
+                      } = user;
                       return (
                         <tr key={index}>
                           <td>{email}</td>
                           <td>
                             {first_name} {last_name}
                           </td>
+                          <td>{companyName}</td>
+                          <td>{divisionName}</td>
                           <td>{role}</td>
                           <td className="btn-container">
                             <button
@@ -84,7 +107,7 @@ class Users extends PureComponent {
                               onClick={() => {
                                 this.setState({
                                   selectedUser: user,
-                                  redirect: paths.adminsForm,
+                                  redirect: paths.usersForm,
                                 });
                               }}
                             >

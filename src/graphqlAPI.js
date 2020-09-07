@@ -39,20 +39,15 @@ export function createAdmin(userModel) {
   const createUserMutation = `
     mutation createAdmin {
       insert_users_one(object: {${createGqlObj(rest)},role:${role}}) {
+        role
         email
         first_name
         last_name
         password
-        company {
-          name
-        }
-        division {
-          name
-        }
-        role
         created_at
         updated_at
-        
+        company_id
+        division_id
       }
     }
   `;
@@ -65,13 +60,19 @@ export function createAdmin(userModel) {
 export function getAdmin() {
   const getUsersQuery = `
   query getAdmin {
-    users {
+    users (where: {role: {_neq: user}}) {
       email
       first_name
       last_name
+      company_id
+      company {
+        name
+      }
+      division_id
+      division {
+        name
+      }
       role
-      created_at
-      updated_at
 
     }
   }
@@ -93,11 +94,12 @@ export function updateAdmin(email, updateValues) {
         email
         first_name
         last_name
-        company
-        division
+        password
         role
         created_at
         updated_at
+        company_id
+        division_id
       }
     }
   `;
@@ -269,6 +271,7 @@ export function getDivisions() {
       name
       updated_at
       created_at
+      company_id
       company {
         name
       }
@@ -365,12 +368,8 @@ export function createUser(userModel) {
         role
         created_at
         updated_at
-        company {
-          name
-        }
-        division {
-          name
-        }
+        company_id
+        division_id
         group {
           name
         }
@@ -386,17 +385,44 @@ export function createUser(userModel) {
 export function getUsers() {
   const getUsersQuery = `
   query getUsers {
-    users {
+    users(where: {role: {_eq: user}}) {
       email
       first_name
       last_name
+      company_id
+      company {
+        name
+      }
+      division_id
+      division {
+        name
+      }
       role
-      created_at
-      updated_at
-
     }
   }
   `;
   return fetchGraphQL(getUsersQuery, "getUsers", {});
+}
+export function updateUsers(email, updateValues) {
+  const { role, ...rest } = updateValues;
+  const operationsDoc = `
+    mutation updateUsers {
+      update_users_by_pk(
+        pk_columns: {email: "${email}"}, 
+        _set: {${createGqlObj(rest)}, role:${role}}
+      ) {
+        email
+        first_name
+        last_name
+        password
+        role
+        created_at
+        updated_at
+        company_id
+        division_id
+      }
+    }
+  `;
+  return fetchGraphQL(operationsDoc, "updateUsers", {});
 }
 

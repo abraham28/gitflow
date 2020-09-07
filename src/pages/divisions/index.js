@@ -6,6 +6,7 @@ import DivisionForm from "./division-form";
 import paths from "../../resources/paths";
 import { formatDate } from "../../helpers";
 
+
 class Divisions extends PureComponent {
   constructor(props) {
     super(props);
@@ -15,23 +16,24 @@ class Divisions extends PureComponent {
           id: "",
           name: "",
           updated_at: "",
-          companyName: "",
+          // companyName: "",
           users: 0,
         },
       ],
-      selectedUser: null,
+      selectedDivision: null,
       redirect: null,
     };
   }
 
   async componentDidMount() {
     await getDivisions().then((result) => {
+      console.log(result);
       this.setState({
         tableUser: result.data.divisions.map((val) => ({
           ...val,
-          companyName: val.company.name,
           users: val.users_aggregate.aggregate.count,
-        })),
+          // companyName: val.company.name,   
+        })),   
       });
     });
   }
@@ -48,14 +50,14 @@ class Divisions extends PureComponent {
             return <Redirect to={this.state.redirect} push />;
           })()}
         <Route path={paths.divisionsForm}>
-          <DivisionForm user={this.state.selectedUser} />
+          <DivisionForm division={this.state.selectedDivision} />
         </Route>
         <Route>
           <div className="super-container">
             <h2>Division</h2>
             <NavLink
               to={paths.divisionsForm}
-              onClick={() => this.setState({ selectedUser: null })}
+              onClick={() => this.setState({ selectedDivision: null })}
             >
               <button type="button" className="btn btn-info">
                 Add
@@ -67,7 +69,7 @@ class Divisions extends PureComponent {
                 <thead>
                   <tr>
                     <th>Division</th>
-                    <th>Company Name</th>
+                     {/* <th>Company Name</th> */}
                     <th>Users</th>
                     <th>Updated at</th>
                     <th>Actions</th>
@@ -78,14 +80,14 @@ class Divisions extends PureComponent {
                     tableUser.map((divisions, index) => {
                       const {
                         name,
-                        companyName,
+                        // companyName,
                         users,
                         updated_at,
                       } = divisions;
                       return (
                         <tr key={index}>
                           <td>{name}</td>
-                          <td> {companyName} </td>
+                           {/* <td> {companyName} </td> */}
                           <td>{users.toString()}</td>
                           <td>{formatDate(updated_at)}</td>
                           <td className="btn-container">
@@ -93,7 +95,7 @@ class Divisions extends PureComponent {
                               className="edit"
                               onClick={() => {
                                 this.setState({
-                                  selectedUser: divisions,
+                                  selectedDivision: divisions,
                                   redirect: paths.divisionsForm,
                                 });
                               }}
@@ -148,5 +150,7 @@ class Divisions extends PureComponent {
     );
   }
 }
+
+
 
 export default Divisions;

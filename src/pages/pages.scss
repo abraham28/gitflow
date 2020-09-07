@@ -2,6 +2,7 @@
 .form-container {
   width: 44.7%;
   margin: 0 auto;
+  height: 601px;
 }
 .form-container form {
   height: 540px;
@@ -31,12 +32,13 @@
   text-align: center;
   display: block;
   height: 8%;
-  padding: 0 163px;
+  width: 465px;
+  margin: 0 auto;
   margin-bottom: 19px;
 }
 .form-container select {
   width: 498px;
-  margin: 13px 0
+  margin: 13px 58px;
 }
 #title {
   text-align: center;
@@ -115,4 +117,8 @@
 }
 .btn-info:hover {
   background:green;
+}
+.errorMessage {
+  color: red;
+  margin: 0 179px;
 }

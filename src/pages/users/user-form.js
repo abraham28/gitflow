@@ -1,5 +1,12 @@
-import React, { PureComponent, Fragment } from "react";
-import {  createUser, getUsers, getRoles, updateAdmin } from "../../graphqlAPI";
+import React, { PureComponent } from "react";
+import {
+  createUser,
+  getUsers,
+  getRoles,
+  updateUsers,
+  getCompanies,
+  getDivisions,
+} from "../../graphqlAPI";
 import { Link } from "react-router-dom";
 import paths from "../../resources/paths";
 
@@ -23,20 +30,20 @@ const formValid = ({ formErrors, ...rest }) => {
   return valid;
 };
 
-const roleLevels = [
-  { value: "user", label: "Users" },
-];
+const roleLevels = [{ value: "user", label: "Users" }];
 
 class UserForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      companies: [],
+      divisions: [],
       email: props.user && props.user.email,
       first_name: props.user && props.user.first_name,
       last_name: props.user && props.user.last_name,
       role: props.user && props.user.role,
-      company: props.company && props.company.name,
-      division: props.division && props.division.division,
+      company_id: props.user && props.user.company_id,
+      division_id: props.user && props.user.division_id,
       password: null,
       confirmpassword: null,
       formErrors: {
@@ -46,21 +53,29 @@ class UserForm extends PureComponent {
         password: "",
         confirmpassword: "",
         role: "",
-        division: "",
-        company: "",
+        company_id: '',
+        division_id: '',
       },
       isUpdate: Boolean(props.user),
     };
   }
   async componentDidMount() {
     const users = await getUsers();
+    console.log(users)
     const roles = await getRoles();
-    console.log(users);
     console.log(roles);
+    const result = await getCompanies();
+    this.setState({ companies: result.data.companies });
+    console.log(result);
+    const divisionResult = await getDivisions();
+    this.setState({ divisions: divisionResult.data.divisions });
+    console.log(divisionResult);
   }
+
   handleSubmit = async (e) => {
     e.preventDefault();
 
+    //if form doesnt have error
     if (formValid(this.state)) {
       console.log(`
         --SUBMITTING--
@@ -68,19 +83,21 @@ class UserForm extends PureComponent {
         Last Name: ${this.state.last_name}
         Email: ${this.state.email}
         role: ${this.state.role}
-        companies: ${this.state.company}
-        divisions: ${this.state.division}
+        companies: ${this.state.company_id}
+        divisions: ${this.state.division_id}
         Password: ${this.state.password}
       `);
+
+      //for users update
       if (this.state.isUpdate) {
-        await updateAdmin(this.state.email, {
+        await updateUsers(this.state.email, {
           first_name: this.state.first_name,
           last_name: this.state.last_name,
           email: this.state.email,
           password: this.state.password,
           role: this.state.role,
-          company: this.state.company,
-          division: this.state.division,
+          company_id: this.state.company_id,
+          division_id: this.state.division_id,
         })
           .then((result) => {
             if (result.errors) {
@@ -92,20 +109,23 @@ class UserForm extends PureComponent {
               }
             } else {
               alert(`${this.state.email} Updated!`);
-              window.location.href = paths.admins;
+              window.location.href = paths.users;
               console.log(result);
             }
           })
           .catch((e) => console.log(e));
-      } else {
+      }
+
+      //users create if there is no to update
+      else {
         await createUser({
           first_name: this.state.first_name,
           last_name: this.state.last_name,
           email: this.state.email,
           password: this.state.password,
           role: this.state.role,
-          company: this.state.company,
-          division: this.state.division,
+          company_id: this.state.company_id,
+          division_id: this.state.division_id,
         })
           .then((result) => {
             if (result.errors) {
@@ -117,7 +137,7 @@ class UserForm extends PureComponent {
               }
             } else {
               alert("user Created");
-              window.location.href = paths.admins;
+              window.location.href = paths.users;
               console.log(result);
             }
           })
@@ -145,11 +165,13 @@ class UserForm extends PureComponent {
         break;
 
       case "company":
-        formErrors.company = value.length > 0 ? "" : "please input companies";
+        formErrors.company_id =
+          value.length > 0 ? "" : "please input companies";
         break;
 
       case "division":
-        formErrors.division = value.length > 0 ? "" : "please input division";
+        formErrors.division_id =
+          value.length > 0 ? "" : "please input division";
         break;
 
       case "email":
@@ -189,7 +211,7 @@ class UserForm extends PureComponent {
           <select
             onChange={this.handleChange}
             name="role"
-            value={this.state.role}
+            defaultValue={this.state.role}
           >
             <option selected hidden disabled>
               ---Please Select---
@@ -197,7 +219,7 @@ class UserForm extends PureComponent {
             {roleLevels.map(({ value, label }) => (
               <option value={value}>{label}</option>
             ))}
-          </select> 
+          </select>
 
           <input
             placeholder="Email Address"
@@ -262,39 +284,34 @@ class UserForm extends PureComponent {
             <span className="errorMessage">{formErrors.last_name}</span>
           )}
 
-          {/* {roleLevels.findIndex(({ value }) => this.state.role === value) >
-            1 && (
-            <Fragment>
-              <input
-                type="text"
-                placeholder="Company Name"
-                name="companies"
-                noValidate
-                value={this.state.name}
-                onChange={this.handleChange}
-              />
-              {formErrors.company.length > 0 && (
-                <span className="errorMessage">{formErrors.company}</span>
-              )}
-            </Fragment>
-          )} */}
+          {/* option field for company */}
+          <select
+            onChange={this.handleChange}
+            name="company_id"
+            value={this.state.company_id}
+          >
+            <option selected hidden disabled>
+              ---Select Company---
+            </option>
+            {this.state.companies.map(({ id, name }) => (
+              <option value={id}>{name}</option>
+            ))}
+          </select>
 
-          {/* {roleLevels.findIndex(({ value }) => this.state.role === value) >
-            2 && (
-            <Fragment>
-              <input
-                placeholder="Division"
-                type="text"
-                name="divisions"
-                noValidate
-                value={this.state.division}
-                onChange={this.handleChange}
-              />
-              {formErrors.division.length > 0 && (
-                <span className="errorMessage">{formErrors.division}</span>
-              )}
-            </Fragment>
-          )} */}
+          {/* option field for division */}
+          <select
+            onChange={this.handleChange}
+            name="division_id"
+            value={this.state.division_id}
+          >
+            <option selected hidden disabled>
+              ---Select Division---
+            </option>
+            {this.state.divisions.map(({ id, name }) => (
+              <option value={id}>{name}</option>
+            ))}
+          </select>
+
           <button type="submit">submit</button>
           <Link to={paths.users}>cancel</Link>
         </form>
