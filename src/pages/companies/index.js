@@ -39,7 +39,6 @@ class Admins extends PureComponent {
 
   render() {
     const { companies } = this.state;
-    console.log(companies)
     return (
       <Switch>
         {this.state.redirect &&

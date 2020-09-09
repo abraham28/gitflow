@@ -38,10 +38,7 @@ class DivisionForm extends PureComponent {
   async componentDidMount() {
     const result = await getCompanies();
     this.setState({ companies: result.data.companies });
-  console.log(result);
-  
   }
-
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,7 +65,6 @@ class DivisionForm extends PureComponent {
             } else {
               alert(`${this.state.name} Updated!`);
               window.location.href = paths.divisions;
-              console.log(result);
             }
           })
           .catch((e) => console.log(e));
@@ -88,7 +84,6 @@ class DivisionForm extends PureComponent {
             } else {
               alert("Division Created");
               window.location.href = paths.divisions;
-              console.log(result);
             }
           })
           .catch((e) => console.log(e));
@@ -118,14 +113,14 @@ class DivisionForm extends PureComponent {
     const { formErrors } = this.state;
     return (
       <div className="form-container">
-        <form onSubmit={this.handleSubmit} noValidate>
+        <form onSubmit={this.handleSubmit} >
 
           {/* Name field */}
           <input
             type="text"
             placeholder="Division Name"
             name="name"
-            noValidate
+            
             value={this.state.name}
             onChange={this.handleChange}
           />
@@ -137,7 +132,7 @@ class DivisionForm extends PureComponent {
           <select
             onChange={this.handleChange}
             name="company_id"
-            value={this.state.company_id}
+            defaultValue={this.state.company_id}
           >
             <option selected hidden disabled>
               ---Select Company---

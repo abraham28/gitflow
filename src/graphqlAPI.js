@@ -46,8 +46,6 @@ export function createAdmin(userModel) {
         password
         created_at
         updated_at
-        company_id
-        division_id
       }
     }
   `;
@@ -64,14 +62,6 @@ export function getAdmin() {
       email
       first_name
       last_name
-      company_id
-      company {
-        name
-      }
-      division_id
-      division {
-        name
-      }
       role
 
     }
@@ -98,8 +88,6 @@ export function updateAdmin(email, updateValues) {
         role
         created_at
         updated_at
-        company_id
-        division_id
       }
     }
   `;

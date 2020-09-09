@@ -7,9 +7,10 @@ export const divisions = "/divisions";
 export const groups = "/groups";
 export const users = "/users";
 export const adminsForm = "/admins/form";
-export const companiesForm = "/companies/form"
-export const divisionsForm = "/divisions/form"
-export const usersForm = "/users/form"
+export const companiesForm = "/companies/form";
+export const divisionsForm = "/divisions/form";
+export const usersForm = "/users/form";
+export const pagination = "/paginations"
 export default {
   root,
   login,
@@ -19,6 +20,7 @@ export default {
   divisions,
   groups,
   users,
+  pagination,
   adminsForm,
   companiesForm,
   divisionsForm,

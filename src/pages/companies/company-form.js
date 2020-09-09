@@ -32,11 +32,8 @@ class CompanyForm extends PureComponent {
         created_at: '',
       },
       isUpdate: Boolean(props.company),
-
     };
-    console.log(props);
   }
-
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,14 +107,13 @@ class CompanyForm extends PureComponent {
     const { formErrors } = this.state;
     return (
       <div className="form-container">
-        <form onSubmit={this.handleSubmit} noValidate>
+        <form onSubmit={this.handleSubmit}>
 
           <input
             placeholder="Company Name"
             text="text"
             type="text"
             name="name"
-            noValidate
             value={this.state.name}
             onChange={this.handleChange}
           />

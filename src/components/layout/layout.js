@@ -30,14 +30,15 @@ class Layout extends PureComponent {
 
   async componentDidMount() {
     const { users } = this.props;
-    await login(users).then((data) => {
-      this.setState({ userLogin: data.data.users });
+    await login(users).then((result) => {
+      this.setState({ userLogin: result.data.users });
     });
   }
 
   checkLoginStatus() {}
 
   render() {
+    const user = JSON.parse(localStorage.getItem('user'));
     const activeClasses = this.state.activeClasses.slice();
     return (
       <div>
@@ -46,6 +47,7 @@ class Layout extends PureComponent {
             <h1>
               Admin <span>Management</span>
             </h1>
+            <p className="user-login"> Welcome, {user.first_name}</p>
           </div>
           <ul className="nav-link">
             <li>
@@ -78,12 +80,12 @@ class Layout extends PureComponent {
             >
               <NavLink to="/divisions">Divisions</NavLink>
             </li>
-            <li
+            {/* <li
               className={activeClasses[3] ? "active" : "inactive"}
               onClick={() => this.addActiveClass(3)}
             >
               <NavLink to="/groups">Groups</NavLink>
-            </li>
+            </li> */}
             <li
               className={activeClasses[4] ? "active" : "inactive"}
               onClick={() => this.addActiveClass(4)}

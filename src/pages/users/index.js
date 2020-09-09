@@ -27,11 +27,6 @@ class Users extends PureComponent {
   }
 
   async componentDidMount() {
-    // const users = await getUsers();
-    // await getUsers(users).then((result) => {
-    //   this.setState({ tableUser: result.data.users });
-    // });
-
     await getUsers().then((result) => {
       console.log(result);
       this.setState({

@@ -1,8 +1,6 @@
 import React, { PureComponent } from "react";
 import {
   createUser,
-  getUsers,
-  getRoles,
   updateUsers,
   getCompanies,
   getDivisions,
@@ -53,23 +51,17 @@ class UserForm extends PureComponent {
         password: "",
         confirmpassword: "",
         role: "",
-        company_id: '',
-        division_id: '',
+        company_id: "",
+        division_id: "",
       },
       isUpdate: Boolean(props.user),
     };
   }
   async componentDidMount() {
-    const users = await getUsers();
-    console.log(users)
-    const roles = await getRoles();
-    console.log(roles);
     const result = await getCompanies();
     this.setState({ companies: result.data.companies });
-    console.log(result);
     const divisionResult = await getDivisions();
     this.setState({ divisions: divisionResult.data.divisions });
-    console.log(divisionResult);
   }
 
   handleSubmit = async (e) => {
@@ -207,7 +199,7 @@ class UserForm extends PureComponent {
     const { formErrors } = this.state;
     return (
       <div className="form-container">
-        <form onSubmit={this.handleSubmit} noValidate>
+        <form onSubmit={this.handleSubmit}>
           <select
             onChange={this.handleChange}
             name="role"
@@ -227,7 +219,6 @@ class UserForm extends PureComponent {
             type="email"
             name="email"
             required
-            noValidate
             value={this.state.email}
             onChange={this.handleChange}
           />
@@ -240,7 +231,6 @@ class UserForm extends PureComponent {
             text="Password"
             type="password"
             name="password"
-            noValidate
             value={this.state.password}
             onChange={this.handleChange}
           />
@@ -252,7 +242,6 @@ class UserForm extends PureComponent {
             text="Password"
             type="password"
             name="confirmpassword"
-            noValidate
             value={this.state.confirmpassword}
             onChange={this.handleChange}
           />
@@ -264,7 +253,7 @@ class UserForm extends PureComponent {
             type="text"
             placeholder="First Name"
             name="first_name"
-            noValidate
+            pattern="[A-Za-z]{3,8}"
             value={this.state.first_name}
             onChange={this.handleChange}
           />
@@ -276,7 +265,7 @@ class UserForm extends PureComponent {
             placeholder="Last Name"
             type="text"
             name="last_name"
-            noValidate
+            pattern="[A-Za-z]{3,16}"
             value={this.state.last_name}
             onChange={this.handleChange}
           />
