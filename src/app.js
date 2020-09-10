@@ -17,7 +17,6 @@ class App extends PureComponent {
     
     return (
       <div className="wrap">
-        <div className="inner">
           <Switch>
             <Route path={paths.login}>
               <Login />
@@ -55,7 +54,6 @@ class App extends PureComponent {
               </Switch>
             </Layout>
           </Switch>
-        </div>
       </div>
     );
   }

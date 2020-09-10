@@ -140,10 +140,10 @@ class AdminForm extends PureComponent {
     }
   };
 
-  // async componentDidMount() {
-  //   await getAdmin();
-  //   await getRoles();
-  // }
+//  async componentDidMount() {
+//    await getAdmin();
+//    await getRoles();
+//  }
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -270,13 +270,13 @@ class AdminForm extends PureComponent {
           <select
             onChange={this.handleChange}
             name="role"
-            defaultValue={this.state.role}
+            value={this.state.role}
           >
             <option selected hidden disabled>
               ---Please Select---
             </option>
             {roleLevels.map(({ value, label }) => (
-              <option defaultValue={value}>{label}</option>
+              <option value={value}>{label}</option>
             ))}
           </select>
 
@@ -286,7 +286,7 @@ class AdminForm extends PureComponent {
             type="email"
             name="email"
             required
-            defaultValue={this.state.email}
+            value={this.state.email}
             onChange={this.handleChange}
           />
           {formErrors.email.length > 0 && (
@@ -428,7 +428,7 @@ class AdminForm extends PureComponent {
             </div>
           </div>
           <button 
-          type="submit"  >submit</button>
+          type="submit">submit</button>
           <Link to={paths.admins}>cancel</Link>
         </form>
       </div>

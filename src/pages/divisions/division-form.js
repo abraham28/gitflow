@@ -132,7 +132,7 @@ class DivisionForm extends PureComponent {
           <select
             onChange={this.handleChange}
             name="company_id"
-            defaultValue={this.state.company_id}
+            value={this.state.company_id}
           >
             <option selected hidden disabled>
               ---Select Company---

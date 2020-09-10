@@ -4,7 +4,6 @@ import "../pages.scss";
 import { getCompanies, deleteCompany } from "../../graphqlAPI";
 import CompanyForm from "./company-form";
 import paths from "../../resources/paths";
-import { formatDate } from "../../helpers";
 
 class Admins extends PureComponent {
   constructor(props) {
@@ -59,15 +58,13 @@ class Admins extends PureComponent {
               </button>
             </NavLink>
             <div className="tableData">
-              <h1 id="title">Table Data</h1>
+              <h1 id="title">Company Data</h1>
               <table id="usersdata">
                 <thead>
                   <tr>
                     <th>Company Name</th>
                     <th>Division</th>
                     <th>Users</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -78,16 +75,12 @@ class Admins extends PureComponent {
                         name,
                         divisions,
                         users,
-                        created_at,
-                        updated_at,
                       } = company;
                       return (
                         <tr key={index}>
                           <td>{name}</td>
                           <td>{divisions}</td>
                           <td>{users.toString()}</td>
-                          <td>{formatDate(created_at)}</td>
-                          <td>{formatDate(updated_at)}</td>
                           <td className="btn-container">
                             <button
                               className="edit"

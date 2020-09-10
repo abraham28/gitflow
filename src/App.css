@@ -10,16 +10,16 @@
 }
 .logo {
   float: left;
-  cursor: pointer;
+  cursor: context-menu;
+  
 }
 .logo h1 {
-    padding: 6px 20px;
+    padding: 15px 20px;
     font-size: 17px;
     font-weight: 800;
     letter-spacing: -1px;
     line-height: 1;
     color: #f00;
-  /*color: #04133699; */
 }
 .logo a {
   text-decoration: none;
@@ -34,8 +34,9 @@
 }
 .navbar ul {
   float: right;
-  padding: 0 20px;
+  padding: 15px 20px;
   list-style: none;
+  margin: 0;
 }
 .navbar li {
   float: left;

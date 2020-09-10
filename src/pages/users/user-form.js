@@ -42,14 +42,17 @@ class UserForm extends PureComponent {
       role: props.user && props.user.role,
       company_id: props.user && props.user.company_id,
       division_id: props.user && props.user.division_id,
-      password: null,
-      confirmpassword: null,
+      password: "",
+      confirmpassword: "",
+      match: null,
+      charNumberValid: false,
+      specialCharValid: false,
+      uppercaseValid: false,
+      numberValid: false,
       formErrors: {
         first_name: "",
         last_name: "",
         email: "",
-        password: "",
-        confirmpassword: "",
         role: "",
         company_id: "",
         division_id: "",
@@ -63,6 +66,91 @@ class UserForm extends PureComponent {
     const divisionResult = await getDivisions();
     this.setState({ divisions: divisionResult.data.divisions });
   }
+
+  // Check the length of the input
+  checkPasswordLength = (password) => {
+    if (password.length >= 8) {
+      this.setState({
+        charNumberValid: true,
+      });
+    } else {
+      this.setState({
+        charNumberValid: false,
+      });
+    }
+  };
+
+  // Check for special characters
+  checkSpecialCharacters = (password) => {
+    const pattern = /[ !@#$%^&*()_+\-=[\]{};':"\\|,.<>? ]/g;
+    if (pattern.test(password)) {
+      this.setState({
+        specialCharValid: true,
+      });
+    } else {
+      this.setState({
+        specialCharValid: false,
+      });
+    }
+  };
+
+  // Check for an uppercase character
+  checkUppercase = (password) => {
+    const pattern = /[A-Z]/;
+    if (pattern.test(password)) {
+      this.setState({
+        uppercaseValid: true,
+      });
+    } else {
+      this.setState({
+        uppercaseValid: false,
+      });
+    }
+  };
+
+  // Check for a number
+  checkNumber = (password) => {
+    const pattern = /[0-9]/;
+    if (pattern.test(password)) {
+      this.setState({
+        numberValid: true,
+      });
+    } else {
+      this.setState({
+        numberValid: false,
+      });
+    }
+  };
+
+  handlePasswordChange = (event) => {
+    this.setState({
+      password: event.target.value,
+    });
+
+    this.checkPasswordLength(event.target.value);
+    this.checkSpecialCharacters(event.target.value);
+    this.checkUppercase(event.target.value);
+    this.checkNumber(event.target.value);
+  };
+
+  handleConfirmPasswordChange = (event) => {
+    this.setState({
+      confirmpassword: event.target.value,
+      match: null,
+    });
+  };
+
+  comparePassword = (event) => {
+    if (this.state.password === this.state.confirmpassword) {
+      this.setState({
+        match: true,
+      });
+    } else {
+      this.setState({
+        match: false,
+      });
+    }
+  };
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -172,19 +260,19 @@ class UserForm extends PureComponent {
           : "invalid email address try again ";
         break;
 
-      case "password":
-        formErrors.password =
-          value.length < 8 ? "minimum 8 characters required" : "";
-        break;
+      // case "password":
+      //   formErrors.password =
+      //     value.length < 8 ? "minimum 8 characters required" : "";
+      //   break;
 
-      case "confirmpassword":
-        formErrors.confirmpassword =
-          formErrors.confirmpassword !== formErrors.password
-            ? formErrors.password !== formErrors.confirmpassword
-            : formErrors.password === formErrors.confirmPassword
-            ? "password match"
-            : "password does not match";
-        break;
+      // case "confirmpassword":
+      //   formErrors.confirmpassword =
+      //     formErrors.confirmpassword !== formErrors.password
+      //       ? formErrors.password !== formErrors.confirmpassword
+      //       : formErrors.password === formErrors.confirmPassword
+      //       ? "password match"
+      //       : "password does not match";
+      //   break;
 
       case "role":
         formErrors.role = value.length > 0 ? "" : "";
@@ -231,23 +319,25 @@ class UserForm extends PureComponent {
             text="Password"
             type="password"
             name="password"
-            value={this.state.password}
-            onChange={this.handleChange}
+            defaultValue={this.state.password}
+            onChange={(event) => this.handlePasswordChange(event)}
           />
-          {formErrors.password.length > 0 && (
+          {/* {formErrors.password.length > 0 && (
             <span className="errorMessage">{formErrors.password}</span>
-          )}
+          )} */}
           <input
+            className={`input${this.state.match === false ? "--error" : ""}`}
             placeholder="Confirm Password"
             text="Password"
             type="password"
             name="confirmpassword"
-            value={this.state.confirmpassword}
-            onChange={this.handleChange}
+            defaultValue={this.state.confirmpassword}
+            onChange={(event) => this.handleConfirmPasswordChange(event)}
+            onBlur={this.comparePassword}
           />
-          {formErrors.password !== formErrors.confirmpassword && (
+          {/* {formErrors.password !== formErrors.confirmpassword && (
             <span className="errorMessage">{formErrors.confirmpassword}</span>
-          )}
+          )} */}
 
           <input
             type="text"
@@ -300,7 +390,48 @@ class UserForm extends PureComponent {
               <option value={id}>{name}</option>
             ))}
           </select>
-
+          <div className="validation">
+            <div className="validator">
+              <i
+                className={
+                  this.state.charNumberValid
+                    ? "fas fa-check success"
+                    : "fas fa-times error"
+                }
+              ></i>
+              <p className="validation-item">8-20 characters</p>
+            </div>
+            <div className="validator">
+              <i
+                className={
+                  this.state.specialCharValid
+                    ? "fas fa-check success"
+                    : "fas fa-times error"
+                }
+              ></i>
+              <p className="validation-item">1 special character</p>
+            </div>
+            <div className="validator">
+              <i
+                className={
+                  this.state.uppercaseValid
+                    ? "fas fa-check success"
+                    : "fas fa-times error"
+                }
+              ></i>
+              <p className="validation-item">1 uppercase letter</p>
+            </div>
+            <div className="validator">
+              <i
+                className={
+                  this.state.numberValid
+                    ? "fas fa-check success"
+                    : "fas fa-times error"
+                }
+              ></i>
+              <p className="validation-item">1 number</p>
+            </div>
+          </div>
           <button type="submit">submit</button>
           <Link to={paths.users}>cancel</Link>
         </form>

@@ -9,7 +9,8 @@ class Admins extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-
+      isLoading: false,
+      content: "",
       tableUser: [
         {
           email: "",
@@ -28,12 +29,13 @@ class Admins extends PureComponent {
   async componentDidMount() {
     const users = await getAdmin();
     await getAdmin(users).then((result) => {
-      this.setState({ tableUser: result.data.users });
+      this.setState({ tableUser: result.data.users,isLoading: false, result });
     });
   }
 
   render() {
     const { tableUser } = this.state;
+ 
     return (
       <Switch>
         {this.state.redirect &&
@@ -47,17 +49,20 @@ class Admins extends PureComponent {
         </Route>
         <Route>
           <div className="super-container">
-            <h2>Admins</h2>
+            <h2>ADMIN</h2>
+            <div className="add-container">
             <NavLink
               to={paths.adminsForm}
               onClick={() => this.setState({ selectedUser: null })}
             >
               <button type="button" className="btn btn-info">
-                Add
+                ADD
               </button>
             </NavLink>
+            </div>
             <div className="tableData">
-              <h1 id="title">Table Data</h1>
+              <h1 id="title">Admin Data</h1>
+
               <table id="usersdata">
                 <thead>
                   <tr>

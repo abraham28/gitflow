@@ -4,7 +4,6 @@ import "../pages.scss";
 import { getDivisions, deleteDivision } from "../../graphqlAPI";
 import DivisionForm from "./division-form";
 import paths from "../../resources/paths";
-import { formatDate } from "../../helpers";
 
 
 class Divisions extends PureComponent {
@@ -64,14 +63,13 @@ class Divisions extends PureComponent {
               </button>
             </NavLink>
             <div className="tableData">
-              <h1 id="title">Table Data</h1>
+              <h1 id="title">Division Data</h1>
               <table id="usersdata">
                 <thead>
                   <tr>
                     <th>Division</th>
                      {/* <th>Company Name</th> */}
                     <th>Users</th>
-                    <th>Updated at</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -82,14 +80,12 @@ class Divisions extends PureComponent {
                         name,
                         // companyName,
                         users,
-                        updated_at,
                       } = divisions;
                       return (
                         <tr key={index}>
                           <td>{name}</td>
                            {/* <td> {companyName} </td> */}
                           <td>{users.toString()}</td>
-                          <td>{formatDate(updated_at)}</td>
                           <td className="btn-container">
                             <button
                               className="edit"

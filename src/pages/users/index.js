@@ -64,7 +64,7 @@ class Users extends PureComponent {
               </button>
             </NavLink>
             <div className="tableData">
-              <h1 id="title">Table Data</h1>
+              <h1 id="title">User Data</h1>
               <table id="usersdata">
                 <thead>
                   <tr>
