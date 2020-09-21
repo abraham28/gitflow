@@ -72,40 +72,6 @@ class Admins extends PureComponent {
       this.setState({ tableUser: result.data.users, isLoading: false, result });
     });
   }
-
-  // onSort = (column) => (e) => {
-  //   const direction = this.state.sort.column ? (this.state.sort.direction === 'asc' ? 'desc' : 'asc') : 'desc';
-  //   const sortedData = this.state.tableUser.sort((a, b) => {
-  //     if (column === 'email') {
-  //       const nameA = a.email.toUpperCase(); // ignore upper and lowercase
-  //       const nameB = b.email.toUpperCase(); // ignore upper and lowercase
-  //       if (nameA < nameB) {
-  //         return -1;
-  //       }
-  //       if (nameA > nameB) {
-  //         return 1;
-  //       }
-
-  //       // names must be equal
-  //       return 0;
-  //     } else {
-  //       return a.first_name - b.first_name;
-  //     }
-  //   });
-
-  //   if (direction === 'desc') {
-  //     sortedData.reverse();
-  //   }
-
-  //   this.setState({
-  //     tableUser: sortedData,
-  //     sort: {
-  //       column,
-  //       direction,
-  //     }
-  //   });
-  // };
-
   render() {
     const { tableUser, currentSort } = this.state;
     console.log(currentSort);
