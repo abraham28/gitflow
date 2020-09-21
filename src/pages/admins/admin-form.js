@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, createRef } from "react";
 import { createAdmin, updateAdmin } from "../../graphqlAPI";
 import { Link } from "react-router-dom";
 import paths from "../../resources/paths";
@@ -33,7 +33,10 @@ const roleLevels = [
 class AdminForm extends PureComponent {
   constructor(props) {
     super(props);
+    this.passwordOneRef = createRef();
+    this.iconRevealPassword = createRef();
     this.state = {
+      isPasswordReveal: false,
       email: props.user && props.user.email,
       first_name: props.user && props.user.first_name,
       last_name: props.user && props.user.last_name,
@@ -56,7 +59,7 @@ class AdminForm extends PureComponent {
   }
 
   // Check the length of the input
-  checkPasswordLength = (password) => {
+  checkPassLength = (password) => {
     if (password.length >= 8) {
       this.setState({
         charNumberValid: true,
@@ -115,7 +118,7 @@ class AdminForm extends PureComponent {
       password: event.target.value,
     });
 
-    this.checkPasswordLength(event.target.value);
+    this.checkPassLength(event.target.value);
     this.checkSpecialCharacters(event.target.value);
     this.checkUppercase(event.target.value);
     this.checkNumber(event.target.value);
@@ -128,7 +131,7 @@ class AdminForm extends PureComponent {
     });
   };
 
-  comparePassword = (event) => {
+  comparePassword = () => {
     if (this.state.password === this.state.confirmpassword) {
       this.setState({
         match: true,
@@ -140,14 +143,17 @@ class AdminForm extends PureComponent {
     }
   };
 
-//  async componentDidMount() {
-//    await getAdmin();
-//    await getRoles();
-//  }
+  togglePassword = () => {
+    this.setState({ isPasswordReveal: !this.state.isPasswordReveal });
+  };
 
   handleSubmit = async (e) => {
     e.preventDefault();
-
+    const { password, confirmpassword } = this.state;
+    if (password !== confirmpassword) {
+      alert('password not match');
+      return null;
+    }
     if (formValid(this.state)) {
       console.log(`
       --SUBMITTING--
@@ -176,7 +182,6 @@ class AdminForm extends PureComponent {
             } else {
               alert(`${this.state.email} Updated!`);
               window.location.href = paths.admins;
-              console.log(result);
             }
           })
           .catch((e) => console.log(e));
@@ -188,20 +193,19 @@ class AdminForm extends PureComponent {
           password: this.state.password,
           role: this.state.role,
         })
-          .then((result) => {
-            if (result.errors) {
-              const uniq = new RegExp("Uniqueness violation");
-              if (uniq.test(result.errors[0].message)) {
-                alert("Email already exists");
-              } else {
-                alert(result.errors[0].message);
-              }
+        .then((result) => {
+          if (result.errors) {
+            const uniq = new RegExp("Uniqueness violation");
+            if (uniq.test(result.errors[0].message)) {
+              alert("Email already exists");
             } else {
-              alert("user Created");
-              window.location.href = paths.admins;
-              console.log(result);
+              alert(result.errors[0].message);
             }
-          })
+          } else {
+            alert("Admin Created");
+            window.location.href = paths.admins;
+          }
+        })
           .catch((e) => console.log(e));
       }
     } else {
@@ -217,12 +221,12 @@ class AdminForm extends PureComponent {
     switch (name) {
       case "first_name":
         formErrors.first_name =
-          value.length < 4 ? "minimum 4 characters required" : "";
+          value.length < 2 ? "minimum 4 characters required" : "";
         break;
 
       case "last_name":
         formErrors.last_name =
-          value.length < 4 ? "minimum 4 characters required" : "";
+          value.length < 2 ? "minimum 4 characters required" : "";
         break;
 
       case "company":
@@ -241,18 +245,6 @@ class AdminForm extends PureComponent {
           : "invalid email address try again ";
         break;
 
-      // case "password":
-      //   formErrors.password =
-      //     value.length < 8 ? "minimum 8 characters required" : "";
-      //   break;
-
-      // case "confirmpassword":
-      //   formErrors.confirmpassword =
-      //   formErrors.confirmpassword == formErrors.password ? "" : "password not match";
-      //     console.log(formErrors.password);
-      //     console.log(formErrors.confirmpassword);
-      //   break;
-
       case "role":
         formErrors.role = value.length > 0 ? "" : "";
         break;
@@ -263,7 +255,7 @@ class AdminForm extends PureComponent {
   };
 
   render() {
-    const { formErrors } = this.state;
+    const { formErrors, isPasswordReveal } = this.state;
     return (
       <div className="form-container">
         <form onSubmit={this.handleSubmit}>
@@ -282,7 +274,6 @@ class AdminForm extends PureComponent {
 
           <input
             placeholder="Email Address"
-            text="Email Address"
             type="email"
             name="email"
             required
@@ -293,98 +284,28 @@ class AdminForm extends PureComponent {
             <span className="errorMessage">{formErrors.email}</span>
           )}
 
+        <div className="password">
           <input
             placeholder="Password"
-            text="Password"
-            type="password"
+            type={isPasswordReveal ? "text" : "password"}
             name="password"
-            defaultValue={this.state.password}
-            onChange={ (event) => this.handlePasswordChange(event) }
+            maxlength="20"
+            ref={this.passwordOneRef}
+            value={this.state.password}
+            onChange={(event) => this.handlePasswordChange(event)}
           />
-          {/* {formErrors.password.length > 0 && (
-            <span className="errorMessage">{formErrors.password}</span>
-          )} */}
-          {/* <label
-            className={`input__label ${
-              this.state.match === false ? "error-msg" : null
-            }`}
-          >
-            Confirm Password
-          </label> */}
-          <input
-            className={`input${this.state.match === false ? "--error" : ""}`}
-            placeholder="Confirm Password"
-            text="Password"
-            type="password"
-            name="confirmpassword"
-            defaultValue={this.state.confirmpassword}
-            onChange={ (event) => this.handleConfirmPasswordChange(event) }
-            onBlur={this.comparePassword}
-          />
-          {/* {formErrors.password !== formErrors.confirmpassword && (
-            <span className="errorMessage">{formErrors.confirmpassword}</span>
-          )} */}
-          <input
-            type="text"
-            placeholder="First Name"
-            name="first_name"
-            pattern="[A-Za-z]{3,8}"
-            defaultValue={this.state.first_name}
-            onChange={this.handleChange}
-          />
-          {formErrors.first_name.length > 0 && (
-            <span className="errorMessage">{formErrors.first_name}</span>
-          )}
 
-          <input
-            placeholder="Last Name"
-            type="text"
-            name="last_name"
-            pattern="[A-Za-z]{3,16}"
-            defaultValue={this.state.last_name}
-            onChange={this.handleChange}
-          />
-          {formErrors.last_name.length > 0 && (
-            <span className="errorMessage">{formErrors.last_name}</span>
-          )}
+          <span onClick={this.togglePassword} ref={this.iconRevealPassword}>
+            <span>
+              {isPasswordReveal ? (
+                <i className="fas fa-eye"></i>
+              ) : (
+                <i className="fas fa-eye-slash"></i>
+              )}
+            </span>
+          </span>
+          </div>
 
-          {/* {roleLevels.findIndex(({ value }) => this.state.role === value) >
-            1 && ( 
-            <Fragment>
-              
-          <select
-            onChange={this.handleChange}
-            name="company_id"
-            value={this.state.company_id}
-          >
-            <option selected hidden disabled>
-              ---Select Company---
-            </option>
-            {this.state.companies.map(({ id, name }) => (
-              <option value={id}>{name}</option>
-            ))}
-          </select>
-            </Fragment>
-            )} 
-
-           {roleLevels.findIndex(({ value }) => this.state.role === value) >
-            2 && ( 
-            <Fragment>
-        
-          <select
-            onChange={this.handleChange}
-            name="division_id"
-            value={this.state.division_id}
-          >
-            <option selected hidden disabled>
-              ---Select Division---
-            </option>
-            {this.state.divisions.map(({ id, name }) => (
-              <option value={id}>{name}</option>
-            ))}
-          </select>
-            </Fragment>
-           )} */}
           <div className="validation">
             <div className="validator">
               <i
@@ -427,9 +348,49 @@ class AdminForm extends PureComponent {
               <p className="validation-item">1 number</p>
             </div>
           </div>
-          <button 
-          type="submit">submit</button>
-          <Link to={paths.admins}>cancel</Link>
+          <input
+            className={`input${this.state.match === false ? "--error" : ""}`}
+            placeholder="Confirm Password"
+            type="password"
+            name="confirmpassword"
+            maxLength="20"
+            required
+            value={this.state.confirmpassword}
+            onChange={(event) => this.handleConfirmPasswordChange(event)}
+            onBlur={this.comparePassword}
+          />
+          <input className ="namefield"
+            type="text"
+            placeholder="First name"
+            autoCapitalize="words"
+            name="first_name"
+            pattern="[A-Za-z\s]{2,17}"
+            value={this.state.first_name}
+            onChange={this.handleChange}
+          />
+          {formErrors.first_name.length > 0 && (
+            <span className="errorMessage">{formErrors.first_name}</span>
+          )}
+
+          <input className ="namefield"
+            placeholder="Last name"
+            type="text"
+            name="last_name"
+            pattern="[A-Za-z\s]{2,17}"
+            value={this.state.last_name}
+            onChange={this.handleChange}
+           
+          />
+          {formErrors.last_name.length > 0 && (
+            <span className="errorMessage">{formErrors.last_name}</span>
+          )}
+
+          <div className="confirm-section">
+            <button type="submit">submit</button>
+            <p>
+              <Link to={paths.admins}>cancel</Link>
+            </p>
+          </div>
         </form>
       </div>
     );

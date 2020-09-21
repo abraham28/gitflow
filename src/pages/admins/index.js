@@ -5,12 +5,33 @@ import { getAdmin, deleteUser } from "../../graphqlAPI";
 import AdminForm from "./admin-form";
 import paths from "../../resources/paths";
 
+// const array = ['mozzarella', 'gouda', 'cheddar'];
+// array.sort();
+// console.log(array); // ['cheddar', 'gouda', 'mozzarella']
+
+const sortTypes = {
+  up: {
+    class: "sort-up",
+    fn: (a, b) => a.email - b.email, 
+
+  },
+  down: {
+    class: "sort-down",
+    fn: (a, b) => b.email - a.email,
+
+  },
+  default: {
+    class: "sort",
+    fn: (a, b) => a,
+  },
+};
 class Admins extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: false,
       content: "",
+      currentSort: "default",
       tableUser: [
         {
           email: "",
@@ -24,18 +45,71 @@ class Admins extends PureComponent {
       selectedUser: null,
       redirect: null,
     };
+    // this.onSort = this.onSort.bind(this);
   }
+  // onSort(event, sortKey) {
+  //   const result = this.state.tableUser;
+  //   result.sort((a, b) => a[sortKey].localeCompare(b[sortKey]));
+  //   this.setState({ result });
+  // }
+
+  onSortChange = () => {
+    const { currentSort } = this.state;
+    let nextSort;
+
+    if (currentSort === "down") nextSort = "up";
+    else if (currentSort === "up") nextSort = "default";
+    else if (currentSort === "default") nextSort = "down";
+
+    this.setState({
+      currentSort: nextSort,
+    });
+  };
 
   async componentDidMount() {
     const users = await getAdmin();
     await getAdmin(users).then((result) => {
-      this.setState({ tableUser: result.data.users,isLoading: false, result });
+      this.setState({ tableUser: result.data.users, isLoading: false, result });
     });
   }
 
+  // onSort = (column) => (e) => {
+  //   const direction = this.state.sort.column ? (this.state.sort.direction === 'asc' ? 'desc' : 'asc') : 'desc';
+  //   const sortedData = this.state.tableUser.sort((a, b) => {
+  //     if (column === 'email') {
+  //       const nameA = a.email.toUpperCase(); // ignore upper and lowercase
+  //       const nameB = b.email.toUpperCase(); // ignore upper and lowercase
+  //       if (nameA < nameB) {
+  //         return -1;
+  //       }
+  //       if (nameA > nameB) {
+  //         return 1;
+  //       }
+
+  //       // names must be equal
+  //       return 0;
+  //     } else {
+  //       return a.first_name - b.first_name;
+  //     }
+  //   });
+
+  //   if (direction === 'desc') {
+  //     sortedData.reverse();
+  //   }
+
+  //   this.setState({
+  //     tableUser: sortedData,
+  //     sort: {
+  //       column,
+  //       direction,
+  //     }
+  //   });
+  // };
+
   render() {
-    const { tableUser } = this.state;
- 
+    const { tableUser, currentSort } = this.state;
+    console.log(currentSort);
+    console.log(tableUser);
     return (
       <Switch>
         {this.state.redirect &&
@@ -49,93 +123,107 @@ class Admins extends PureComponent {
         </Route>
         <Route>
           <div className="super-container">
-            <h2>ADMIN</h2>
-            <div className="add-container">
-            <NavLink
-              to={paths.adminsForm}
-              onClick={() => this.setState({ selectedUser: null })}
-            >
-              <button type="button" className="btn btn-info">
-                ADD
-              </button>
-            </NavLink>
+            <div className="block01">
+              <h2>ADMIN PAGE</h2>
+              <p className="btn1">
+                <NavLink
+                  to={paths.adminsForm}
+                  onClick={() => this.setState({ selectedUser: null })}
+                >
+                  ADD ADMIN<i className="fas fa-plus"></i>
+                </NavLink>
+              </p>
             </div>
             <div className="tableData">
               <h1 id="title">Admin Data</h1>
-
-              <table id="usersdata">
-                <thead>
-                  <tr>
-                    <th>Email</th>
-                    <th>Full Name</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tableUser.length > 0 ? (
-                    tableUser.map((user, index) => {
-                      const { email, first_name, last_name, role } = user;
-                      return (
-                        <tr key={index}>
-                          <td>{email}</td>
-                          <td>
-                            {first_name} {last_name}
-                          </td>
-                          <td>{role}</td>
-                          <td className="btn-container">
-                            <button
-                              className="edit"
-                              onClick={() => {
-                                this.setState({
-                                  selectedUser: user,
-                                  redirect: paths.adminsForm,
-                                });
-                              }}
-                            >
-                              edit
-                            </button>
-                            <button
-                              className="delete"
-                              onClick={async () => {
-                                const confirmed = window.confirm(
-                                  `are you sure you want to delete ${user.email}`
-                                );
-                                if (confirmed) {
-                                  deleteUser(user.email).then((result) => {
-                                    if (result.errors) {
-                                      alert(result.errors);
-                                    } else if (
-                                      result.data.delete_users_by_pk === null
-                                    ) {
-                                      alert("no user has been deleted");
-                                    } else if (
-                                      result.data.delete_users_by_pk.email
-                                    ) {
-                                      this.componentDidMount();
-                                      alert(
-                                        `${result.data.delete_users_by_pk.email} has been deleted`
-                                      );
-                                    } else {
-                                      alert("unknown error");
-                                    }
-                                  });
-                                }
-                              }}
-                            >
-                              delete
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
+              {tableUser.length > 0 ? (
+                <table id="usersdata">
+                  <thead>
                     <tr>
-                      <td colSpan="5">Loading...</td>
+                      <th>
+                        Email
+                        <button
+                          className="sort-button"
+                          onClick={this.onSortChange}
+                        >
+                          <i
+                            className={`fas fa-${sortTypes[currentSort].class}`}
+                          />
+                        </button>
+                      </th>
+
+                      <th>
+                        Full Name
+                      </th>
+
+                      <th>Role</th>
+
+                      <th>Actions</th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {[...tableUser].sort(sortTypes[currentSort].fn).map((user, index) => {
+                        const { email, first_name, last_name, role } = user;
+                        return (
+                          <tr key={index}>
+                            <td>{email}</td>
+                            <td>
+                              {first_name} {last_name}
+                            </td>
+                            <td>{role}</td>
+                            <td className="btn-container">
+                              <button
+                                className="edit"
+                                onClick={() => {
+                                  this.setState({
+                                    selectedUser: user,
+                                    redirect: paths.adminsForm,
+                                  });
+                                }}
+                              >
+                                edit
+                              </button>
+                              <button
+                                className="delete"
+                                onClick={async () => {
+                                  const confirmed = window.confirm(
+                                    `are you sure you want to delete ${user.email}`
+                                  );
+                                  if (confirmed) {
+                                    deleteUser(user.email).then((result) => {
+                                      if (result.errors) {
+                                        alert(result.errors);
+                                      } else if (
+                                        result.data.delete_users_by_pk === null
+                                      ) {
+                                        alert("no user has been deleted");
+                                      } else if (
+                                        result.data.delete_users_by_pk.email
+                                      ) {
+                                        this.componentDidMount();
+                                        alert(
+                                          `${result.data.delete_users_by_pk.email} has been deleted`
+                                        );
+                                      } else {
+                                        alert("unknown error");
+                                      }
+                                    });
+                                  }
+                                }}
+                              >
+                                delete
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              ) : (
+                <tr>
+                  <td colSpan="5">No data to display...</td>
+                </tr>
+              )}
             </div>
           </div>
         </Route>

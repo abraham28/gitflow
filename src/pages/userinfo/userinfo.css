@@ -1,0 +1,31 @@
+.flex-container {
+display: flex;
+flex-direction: column;
+flex-wrap: wrap;
+}
+.personal-info {
+    border: 1px solid blue;
+    width: 33%;
+    overflow: hidden;
+}
+.personal-info table {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+  }
+/* .personal-info thead {
+    float: left;
+}
+.personal-info tbody {
+    float: right;
+} */
+.skill-info {
+    border:1px solid black;
+}
+.company-info {
+    border: 1px solid black;
+}

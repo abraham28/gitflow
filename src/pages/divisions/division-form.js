@@ -141,10 +141,10 @@ class DivisionForm extends PureComponent {
               <option value={id}>{name}</option>
             ))}
           </select> 
-          
-
+          <div className="confirm-section">
           <button type="submit">submit</button>
-          <Link to={paths.divisions}>cancel</Link>
+          <p><Link to={paths.divisions}>cancel</Link></p>
+          </div>
         </form>
       </div>
     );

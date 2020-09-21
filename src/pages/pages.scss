@@ -1,51 +1,63 @@
-.form-container {
-  width: 44.7%;
-  margin: 0 auto;
-  height: 601px;
+.block01 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 40px;
 }
-.form-container form {
-  height: 540px;
-}
-.form-container button {
-  background: #6ecd90ad;
-  cursor: pointer;
-  outline: none;
+.btn1 a {
+  display: inline-block;
+  background: #148dfe;
+  border-radius: 40px;
+  padding: 20px 30px;
   color: #fff;
-  padding: 10px 17px;
-  border-radius: 7px;
-  border: 1px solid;
-  margin: 0;
+  font-size: 14px;
 }
-.form-container a {
-  background: #6ecd90ad;
-  cursor: pointer;
-  outline: none;
-  padding: 7px 17px;
-  border-radius: 7px;
-  margin: 0;
-  color: #fff;
+.fa-plus:before {
+  content: "\f067";
+}
+.btn1 a:hover {
   text-decoration: none;
-  border: 1px solid;
+}
+.btn1 a i {
+  margin-left: 15px;
+}
+.form-container {
+  max-width: 650px;
+  padding: 40px 40px 20px;
+  border-radius: 20px;
+  background: #f6f6fa;
+  margin: 0 auto;
+  position: relative;
 }
 .form-container input {
-  text-align: center;
+  text-align: left;
+  padding: 12px 20px;
   display: block;
-  height: 8%;
-  width: 465px;
+  width: 100%;
   margin: 0 auto;
-  margin-bottom: 19px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+.form-container .password {
+  position: relative;
+}
+.form-container .namefield {
+  text-transform: capitalize;
 }
 .form-container select {
-  width: 498px;
-  margin: 13px 58px;
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  text-align: left;
 }
+
 #title {
   text-align: center;
   font-size: 23px;
   margin-bottom: 13px;
   font-family: arial, sans-serif;
 }
-
 #usersdata {
   text-align: center;
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -53,16 +65,13 @@
   border-spacing: 0;
   width: 100%;
 }
-
 #usersdata td,
 #usersdata th {
   border: 1px solid #ddd;
   padding: 8px;
   background: #fff;
-  cursor:context-menu;
+  cursor: context-menu;
 }
-
-
 #usersdata th {
   padding-top: 12px;
   padding-bottom: 12px;
@@ -72,7 +81,6 @@
 }
 .tableData {
   max-width: 100%;
-  margin: 0 36px;
   height: 464px;
 }
 .delete {
@@ -83,6 +91,8 @@
   outline: none;
   border: 1px solid #d9534f;
   background: #d9534f;
+  border-radius: 10px;
+  outline: none;
 }
 .edit {
   color: #fff;
@@ -92,17 +102,13 @@
   outline: none;
   border: 1px solid #5cb85c;
   background: #5cb85c;
+  border-radius: 10px;
+  outline: none;
 }
 .delete:hover,
 .edit:hover {
   background: #1a7eae;
 }
-// .add-container  {
-//   max-width: 30px;
-// }
-// .btn-container {
-//   width: 200px;
-// }
 .btn {
   background: #1286b2ad;
   color: #fff;
@@ -124,71 +130,37 @@
   background: green;
 }
 .errorMessage {
+  display: block;
+  font-size: 12px;
   color: red;
-  margin: 0 179px;
+  margin: 0 0 20px;
 }
 .validation {
-  flex-direction: column;
-  justify-content: space-around;
-  box-sizing: border-box;
+  display: block;
   margin-bottom: 1em;
 }
+.validation p {
+  display: inline-block;
+  margin: 0;
+  text-align: left;
+  font-size: 12px;
+}
 .validator {
-  display: flex;
+  display: block;
 }
 .error {
   color: #f2180a;
+}
+.success {
+  color: #0c0;
 }
 .validation-icon,
 .error,
 .success {
   display: inline-block;
-  margin-right: 0.5em;
   width: 1.25em;
 }
-.fa,
-.fas {
-  font-weight: 900;
-}
-.fa,
-.far,
-.fas {
-  font-family: "Font Awesome 5 Free";
-}
-.fa,
-.fab,
-.fal,
-.far,
-.fas {
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  display: inline-block;
-  font-style: normal;
-  font-variant: normal;
-  text-rendering: auto;
-  line-height: 1;
-}
-.fa-times:before {
-  content: "X";
-  position: relative;
-  top: 20px;
-}
-.fa-remove:before,
-.fa-close:before,
-.fa-times:before {
-  content: "X";
-}
-.success {
-  color: #11af41;
-}
-.fa-check:before {
-  content: "\2713";
-  position: relative;
-  top: 19px;
-}
-.fa-check:before {
-  content: "\2713";
-}
+
 .error-msg {
   color: red !important;
 }
@@ -200,14 +172,77 @@
   color: #222;
 }
 .input--error {
-  border: 2px solid #f2180a;
+  border: 2px solid #f2180a !important;
 }
 .super-container {
-	max-width: 1094px;
-	margin: 0 auto;
+  max-width: 1094px;
+  margin: 0 auto;
 }
 .super-container h2 {
-  font-weight: bolder;
-  font-size: 30px;
-  margin: 0 7px 27px;
+  font-size: 1.8em;
+  font-weight: 700;
 }
+.confirm-section {
+  overflow: hidden;
+  max-width: 208px;
+  margin: 0 auto;
+}
+.confirm-section p {
+  display: inline-block;
+  margin: 0 10px;
+}
+.confirm-section button {
+  background: #6ecd90;
+  outline: none;
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 7px;
+  border: none;
+  margin: 0 10px;
+  text-transform: capitalize;
+}
+.confirm-section a {
+  background: #dd2828;
+  outline: none;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin: 0;
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  text-transform: capitalize;
+}
+.fa-eye:before {
+  position: absolute;
+  right: 16px;
+  bottom: 57px;
+}
+.fa-eye-slash:before {
+  position: absolute;
+  right: 16px;
+  bottom: 57px;
+}
+.fa-arrow-up {
+  position: relative;
+  left: 56px;
+  cursor: pointer;
+}
+.sort-button {
+  position: relative;
+  left: 14px;
+}
+// .sort-direction {
+//   display: inline-block;
+//   height: 0;
+//   width: 0;
+//   border-left: 5px solid transparent;
+//   border-right: 5px solid transparent;
+
+//   &.asc {
+//     border-bottom: 5px solid black;
+//   }
+
+//   &.desc {
+//     border-top: 5px solid black;
+//   }
+// }

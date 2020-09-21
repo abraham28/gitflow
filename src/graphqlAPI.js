@@ -120,6 +120,9 @@ export function login(email, password) {
       updated_at
       created_at
       email
+      gender
+      position
+      skill
       first_name
       last_name
       company_id
@@ -355,6 +358,11 @@ export function createUser(userModel) {
         last_name
         password
         role
+        position
+        skill
+        birthdate
+        gender
+        mobile
         created_at
         updated_at
         company_id
@@ -387,6 +395,11 @@ export function getUsers() {
         name
       }
       role
+      skill
+      gender
+      birthdate
+      mobile
+      position
     }
   }
   `;
@@ -404,6 +417,7 @@ export function updateUsers(email, updateValues) {
         first_name
         last_name
         password
+        position
         role
         created_at
         updated_at

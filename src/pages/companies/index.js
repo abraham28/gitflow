@@ -51,12 +51,17 @@ class Admins extends PureComponent {
         </Route>
         <Route>
           <div className="super-container">
-            <h2>Companies</h2>
-            <NavLink to={paths.companiesForm}>
-              <button type="button" className="btn btn-info">
-                Add
-              </button>
-            </NavLink>
+          <div className="block01">
+              <h2>COMPANY PAGE</h2>
+            <p className="btn1">
+              <NavLink
+                to={paths.companiesForm}
+                onClick={() => this.setState({ selectedCompany: null })}
+              >
+                ADD COMPANY<i className="fas fa-plus"></i>
+              </NavLink>
+            </p>
+            </div>
             <div className="tableData">
               <h1 id="title">Company Data</h1>
               <table id="usersdata">
@@ -102,7 +107,7 @@ class Admins extends PureComponent {
                                 if (confirmed) {
                                   deleteCompany(company.id).then((result) => {
                                     if (result.errors) {
-                                      alert(result.errors);
+                                      alert("Cant delete data. Delete users first, then division");
                                     } else if (
                                       result.data.delete_companies_by_pk === null
                                     ) {
@@ -129,7 +134,7 @@ class Admins extends PureComponent {
                     })
                   ) : (
                     <tr>
-                      <td colSpan="5">Loading...</td>
+                      <td colSpan="5">No data to display...</td>
                     </tr>
                   )}
                 </tbody>

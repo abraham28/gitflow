@@ -26,12 +26,10 @@ class Divisions extends PureComponent {
 
   async componentDidMount() {
     await getDivisions().then((result) => {
-      console.log(result);
       this.setState({
         tableUser: result.data.divisions.map((val) => ({
           ...val,
-          users: val.users_aggregate.aggregate.count,
-          // companyName: val.company.name,   
+          users: val.users_aggregate.aggregate.count,  
         })),   
       });
     });
@@ -39,7 +37,6 @@ class Divisions extends PureComponent {
 
   render() {
     const { tableUser } = this.state;
-    console.log(tableUser);
     return (
       <Switch>
         {this.state.redirect &&
@@ -53,15 +50,17 @@ class Divisions extends PureComponent {
         </Route>
         <Route>
           <div className="super-container">
-            <h2>Division</h2>
-            <NavLink
-              to={paths.divisionsForm}
-              onClick={() => this.setState({ selectedDivision: null })}
-            >
-              <button type="button" className="btn btn-info">
-                Add
-              </button>
-            </NavLink>
+          <div className="block01">
+              <h2>DIVISION PAGE</h2>
+            <p className="btn1">
+              <NavLink
+                to={paths.divisionsForm}
+                onClick={() => this.setState({ selectedDivision: null })}
+              >
+                ADD DIVISION<i className="fas fa-plus"></i>
+              </NavLink>
+            </p>
+            </div>
             <div className="tableData">
               <h1 id="title">Division Data</h1>
               <table id="usersdata">
@@ -100,14 +99,14 @@ class Divisions extends PureComponent {
                             </button>
                             <button
                               className="delete"
-                              onClick={async () => {
+                              onClick={ () => {
                                 const confirmed = window.confirm(
                                   `are you sure you want to delete ${divisions.name}`
                                 );
                                 if (confirmed) {
                                   deleteDivision(divisions.id).then((result) => {
                                     if (result.errors) {
-                                      alert(result.errors);
+                                      alert('Cant delete data, Delete users first');
                                     } else if (
                                       result.data.delete_divisions_by_pk === null
                                     ) {
@@ -134,7 +133,7 @@ class Divisions extends PureComponent {
                     })
                   ) : (
                     <tr>
-                      <td colSpan="5">Loading...</td>
+                      <td colSpan="5">No data to display...</td>
                     </tr>
                   )}
                 </tbody>

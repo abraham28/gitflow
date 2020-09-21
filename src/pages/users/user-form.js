@@ -1,10 +1,5 @@
-import React, { PureComponent } from "react";
-import {
-  createUser,
-  updateUsers,
-  getCompanies,
-  getDivisions,
-} from "../../graphqlAPI";
+import React, { PureComponent, createRef } from "react";
+import { createUser,updateUsers,getCompanies,getDivisions } from "../../graphqlAPI";
 import { Link } from "react-router-dom";
 import paths from "../../resources/paths";
 
@@ -28,11 +23,24 @@ const formValid = ({ formErrors, ...rest }) => {
   return valid;
 };
 
+
+
 const roleLevels = [{ value: "user", label: "Users" }];
+
+//(Associate, Senior Associate, Team Leader, Supervisor, Manager)
+const positionLevel = [
+  { value: "associate", label: "Associate" },
+  { value: "senior_associate", label: "Senior Associate" },
+  { value: "team_leader", label: "Team Leader" },
+  { value: "supervisor", label: "Supervisor" },
+  { value: "manager", label: "Manager" },
+];
 
 class UserForm extends PureComponent {
   constructor(props) {
     super(props);
+    this.psswordOneRef = createRef();
+    this.iconRevealPassword = createRef();
     this.state = {
       companies: [],
       divisions: [],
@@ -40,6 +48,11 @@ class UserForm extends PureComponent {
       first_name: props.user && props.user.first_name,
       last_name: props.user && props.user.last_name,
       role: props.user && props.user.role,
+      birthdate: props.user && props.user.birthdate,
+      gender: props.user && props.user.gender,
+      skill: props.user && props.user.skill,
+      mobile: props.user && props.user.mobile,
+      position: props.user && props.user.position,
       company_id: props.user && props.user.company_id,
       division_id: props.user && props.user.division_id,
       password: "",
@@ -54,6 +67,11 @@ class UserForm extends PureComponent {
         last_name: "",
         email: "",
         role: "",
+        birthdate: "",
+        gender: "",
+        skill: "",
+        mobile: "",
+        position: "",
         company_id: "",
         division_id: "",
       },
@@ -140,7 +158,7 @@ class UserForm extends PureComponent {
     });
   };
 
-  comparePassword = (event) => {
+  comparePassword = () => {
     if (this.state.password === this.state.confirmpassword) {
       this.setState({
         match: true,
@@ -152,32 +170,76 @@ class UserForm extends PureComponent {
     }
   };
 
+  togglePassword = () => {
+    this.setState({ isPasswordReveal: !this.state.isPasswordReveal });
+  };
+
   handleSubmit = async (e) => {
     e.preventDefault();
-
+    const { password, confirmpassword,numberValid, uppercaseValid, specialCharValid, charNumberValid } = this.state;
+    if (password !== confirmpassword) {
+      alert("password not match");
+      return null;
+    } else if (numberValid === false) {
+      alert("please input atleast 1 number")
+      return null;
+    } else if (uppercaseValid === false) {
+      alert("Please add atleast 1 Upper case")
+      return null;
+    } else if (specialCharValid === false) {
+      alert("Please add atleast 1 Special character")
+      return null;
+    } else if (charNumberValid === false) {
+      alert ("Character must be 8-20")
+      return null;
+    }
     //if form doesnt have error
     if (formValid(this.state)) {
+      const {
+        first_name,
+        last_name,
+        email,
+        role,
+        birthdate,
+        gender,
+        skill,
+        mobile,
+        position,
+        company_id,
+        division_id,
+        password,
+      } = this.state;
       console.log(`
         --SUBMITTING--
-        First Name: ${this.state.first_name}
-        Last Name: ${this.state.last_name}
-        Email: ${this.state.email}
-        role: ${this.state.role}
-        companies: ${this.state.company_id}
-        divisions: ${this.state.division_id}
-        Password: ${this.state.password}
+        First Name: ${first_name}
+        Last Name: ${last_name}
+        Email: ${email}
+        role: ${role}
+        birthdate: ${birthdate}
+        gender:${gender}
+        skill: ${skill}
+        mobile: ${mobile}
+        companies: ${company_id}
+        divisions: ${division_id}
+        Password: ${password}
+        Position: ${position}
       `);
 
       //for users update
       if (this.state.isUpdate) {
-        await updateUsers(this.state.email, {
-          first_name: this.state.first_name,
-          last_name: this.state.last_name,
-          email: this.state.email,
-          password: this.state.password,
-          role: this.state.role,
-          company_id: this.state.company_id,
-          division_id: this.state.division_id,
+        await updateUsers(email, {
+          first_name: first_name,
+          last_name: last_name,
+          email: email,
+          password: password,
+          role: role,
+          birthdate: birthdate,
+          gender: gender,
+          skill: skill,
+          mobile: mobile,
+          position: position,
+          company_id: company_id,
+          division_id: division_id,
         })
           .then((result) => {
             if (result.errors) {
@@ -188,9 +250,8 @@ class UserForm extends PureComponent {
                 alert(result.errors[0].message);
               }
             } else {
-              alert(`${this.state.email} Updated!`);
+              alert(`${email} Updated!`);
               window.location.href = paths.users;
-              console.log(result);
             }
           })
           .catch((e) => console.log(e));
@@ -199,13 +260,18 @@ class UserForm extends PureComponent {
       //users create if there is no to update
       else {
         await createUser({
-          first_name: this.state.first_name,
-          last_name: this.state.last_name,
-          email: this.state.email,
-          password: this.state.password,
-          role: this.state.role,
-          company_id: this.state.company_id,
-          division_id: this.state.division_id,
+          first_name: first_name,
+          last_name: last_name,
+          email: email,
+          password: password,
+          role: role,
+          birthdate: birthdate,
+          skill: skill,
+          gender: gender,
+          mobile: mobile,
+          position: position,
+          company_id: company_id,
+          division_id: division_id,
         })
           .then((result) => {
             if (result.errors) {
@@ -218,7 +284,6 @@ class UserForm extends PureComponent {
             } else {
               alert("user Created");
               window.location.href = paths.users;
-              console.log(result);
             }
           })
           .catch((e) => console.log(e));
@@ -259,21 +324,22 @@ class UserForm extends PureComponent {
           ? ""
           : "invalid email address try again ";
         break;
-
-      // case "password":
-      //   formErrors.password =
-      //     value.length < 8 ? "minimum 8 characters required" : "";
-      //   break;
-
-      // case "confirmpassword":
-      //   formErrors.confirmpassword =
-      //     formErrors.confirmpassword !== formErrors.password
-      //       ? formErrors.password !== formErrors.confirmpassword
-      //       : formErrors.password === formErrors.confirmPassword
-      //       ? "password match"
-      //       : "password does not match";
-      //   break;
-
+      case "skills":
+        formErrors.skill = value.length > 0 ? "" : "please add skill";
+        break;
+      case "gender":
+        formErrors.gender =
+          value.length < 4 ? "minimum 4 characters required" : "";
+        break;
+      case "birthdate":
+        formErrors.birthdate = value.length > 0 ? "" : "please add birthdate";
+        break;
+      case "mobile":
+        formErrors.mobile = value.length < 11 ? "11 numbers is required" : "";
+        break;
+      case "position":
+        formErrors.position = value.length > 0 ? "" : "";
+        break;
       case "role":
         formErrors.role = value.length > 0 ? "" : "";
         break;
@@ -284,10 +350,11 @@ class UserForm extends PureComponent {
   };
 
   render() {
-    const { formErrors } = this.state;
+    const { formErrors, isPasswordReveal } = this.state;
     return (
       <div className="form-container">
         <form onSubmit={this.handleSubmit}>
+          {/* role option */}
           <select
             onChange={this.handleChange}
             name="role"
@@ -300,6 +367,32 @@ class UserForm extends PureComponent {
               <option value={value}>{label}</option>
             ))}
           </select>
+
+          {/* option field for position */}
+          <select
+            onChange={this.handleChange}
+            name="position"
+            defaultValue={this.state.position}
+          >
+            <option selected hidden disabled>
+              ---Select Position---
+            </option>
+            {positionLevel.map(({ value, label }) => (
+              <option value={value}>{label}</option>
+            ))}
+          </select>
+
+          <input
+            placeholder="Phone number"
+            text="phone"
+            name="mobile"
+            required
+            value={this.state.mobile}
+            onChange={this.handleChange}
+          />
+          {formErrors.mobile.length > 0 && (
+            <span className="errorMessage">{formErrors.mobile}</span>
+          )}
 
           <input
             placeholder="Email Address"
@@ -314,82 +407,29 @@ class UserForm extends PureComponent {
             <span className="errorMessage">{formErrors.email}</span>
           )}
 
-          <input
-            placeholder="Password"
-            text="Password"
-            type="password"
-            name="password"
-            defaultValue={this.state.password}
-            onChange={(event) => this.handlePasswordChange(event)}
-          />
-          {/* {formErrors.password.length > 0 && (
-            <span className="errorMessage">{formErrors.password}</span>
-          )} */}
-          <input
-            className={`input${this.state.match === false ? "--error" : ""}`}
-            placeholder="Confirm Password"
-            text="Password"
-            type="password"
-            name="confirmpassword"
-            defaultValue={this.state.confirmpassword}
-            onChange={(event) => this.handleConfirmPasswordChange(event)}
-            onBlur={this.comparePassword}
-          />
-          {/* {formErrors.password !== formErrors.confirmpassword && (
-            <span className="errorMessage">{formErrors.confirmpassword}</span>
-          )} */}
+          <div className="password">
+            <input
+              placeholder="Password"
+              text="Password"
+              type={isPasswordReveal ? "text" : "password"}
+              name="password"
+              maxlength="20"
+              ref={this.passwordOneRef}
+              defaultValue={this.state.password}
+              onChange={(event) => this.handlePasswordChange(event)}
+            />
 
-          <input
-            type="text"
-            placeholder="First Name"
-            name="first_name"
-            pattern="[A-Za-z]{3,8}"
-            value={this.state.first_name}
-            onChange={this.handleChange}
-          />
-          {formErrors.first_name.length > 0 && (
-            <span className="errorMessage">{formErrors.first_name}</span>
-          )}
+            <span onClick={this.togglePassword} ref={this.iconRevealPassword}>
+              <span>
+                {isPasswordReveal ? (
+                  <i className="fas fa-eye"></i>
+                ) : (
+                  <i className="fas fa-eye-slash"></i>
+                )}
+              </span>
+            </span>
+          </div>
 
-          <input
-            placeholder="Last Name"
-            type="text"
-            name="last_name"
-            pattern="[A-Za-z]{3,16}"
-            value={this.state.last_name}
-            onChange={this.handleChange}
-          />
-          {formErrors.last_name.length > 0 && (
-            <span className="errorMessage">{formErrors.last_name}</span>
-          )}
-
-          {/* option field for company */}
-          <select
-            onChange={this.handleChange}
-            name="company_id"
-            value={this.state.company_id}
-          >
-            <option selected hidden disabled>
-              ---Select Company---
-            </option>
-            {this.state.companies.map(({ id, name }) => (
-              <option value={id}>{name}</option>
-            ))}
-          </select>
-
-          {/* option field for division */}
-          <select
-            onChange={this.handleChange}
-            name="division_id"
-            value={this.state.division_id}
-          >
-            <option selected hidden disabled>
-              ---Select Division---
-            </option>
-            {this.state.divisions.map(({ id, name }) => (
-              <option value={id}>{name}</option>
-            ))}
-          </select>
           <div className="validation">
             <div className="validator">
               <i
@@ -432,8 +472,114 @@ class UserForm extends PureComponent {
               <p className="validation-item">1 number</p>
             </div>
           </div>
-          <button type="submit">submit</button>
-          <Link to={paths.users}>cancel</Link>
+
+          <input
+            className={`input${this.state.match === false ? "--error" : ""}`}
+            placeholder="Confirm Password"
+            text="Password"
+            type="password"
+            name="confirmpassword"
+            maxlength="20"
+            defaultValue={this.state.confirmpassword}
+            onChange={(event) => this.handleConfirmPasswordChange(event)}
+            onBlur={this.comparePassword}
+          />
+
+          <input
+            className="namefield"
+            type="text"
+            placeholder="First Name"
+            name="first_name"
+            pattern="[A-Za-z\s]{2,17}"
+            value={this.state.first_name}
+            onChange={this.handleChange}
+          />
+          {formErrors.first_name.length > 0 && (
+            <span className="errorMessage">{formErrors.first_name}</span>
+          )}
+
+          <input
+            className="namefield"
+            placeholder="Last Name"
+            type="text"
+            name="last_name"
+            pattern="[A-Za-z\s]{2,17}"
+            value={this.state.last_name}
+            onChange={this.handleChange}
+          />
+          {formErrors.last_name.length > 0 && (
+            <span className="errorMessage">{formErrors.last_name}</span>
+          )}
+
+          <input
+            placeholder="Skill"
+            type="text"
+            name="skill"
+            pattern="[A-Za-z\s]{2,17}"
+            value={this.state.skill}
+            onChange={this.handleChange}
+          />
+          {formErrors.skill.length > 0 && (
+            <span className="errorMessage">{formErrors.skill}</span>
+          )}
+
+          <input
+            placeholder="Birthday"
+            type="date"
+            name="birthdate"
+            pattern="\d{1,2}/\d{1,2}/\d{4}"
+            value={this.state.birthdate}
+            onChange={this.handleChange}
+          />
+          {formErrors.birthdate.length > 0 && (
+            <span className="errorMessage">{formErrors.birthdate}</span>
+          )}
+
+          <input
+            placeholder="Gender"
+            type="text"
+            name="gender"
+            pattern="[A-Za-z\s]{2,6}"
+            value={this.state.gender}
+            onChange={this.handleChange}
+          />
+          {formErrors.gender.length > 0 && (
+            <span className="errorMessage">{formErrors.gender}</span>
+          )}
+
+          {/* option field for company */}
+          <select
+            onChange={this.handleChange}
+            name="company_id"
+            value={this.state.company_id}
+          >
+            <option selected hidden disabled>
+              ---Select Company---
+            </option>
+            {this.state.companies.map(({ id, name }) => (
+              <option value={id}>{name}</option>
+            ))}
+          </select>
+
+          {/* option field for division */}
+          <select
+            onChange={this.handleChange}
+            name="division_id"
+            value={this.state.division_id}
+          >
+            <option selected hidden disabled>
+              ---Select Division---
+            </option>
+            {this.state.divisions.map(({ id, name }) => (
+              <option value={id}>{name}</option>
+            ))}
+          </select>
+          <div className="confirm-section">
+            <button type="submit">submit</button>
+            <p>
+              <Link to={paths.users}>cancel</Link>
+            </p>
+          </div>
         </form>
       </div>
     );

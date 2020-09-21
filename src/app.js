@@ -8,6 +8,7 @@ import Admins from "./pages/admins";
 import Companies from "./pages/companies";
 import Divisions from "./pages/divisions";
 import Users from "./pages/users";
+import UserInfo from "./pages/userinfo/userinfo";
 import paths from "./resources/paths";
 
 
@@ -39,8 +40,8 @@ class App extends PureComponent {
                     <Divisions />
                   </div>
                 </Route>
-                <Route path={paths.groups}>
-                  <div>groups</div>
+                <Route path={paths.userinfo}>
+                  <div><UserInfo/></div>
                 </Route>
                 <Route path={paths.users}>
                   <div><Users /></div>

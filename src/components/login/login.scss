@@ -1,20 +1,26 @@
 .login-container {
     margin: 0 auto;
     width: 500px;
+    padding: 230px 0;
+    font-size: 14px;
+    font-family: "Source Sans Pro", sans-serif;
 }
 .login-holder h1 {
     text-align: center;
     color: #215097c2;
+    font-weight: bolder;
+    margin-bottom: 25px;
+    font-size: 2.5rem;
 }
 .login-holder h2 {
     text-align: center;
     color: #2a2d53;
 }
 .login-holder {
-    margin: 114px 0;
-    border: 1px solid #417f9754;
-    background: #9d98b040;
-    box-shadow: 0px 0px 12px 3px rgba(145,139,145,1);
+    border-radius: 20px;
+    padding: 30px 0;
+    background: #fff;
+    box-shadow: 0px 0px 12px 3px #010234;
 }
 .login-flex {
     display: flex;
@@ -30,18 +36,12 @@
     height: 30px;
     border: 1px solid #8cb3ee;
 } 
-.login-flex ::placeholder {
-    text-align: center;
-} 
 .login-flex input[type="password"] {
     width: 60%;
     margin: 0 97px 20px;
     height: 30px;
     border: 1px solid #8cb3ee;
 
-} 
-.login-flex ::placeholder {
-    text-align: center;
 } 
 .login-flex button {
     margin: 0 182px;

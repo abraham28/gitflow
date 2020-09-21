@@ -1,7 +1,6 @@
 import React, { PureComponent } from "react";
 import "./login.scss";
 import { login } from "../../graphqlAPI";
-import Header from "../header/header";
 import paths from "../../resources/paths";
 
 class Login extends PureComponent {
@@ -51,21 +50,19 @@ class Login extends PureComponent {
   render() {
     const { email, password, submitted } = this.state;
     return (
-      <div>
-        <Header />
-        <div className="background">
           <div className="login-container">
             <div className="login-holder">
               <h1>Login</h1>
               <div className="login-flex">
                 <form onSubmit={this.handleSubmit}>
                   <input
-                    placeholder="Email Address"
+                    placeholder="Email address"
                     text="Email Address"
                     type="email"
                     name="email"
                     value={email}
                     onChange={this.handleChange}
+                    autoFocus
                   />
 
                   {submitted && !email && (
@@ -76,7 +73,7 @@ class Login extends PureComponent {
 
                   <input
                     type="password"
-                    placeholder="password"
+                    placeholder="Password"
                     name="password"
                     text="password"
                     value={password}
@@ -93,8 +90,6 @@ class Login extends PureComponent {
               </div>
             </div>
           </div>
-        </div>
-      </div>
     );
   }
 }

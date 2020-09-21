@@ -21,6 +21,7 @@ const formValid = ({ formErrors, ...rest }) => {
 };
 
 class CompanyForm extends PureComponent {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -58,7 +59,6 @@ class CompanyForm extends PureComponent {
             } else {
               alert(`${this.state.name} Updated!`);
               window.location.href = paths.companies;
-              console.log(result);
             }
           })
           .catch((e) => console.log(e));
@@ -77,7 +77,6 @@ class CompanyForm extends PureComponent {
             } else {
               alert("Company Created");
               window.location.href = paths.companies;
-              console.log(result);
             }
           })
           .catch((e) => console.log(e));
@@ -114,16 +113,17 @@ class CompanyForm extends PureComponent {
             text="text"
             type="text"
             name="name"
-            value={this.state.name}
+            defaultValue={this.state.name}
             onChange={this.handleChange}
           />
           {formErrors.name.length > 0 && (
             <span className="errorMessage">{formErrors.name}</span>
           )}
 
-
+          <div className="confirm-section">
           <button type="submit">submit</button>
-          <Link to={paths.companies}>cancel</Link>
+          <p><Link to={paths.companies}>cancel</Link></p>
+          </div>
         </form>
       </div>
     );
