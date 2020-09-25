@@ -27,7 +27,6 @@ class Login extends PureComponent {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-
     this.setState({ submitted: true });
     const { email, password } = this.state;
     if (email && password) {
@@ -39,7 +38,16 @@ class Login extends PureComponent {
         alert("incorrect email/password");
       } else {
         localStorage.setItem("user", JSON.stringify(data.users[0]));
-        window.location.href = paths.root;
+        window.location.href = paths.dashboard;
+      }  if (!data || data.admins.length < 1 ) {
+        alert ("incorrect email/password");
+      } 
+      // else if  (!data || data.admins.length !== "active") {
+      //   alert("inactive");
+      // }
+      else {
+        localStorage.setItem("user", JSON.stringify(data.admins[0]));
+        window.location.href = paths.dashboard;
       }
     } else {
       const message = this.state.message;
@@ -50,46 +58,53 @@ class Login extends PureComponent {
   render() {
     const { email, password, submitted } = this.state;
     return (
-          <div className="login-container">
-            <div className="login-holder">
-              <h1>Login</h1>
-              <div className="login-flex">
-                <form onSubmit={this.handleSubmit}>
-                  <input
-                    placeholder="Email address"
-                    text="Email Address"
-                    type="email"
-                    name="email"
-                    value={email}
-                    onChange={this.handleChange}
-                    autoFocus
-                  />
+      <div className="login-container">
+        <div className="login-holder">
+          <h1>ADMIN LOGIN</h1>
+          <div className="login-flex">
+            <div className="input-icons">
+              <form onSubmit={this.handleSubmit}>
+                <i className="fa fa-envelope icon"></i>
+                <input
+                  className="input-field"
+                  placeholder="Email address"
+                  text="Email Address"
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={this.handleChange}
+                  autoFocus
+                />
 
-                  {submitted && !email && (
-                    <div className="errorMessage">
-                      Please fiil up email address
-                    </div>
-                  )}
+                {submitted && !email && (
+                  <div className="errorMessage">
+                    Please fiil up email address
+                  </div>
+                )}
 
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    name="password"
-                    text="password"
-                    value={password}
-                    onChange={this.handleChange}
-                  />
-                  {submitted && !password && (
-                    <div className="errorMessage">
-                      Please fill up the password
-                    </div>
-                  )}
+                <i className="fas fa-key icon icons"></i>
+                <input
+                  className="input-field"
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  text="password"
+                  value={password}
+                  onChange={this.handleChange}
+                />
 
-                  <button type="submit">Login</button>
-                </form>
-              </div>
+                {submitted && !password && (
+                  <div className="errorMessage">
+                    Please fill up the password
+                  </div>
+                )}
+
+                <button type="submit">Login</button>
+              </form>
             </div>
           </div>
+        </div>
+      </div>
     );
   }
 }

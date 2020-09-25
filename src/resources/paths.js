@@ -5,13 +5,14 @@ export const admins = "/admins";
 export const companies = "/companies";
 export const divisions = "/divisions";
 export const userinfo = "/userinfo";
+export const dashboard = "/dashboard";
 export const groups = "/groups";
 export const users = "/users";
 export const adminsForm = "/admins/form";
 export const companiesForm = "/companies/form";
 export const divisionsForm = "/divisions/form";
 export const usersForm = "/users/form";
-export const pagination = "/paginations";
+export const usersEdit = "/users/form";
 export default {
   root,
   login,
@@ -21,8 +22,9 @@ export default {
   divisions,
   groups,
   userinfo,
+  dashboard,
   users,
-  pagination,
+  usersEdit,
   adminsForm,
   companiesForm,
   divisionsForm,

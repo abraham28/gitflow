@@ -1,31 +1,46 @@
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
 .flex-container {
-display: flex;
-flex-direction: column;
-flex-wrap: wrap;
+  float: left;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow: hidden;
+  width: 36%;
 }
-.personal-info {
-    border: 1px solid blue;
-    width: 33%;
-    overflow: hidden;
+.personal-info p,
+.company-info p {
+  border-bottom: 1px solid black;
+  font-size: 16px;
+  padding: 10px;
 }
-.personal-info table {
-    width: 100%;
-    margin: 0;
-    text-align: center;
-}
-th, td {
-    padding: 5px;
-    text-align: left;
-  }
-/* .personal-info thead {
-    float: left;
-}
-.personal-info tbody {
-    float: right;
-} */
-.skill-info {
-    border:1px solid black;
-}
+.personal-info,
 .company-info {
-    border: 1px solid black;
+  border: 1px solid blue;
+  width: 100%;
+  margin-bottom: 37px;
+  overflow: hidden;
+}
+.personal-info table,
+.company-info table {
+  width: 100%;
+  overflow: hidden;
+}
+th,
+td {
+  padding: 5px;
+  text-align: left;
+}
+.right-container {
+  overflow: hidden;
+  float: right;
+  width: 54%;
+}
+.skill-info {
+  border: 1px solid black;
+  float: right;
 }

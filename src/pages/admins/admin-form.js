@@ -30,6 +30,11 @@ const roleLevels = [
   { value: "division_admin", label: "Division Admin" },
 ];
 
+const statusAdmin = [
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" },
+];
+
 class AdminForm extends PureComponent {
   constructor(props) {
     super(props);
@@ -41,6 +46,7 @@ class AdminForm extends PureComponent {
       first_name: props.user && props.user.first_name,
       last_name: props.user && props.user.last_name,
       role: props.user && props.user.role,
+      status: props.user && props.user.status,
       password: "",
       confirmpassword: "",
       match: null,
@@ -53,6 +59,7 @@ class AdminForm extends PureComponent {
         last_name: "",
         email: "",
         role: "",
+        status: "",
       },
       isUpdate: Boolean(props.user),
     };
@@ -151,7 +158,7 @@ class AdminForm extends PureComponent {
     e.preventDefault();
     const { password, confirmpassword } = this.state;
     if (password !== confirmpassword) {
-      alert('password not match');
+      alert("password not match");
       return null;
     }
     if (formValid(this.state)) {
@@ -161,6 +168,7 @@ class AdminForm extends PureComponent {
       Last Name: ${this.state.last_name}
       Email: ${this.state.email}
       role: ${this.state.role}
+      status: ${this.state.status}
       Password: ${this.state.password}
       `);
       if (this.state.isUpdate) {
@@ -168,6 +176,7 @@ class AdminForm extends PureComponent {
           first_name: this.state.first_name,
           last_name: this.state.last_name,
           email: this.state.email,
+          status: this.state.status,
           password: this.state.password,
           role: this.state.role,
         })
@@ -190,22 +199,23 @@ class AdminForm extends PureComponent {
           first_name: this.state.first_name,
           last_name: this.state.last_name,
           email: this.state.email,
+          status: this.state.status,
           password: this.state.password,
           role: this.state.role,
         })
-        .then((result) => {
-          if (result.errors) {
-            const uniq = new RegExp("Uniqueness violation");
-            if (uniq.test(result.errors[0].message)) {
-              alert("Email already exists");
+          .then((result) => {
+            if (result.errors) {
+              const uniq = new RegExp("Uniqueness violation");
+              if (uniq.test(result.errors[0].message)) {
+                alert("Email already exists");
+              } else {
+                alert(result.errors[0].message);
+              }
             } else {
-              alert(result.errors[0].message);
+              alert("Admin Created");
+              window.location.href = paths.admins;
             }
-          } else {
-            alert("Admin Created");
-            window.location.href = paths.admins;
-          }
-        })
+          })
           .catch((e) => console.log(e));
       }
     } else {
@@ -228,17 +238,6 @@ class AdminForm extends PureComponent {
         formErrors.last_name =
           value.length < 2 ? "minimum 4 characters required" : "";
         break;
-
-      case "company":
-        formErrors.company_id =
-          value.length > 0 ? "" : "please input companies";
-        break;
-
-      case "division":
-        formErrors.division_id =
-          value.length > 0 ? "" : "please input division";
-        break;
-
       case "email":
         formErrors.email = emailRegex.test(value)
           ? ""
@@ -246,6 +245,9 @@ class AdminForm extends PureComponent {
         break;
 
       case "role":
+        formErrors.role = value.length > 0 ? "" : "";
+        break;
+      case "status":
         formErrors.role = value.length > 0 ? "" : "";
         break;
       default:
@@ -256,142 +258,312 @@ class AdminForm extends PureComponent {
 
   render() {
     const { formErrors, isPasswordReveal } = this.state;
+    const user = JSON.parse(localStorage.getItem("user"));
     return (
       <div className="form-container">
-        <form onSubmit={this.handleSubmit}>
-          <select
-            onChange={this.handleChange}
-            name="role"
-            value={this.state.role}
-          >
-            <option selected hidden disabled>
-              ---Please Select---
-            </option>
-            {roleLevels.map(({ value, label }) => (
-              <option value={value}>{label}</option>
-            ))}
-          </select>
+        {user.role.toString() === "system_admin" ? (
+          <form onSubmit={this.handleSubmit}>
+            <select
+              onChange={this.handleChange}
+              name="role"
+              value={this.state.role}
+            >
+              <option selected hidden disabled>
+                ---Please Select---
+              </option>
+              {roleLevels.map(({ value, label }) => (
+                <option value={value}>{label}</option>
+              ))}
+            </select>
 
-          <input
-            placeholder="Email Address"
-            type="email"
-            name="email"
-            required
-            value={this.state.email}
-            onChange={this.handleChange}
-          />
-          {formErrors.email.length > 0 && (
-            <span className="errorMessage">{formErrors.email}</span>
-          )}
+            {/* Status */}
+            <select
+              onChange={this.handleChange}
+              name="status"
+              value={this.state.status}
+            >
+              <option selected hidden disabled>
+                ---Status---
+              </option>
+              {statusAdmin.map(({ value, label }) => (
+                <option value={value}>{label}</option>
+              ))}
+            </select>
 
-        <div className="password">
-          <input
-            placeholder="Password"
-            type={isPasswordReveal ? "text" : "password"}
-            name="password"
-            maxlength="20"
-            ref={this.passwordOneRef}
-            value={this.state.password}
-            onChange={(event) => this.handlePasswordChange(event)}
-          />
+            <input
+              placeholder="Email Address"
+              type="email"
+              name="email"
+              required
+              value={this.state.email}
+              onChange={this.handleChange}
+            />
+            {formErrors.email.length > 0 && (
+              <span className="errorMessage">{formErrors.email}</span>
+            )}
 
-          <span onClick={this.togglePassword} ref={this.iconRevealPassword}>
-            <span>
-              {isPasswordReveal ? (
-                <i className="fas fa-eye"></i>
-              ) : (
-                <i className="fas fa-eye-slash"></i>
-              )}
-            </span>
-          </span>
-          </div>
+            <div className="password">
+              <input
+                placeholder="Password"
+                type={isPasswordReveal ? "text" : "password"}
+                name="password"
+                maxlength="20"
+                ref={this.passwordOneRef}
+                value={this.state.password}
+                onChange={(event) => this.handlePasswordChange(event)}
+              />
 
-          <div className="validation">
-            <div className="validator">
-              <i
-                className={
-                  this.state.charNumberValid
-                    ? "fas fa-check success"
-                    : "fas fa-times error"
-                }
-              ></i>
-              <p className="validation-item">8-20 characters</p>
+              <span onClick={this.togglePassword} ref={this.iconRevealPassword}>
+                <span>
+                  {isPasswordReveal ? (
+                    <i className="fas fa-eye"></i>
+                  ) : (
+                    <i className="fas fa-eye-slash"></i>
+                  )}
+                </span>
+              </span>
             </div>
-            <div className="validator">
-              <i
-                className={
-                  this.state.specialCharValid
-                    ? "fas fa-check success"
-                    : "fas fa-times error"
-                }
-              ></i>
-              <p className="validation-item">1 special character</p>
-            </div>
-            <div className="validator">
-              <i
-                className={
-                  this.state.uppercaseValid
-                    ? "fas fa-check success"
-                    : "fas fa-times error"
-                }
-              ></i>
-              <p className="validation-item">1 uppercase letter</p>
-            </div>
-            <div className="validator">
-              <i
-                className={
-                  this.state.numberValid
-                    ? "fas fa-check success"
-                    : "fas fa-times error"
-                }
-              ></i>
-              <p className="validation-item">1 number</p>
-            </div>
-          </div>
-          <input
-            className={`input${this.state.match === false ? "--error" : ""}`}
-            placeholder="Confirm Password"
-            type="password"
-            name="confirmpassword"
-            maxLength="20"
-            required
-            value={this.state.confirmpassword}
-            onChange={(event) => this.handleConfirmPasswordChange(event)}
-            onBlur={this.comparePassword}
-          />
-          <input className ="namefield"
-            type="text"
-            placeholder="First name"
-            autoCapitalize="words"
-            name="first_name"
-            pattern="[A-Za-z\s]{2,17}"
-            value={this.state.first_name}
-            onChange={this.handleChange}
-          />
-          {formErrors.first_name.length > 0 && (
-            <span className="errorMessage">{formErrors.first_name}</span>
-          )}
 
-          <input className ="namefield"
-            placeholder="Last name"
-            type="text"
-            name="last_name"
-            pattern="[A-Za-z\s]{2,17}"
-            value={this.state.last_name}
-            onChange={this.handleChange}
-           
-          />
-          {formErrors.last_name.length > 0 && (
-            <span className="errorMessage">{formErrors.last_name}</span>
-          )}
+            <div className="validation">
+              <div className="validator">
+                <i
+                  className={
+                    this.state.charNumberValid
+                      ? "fas fa-check success"
+                      : "fas fa-times error"
+                  }
+                ></i>
+                <p className="validation-item">8-20 characters</p>
+              </div>
+              <div className="validator">
+                <i
+                  className={
+                    this.state.specialCharValid
+                      ? "fas fa-check success"
+                      : "fas fa-times error"
+                  }
+                ></i>
+                <p className="validation-item">1 special character</p>
+              </div>
+              <div className="validator">
+                <i
+                  className={
+                    this.state.uppercaseValid
+                      ? "fas fa-check success"
+                      : "fas fa-times error"
+                  }
+                ></i>
+                <p className="validation-item">1 uppercase letter</p>
+              </div>
+              <div className="validator">
+                <i
+                  className={
+                    this.state.numberValid
+                      ? "fas fa-check success"
+                      : "fas fa-times error"
+                  }
+                ></i>
+                <p className="validation-item">1 number</p>
+              </div>
+            </div>
+            <input
+              className={`input${this.state.match === false ? "--error" : ""}`}
+              placeholder="Confirm Password"
+              type="password"
+              name="confirmpassword"
+              maxLength="20"
+              required
+              value={this.state.confirmpassword}
+              onChange={(event) => this.handleConfirmPasswordChange(event)}
+              onBlur={this.comparePassword}
+            />
+            <input
+              className="namefield"
+              type="text"
+              placeholder="First name"
+              autoCapitalize="words"
+              name="first_name"
+              pattern="[A-Za-z\s]{2,17}"
+              value={this.state.first_name}
+              onChange={this.handleChange}
+            />
+            {formErrors.first_name.length > 0 && (
+              <span className="errorMessage">{formErrors.first_name}</span>
+            )}
 
-          <div className="confirm-section">
-            <button type="submit">submit</button>
-            <p>
-              <Link to={paths.admins}>cancel</Link>
-            </p>
-          </div>
-        </form>
+            <input
+              className="namefield"
+              placeholder="Last name"
+              type="text"
+              name="last_name"
+              pattern="[A-Za-z\s]{2,17}"
+              value={this.state.last_name}
+              onChange={this.handleChange}
+            />
+            {formErrors.last_name.length > 0 && (
+              <span className="errorMessage">{formErrors.last_name}</span>
+            )}
+
+            <div className="confirm-section">
+              <button type="submit">submit</button>
+              <p>
+                <Link to={paths.admins}>cancel</Link>
+              </p>
+            </div>
+          </form>
+        ) : user.role.toString() === "super_admin" ? (
+          <form onSubmit={this.handleSubmit}>
+            <select
+              onChange={this.handleChange}
+              name="role"
+              value={this.state.role}
+            >
+              <option selected hidden disabled>
+                ---Please Select---
+              </option>
+              {roleLevels.map(({ value, label }) => (
+                <option value={value}>{label}</option>
+              ))}
+            </select>
+
+            {/* Status */}
+            <select
+              onChange={this.handleChange}
+              name="status"
+              value={this.state.status}
+            >
+              <option selected hidden disabled>
+                ---Status---
+              </option>
+              {statusAdmin.map(({ value, label }) => (
+                <option value={value}>{label}</option>
+              ))}
+            </select>
+
+            <input
+              placeholder="Email Address"
+              type="email"
+              name="email"
+              required
+              value={this.state.email}
+              onChange={this.handleChange}
+            />
+            {formErrors.email.length > 0 && (
+              <span className="errorMessage">{formErrors.email}</span>
+            )}
+
+            <div className="password">
+              <input
+                placeholder="Password"
+                type={isPasswordReveal ? "text" : "password"}
+                name="password"
+                maxlength="20"
+                ref={this.passwordOneRef}
+                value={this.state.password}
+                onChange={(event) => this.handlePasswordChange(event)}
+              />
+
+              <span onClick={this.togglePassword} ref={this.iconRevealPassword}>
+                <span>
+                  {isPasswordReveal ? (
+                    <i className="fas fa-eye"></i>
+                  ) : (
+                    <i className="fas fa-eye-slash"></i>
+                  )}
+                </span>
+              </span>
+            </div>
+
+            <div className="validation">
+              <div className="validator">
+                <i
+                  className={
+                    this.state.charNumberValid
+                      ? "fas fa-check success"
+                      : "fas fa-times error"
+                  }
+                ></i>
+                <p className="validation-item">8-20 characters</p>
+              </div>
+              <div className="validator">
+                <i
+                  className={
+                    this.state.specialCharValid
+                      ? "fas fa-check success"
+                      : "fas fa-times error"
+                  }
+                ></i>
+                <p className="validation-item">1 special character</p>
+              </div>
+              <div className="validator">
+                <i
+                  className={
+                    this.state.uppercaseValid
+                      ? "fas fa-check success"
+                      : "fas fa-times error"
+                  }
+                ></i>
+                <p className="validation-item">1 uppercase letter</p>
+              </div>
+              <div className="validator">
+                <i
+                  className={
+                    this.state.numberValid
+                      ? "fas fa-check success"
+                      : "fas fa-times error"
+                  }
+                ></i>
+                <p className="validation-item">1 number</p>
+              </div>
+            </div>
+            <input
+              className={`input${this.state.match === false ? "--error" : ""}`}
+              placeholder="Confirm Password"
+              type="password"
+              name="confirmpassword"
+              maxLength="20"
+              required
+              value={this.state.confirmpassword}
+              onChange={(event) => this.handleConfirmPasswordChange(event)}
+              onBlur={this.comparePassword}
+            />
+            <input
+              className="namefield"
+              type="text"
+              placeholder="First name"
+              autoCapitalize="words"
+              name="first_name"
+              pattern="[A-Za-z\s]{2,17}"
+              value={this.state.first_name}
+              onChange={this.handleChange}
+            />
+            {formErrors.first_name.length > 0 && (
+              <span className="errorMessage">{formErrors.first_name}</span>
+            )}
+
+            <input
+              className="namefield"
+              placeholder="Last name"
+              type="text"
+              name="last_name"
+              pattern="[A-Za-z\s]{2,17}"
+              value={this.state.last_name}
+              onChange={this.handleChange}
+            />
+            {formErrors.last_name.length > 0 && (
+              <span className="errorMessage">{formErrors.last_name}</span>
+            )}
+
+            <div className="confirm-section">
+              <button type="submit">submit</button>
+              <p>
+                <Link to={paths.admins}>cancel</Link>
+              </p>
+            </div>
+          </form>
+        ) : (
+          <div></div>
+        )}
       </div>
     );
   }

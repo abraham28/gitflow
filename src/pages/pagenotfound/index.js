@@ -10,7 +10,7 @@ class PageNotFound extends PureComponent {
         <h1>404 page not found</h1>
         <button
           onClick={() => {
-            window.location.href = paths.root;
+            window.location.href = paths.dashboard;
           }}
         >
           go to home

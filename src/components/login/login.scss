@@ -1,83 +1,114 @@
 .login-container {
-    margin: 0 auto;
-    width: 500px;
-    padding: 230px 0;
-    font-size: 14px;
-    font-family: "Source Sans Pro", sans-serif;
+  margin: 0 426px 0 404px;
+  max-width: 770px;
+  padding: 68px 0;
+  font-size: 14px;
+  font-family: "Source Sans Pro", sans-serif;
 }
 .login-holder h1 {
-    text-align: center;
-    color: #215097c2;
-    font-weight: bolder;
-    margin-bottom: 25px;
-    font-size: 2.5rem;
+  color: #2d2e28;
+  font-weight: bolder;
+  margin-bottom: 5px;
+  margin: 0 154px 40px;
+  float: right;
+  font-size: 19px;
 }
 .login-holder h2 {
-    text-align: center;
-    color: #2a2d53;
+  text-align: center;
+  color: #2a2d53;
 }
 .login-holder {
-    border-radius: 20px;
-    padding: 30px 0;
-    background: #fff;
-    box-shadow: 0px 0px 12px 3px #010234;
+  border-radius: 9px;
+  padding: 145px 0 129px;
+  background: #fff url(../../images/transcosmos.png) 10px 218px no-repeat;
+  background-size: 52%;
+  box-shadow: 0px 0px 12px 3px #010234;
+  max-width: 770px;
+  overflow: hidden;
 }
 .login-flex {
-    display: flex;
-    box-sizing: border-box;
+  float: right;
+  width: 44%;
 }
 .login-flex form {
-    width: 100%;
-    padding-bottom: 27px;
+  width: 100%;
+  padding-bottom: 27px;
+}
+.login-flex input {
+  background: #e6e6e6;
 }
 .login-flex input[type="email"] {
-    width: 60%;
-    margin: 0 97px 20px;
-    height: 30px;
-    border: 1px solid #8cb3ee;
-} 
-.login-flex input[type="password"] {
-    width: 60%;
-    margin: 0 97px 20px;
-    height: 30px;
-    border: 1px solid #8cb3ee;
+  outline: none;
+  width: 70%;
+  height: 42px;
+  border-radius: 22px;
+  padding-left: 23px;
+  border: 0px;
+}
+.input-icons i {
+  position: absolute;
+}
 
-} 
+.input-icons {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.input-field {
+  padding: 10px;
+  margin-bottom: 6px;
+}
+.icon {
+  padding: 14px 6px 13px;
+  min-width: 16px;
+}
+.icons {
+  top: 47px;
+  left: 0;
+}
+.login-flex input[type="password"] {
+  outline: none;
+  width: 70%;
+  height: 42px;
+  border-radius: 22px;
+  padding-left: 23px;
+  border: 0px;
+}
 .login-flex button {
-    margin: 0 182px;
-    width: 135px;
-    outline: none;
-    cursor: pointer;
-    font-size: 18px;
-    background: #707febbd;
-    color: #fff;
-    border: none;
-    padding: 8px 0;
+  width: 233px;
+  outline: none;
+  cursor: pointer;
+  font-size: 18px;
+  background: #57b845;
+  color: #fff;
+  border: none;
+  padding: 8px 0 5px;
+  border-radius: 20px;
+  margin: 17px 2px;
 }
 .login-flex button:hover {
-    background: #0d6e2b;
+  background: #0d6e2b;
 }
 .login-container .reg {
-    text-align: center;
+  text-align: center;
 }
 .login-container .reg a {
-    text-decoration: none;
-    color: black;
+  text-decoration: none;
+  color: black;
 }
 .login-container a:hover {
-    color: salmon;
+  color: salmon;
 }
 .Register {
-    text-align: center;
-    font-size: 15px;
-    margin-bottom: 39px;
+  text-align: center;
+  font-size: 15px;
+  margin-bottom: 39px;
 }
 .Register a {
-    text-decoration: none;
-    color:black;
+  text-decoration: none;
+  color: black;
 }
 .errorMessage {
-    color: red;
-    margin: 0 154px;
-
-  }
+  color: red;
+  margin: 0 154px;
+}

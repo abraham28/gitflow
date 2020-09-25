@@ -38,6 +38,10 @@ class Admins extends PureComponent {
 
   render() {
     const { companies } = this.state;
+    companies.sort((a, b) =>
+    a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+  );
+    const user = JSON.parse(localStorage.getItem("user"));
     return (
       <Switch>
         {this.state.redirect &&
@@ -50,97 +54,282 @@ class Admins extends PureComponent {
           <CompanyForm company={this.state.selectedCompany} />
         </Route>
         <Route>
-          <div className="super-container">
-          <div className="block01">
-              <h2>COMPANY PAGE</h2>
-            <p className="btn1">
-              <NavLink
-                to={paths.companiesForm}
-                onClick={() => this.setState({ selectedCompany: null })}
-              >
-                ADD COMPANY<i className="fas fa-plus"></i>
-              </NavLink>
-            </p>
-            </div>
-            <div className="tableData">
-              <h1 id="title">Company Data</h1>
-              <table id="usersdata">
-                <thead>
-                  <tr>
-                    <th>Company Name</th>
-                    <th>Division</th>
-                    <th>Users</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {companies.length > 0 ? (
-                    companies.map((company, index) => {
-                      const {
-                        name,
-                        divisions,
-                        users,
-                      } = company;
-                      return (
-                        <tr key={index}>
-                          <td>{name}</td>
-                          <td>{divisions}</td>
-                          <td>{users.toString()}</td>
-                          <td className="btn-container">
-                            <button
-                              className="edit"
-                              onClick={() => {
-                                this.setState({
-                                  selectedCompany: company,
-                                  redirect: paths.companiesForm,
-                                });
-                              }}
-                            >
-                              edit
-                            </button>
-                            <button
-                              className="delete"
-                              onClick={async () => {
-                                const confirmed = window.confirm(
-                                  `are you sure you want to delete ${company.name}`
-                                );
-                                if (confirmed) {
-                                  deleteCompany(company.id).then((result) => {
-                                    if (result.errors) {
-                                      alert("Cant delete data. Delete users first, then division");
-                                    } else if (
-                                      result.data.delete_companies_by_pk === null
-                                    ) {
-                                      alert("no user has been deleted");
-                                    } else if (
-                                      result.data.delete_companies_by_pk.name
-                                    ) {
-                                      this.componentDidMount();
-                                      alert(
-                                        `${result.data.delete_companies_by_pk.name} has been deleted`
-                                      );
-                                    } else {
-                                      alert("unknown error");
-                                    }
-                                  });
-                                }
-                              }}
-                            >
-                              delete
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
+          {user.role.toString() === "company_admin" ? (
+            <div className="super-container">
+              <div className="block01">
+                <h2>COMPANY PAGE</h2>
+                <p className="btn1">
+                  <NavLink
+                    to={paths.companiesForm}
+                    onClick={() => this.setState({ selectedCompany: null })}
+                  >
+                    ADD COMPANY<i className="fas fa-plus"></i>
+                  </NavLink>
+                </p>
+              </div>
+              <div className="tableData">
+                <h1 id="title">Company Data</h1>
+                <table id="usersdata">
+                  <thead>
                     <tr>
-                      <td colSpan="5">No data to display...</td>
+                      <th>Company Name</th>
+                      <th>Division</th>
+                      <th>Users</th>
+                      <th>Actions</th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {companies.length > 0 ? (
+                      companies.map((company, index) => {
+                        const { name, divisions, users } = company;
+                        return (
+                          <tr key={index}>
+                            <td>{name}</td>
+                            <td>{divisions}</td>
+                            <td>{users.toString()}</td>
+                            <td className="btn-container">
+                              <button
+                                className="edit"
+                                onClick={() => {
+                                  this.setState({
+                                    selectedCompany: company,
+                                    redirect: paths.companiesForm,
+                                  });
+                                }}
+                              >
+                                edit
+                              </button>
+                              <button
+                                className="delete"
+                                onClick={async () => {
+                                  const confirmed = window.confirm(
+                                    `are you sure you want to delete ${company.name}`
+                                  );
+                                  if (confirmed) {
+                                    deleteCompany(company.id).then((result) => {
+                                      if (result.errors) {
+                                        alert(
+                                          "Cant delete data. Delete users first, then division"
+                                        );
+                                      } else if (
+                                        result.data.delete_companies_by_pk ===
+                                        null
+                                      ) {
+                                        alert("no user has been deleted");
+                                      } else if (
+                                        result.data.delete_companies_by_pk.name
+                                      ) {
+                                        this.componentDidMount();
+                                        alert(
+                                          `${result.data.delete_companies_by_pk.name} has been deleted`
+                                        );
+                                      } else {
+                                        alert("unknown error");
+                                      }
+                                    });
+                                  }
+                                }}
+                              >
+                                delete
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan="5">No data to display...</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          ) : user.role.toString() === "super_admin" ? (
+            <div className="super-container">
+              <div className="block01">
+                <h2>COMPANY PAGE</h2>
+                <p className="btn1">
+                  <NavLink
+                    to={paths.companiesForm}
+                    onClick={() => this.setState({ selectedCompany: null })}
+                  >
+                    ADD COMPANY<i className="fas fa-plus"></i>
+                  </NavLink>
+                </p>
+              </div>
+              <div className="tableData">
+                <h1 id="title">Company Data</h1>
+                <table id="usersdata">
+                  <thead>
+                    <tr>
+                      <th>Company Name</th>
+                      <th>Division</th>
+                      <th>Users</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {companies.length > 0 ? (
+                      companies.map((company, index) => {
+                        const { name, divisions, users } = company;
+                        return (
+                          <tr key={index}>
+                            <td>{name}</td>
+                            <td>{divisions}</td>
+                            <td>{users.toString()}</td>
+                            <td className="btn-container">
+                              <button
+                                className="edit"
+                                onClick={() => {
+                                  this.setState({
+                                    selectedCompany: company,
+                                    redirect: paths.companiesForm,
+                                  });
+                                }}
+                              >
+                                edit
+                              </button>
+                              <button
+                                className="delete"
+                                onClick={async () => {
+                                  const confirmed = window.confirm(
+                                    `are you sure you want to delete ${company.name}`
+                                  );
+                                  if (confirmed) {
+                                    deleteCompany(company.id).then((result) => {
+                                      if (result.errors) {
+                                        alert(
+                                          "Cant delete data. Delete users first, then division"
+                                        );
+                                      } else if (
+                                        result.data.delete_companies_by_pk ===
+                                        null
+                                      ) {
+                                        alert("no user has been deleted");
+                                      } else if (
+                                        result.data.delete_companies_by_pk.name
+                                      ) {
+                                        this.componentDidMount();
+                                        alert(
+                                          `${result.data.delete_companies_by_pk.name} has been deleted`
+                                        );
+                                      } else {
+                                        alert("unknown error");
+                                      }
+                                    });
+                                  }
+                                }}
+                              >
+                                delete
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan="5">No data to display...</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : user.role.toString() === "system_admin" ? (
+            <div className="super-container">
+              <div className="block01">
+                <h2>COMPANY PAGE</h2>
+                <p className="btn1">
+                  <NavLink
+                    to={paths.companiesForm}
+                    onClick={() => this.setState({ selectedCompany: null })}
+                  >
+                    ADD COMPANY<i className="fas fa-plus"></i>
+                  </NavLink>
+                </p>
+              </div>
+              <div className="tableData">
+                <h1 id="title">Company Data</h1>
+                <table id="usersdata">
+                  <thead>
+                    <tr>
+                      <th>Company Name</th>
+                      <th>Division</th>
+                      <th>Users</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {companies.length > 0 ? (
+                      companies.map((company, index) => {
+                        const { name, divisions, users } = company;
+                        return (
+                          <tr key={index}>
+                            <td>{name}</td>
+                            <td>{divisions}</td>
+                            <td>{users.toString()}</td>
+                            <td className="btn-container">
+                              <button
+                                className="edit"
+                                onClick={() => {
+                                  this.setState({
+                                    selectedCompany: company,
+                                    redirect: paths.companiesForm,
+                                  });
+                                }}
+                              >
+                                edit
+                              </button>
+                              <button
+                                className="delete"
+                                onClick={async () => {
+                                  const confirmed = window.confirm(
+                                    `are you sure you want to delete ${company.name}`
+                                  );
+                                  if (confirmed) {
+                                    deleteCompany(company.id).then((result) => {
+                                      if (result.errors) {
+                                        alert(
+                                          "Cant delete data. Delete users first, then division"
+                                        );
+                                      } else if (
+                                        result.data.delete_companies_by_pk ===
+                                        null
+                                      ) {
+                                        alert("no user has been deleted");
+                                      } else if (
+                                        result.data.delete_companies_by_pk.name
+                                      ) {
+                                        this.componentDidMount();
+                                        alert(
+                                          `${result.data.delete_companies_by_pk.name} has been deleted`
+                                        );
+                                      } else {
+                                        alert("unknown error");
+                                      }
+                                    });
+                                  }
+                                }}
+                              >
+                                delete
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan="5">No data to display...</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : (
+            <div>Company User Only</div>
+          )}
         </Route>
       </Switch>
     );

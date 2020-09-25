@@ -21,6 +21,9 @@ a {
 .content {
   padding: 50px 40px;
   flex-grow: 1;
+  min-height: 789px;
+  overflow: hidden;
+
 }
 .user-login {
   color: #fff;
@@ -56,10 +59,11 @@ a {
 }
 .dashboard-container {
   width: 200px;
-  height: 100vh;
+  height: auto;
   background: #0584fe;
   display: flex;
   flex-flow: column;
+  z-index: 1;
 }
 .dashboard-container .userSec {
   position: relative;
@@ -70,6 +74,19 @@ a {
   border-radius: 30px;
   min-height: 60px;
   background-size: 14%;
+}
+.name-holder button {
+  padding: 0;
+  outline: none;
+  border:none;
+}
+.name-holder button a {
+  padding: 10px;
+  display: block;
+}
+.name-holder button a:hover {
+  color: #fff;
+  background: green;
 }
 .dashboard-container li .active {
   color: #fff;
@@ -106,7 +123,7 @@ a {
   margin-right: 10px;
 }
 .dashboard-container .logout button:hover {
-  background:  #58bb84;
+  background: #58bb84;
 }
 .name-holder {
   padding: 0 15px;
@@ -143,9 +160,21 @@ a {
   display: block;
 }
 .red {
-color: red;
+  color: red;
 }
 a:hover {
   color: #0056b3;
   text-decoration: none !important;
 }
+.display {
+  display: none;
+}
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 12%;
+  margin: 0 auto;
+  text-align: center;
+}
+

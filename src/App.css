@@ -2,6 +2,14 @@ html,
 body {
   height: 100%;
 }
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: #709ca673;
+  text-align: center;
+}
 .inner {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 16px;
