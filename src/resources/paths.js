@@ -12,7 +12,7 @@ export const adminsForm = "/admins/form";
 export const companiesForm = "/companies/form";
 export const divisionsForm = "/divisions/form";
 export const usersForm = "/users/form";
-export const usersEdit = "/users/form";
+export const usersEdit = "/users/edit";
 export default {
   root,
   login,

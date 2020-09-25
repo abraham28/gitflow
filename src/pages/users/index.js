@@ -107,6 +107,9 @@ class Users extends PureComponent {
         <Route path={paths.usersEdit}>
           <UserEdit user={this.state.selectedUser} />
         </Route>
+        <Route path={paths.usersForm}>
+          <UserForm user={this.state.selectedUser} />
+        </Route>
         <Route>
           {user.role.toString() === "system_admin" ? (
             <div className="super-container">
@@ -115,6 +118,7 @@ class Users extends PureComponent {
                 <p className="btn1">
                   <NavLink
                     to={paths.usersForm}
+                    
                     onClick={() => this.setState({ selectedUser: null })}
                   >
                     ADD USER<i className="fas fa-plus"></i>
@@ -258,7 +262,7 @@ class Users extends PureComponent {
                 <h2>USER PAGE</h2>
                 <p className="btn1">
                   <NavLink
-                    to={paths.usersForm}
+                    to={paths.UserForm}
                     onClick={() => this.setState({ selectedUser: null })}
                   >
                     ADD USER<i className="fas fa-plus"></i>

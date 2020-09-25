@@ -445,9 +445,9 @@ class UserForm extends PureComponent {
               name="password"
               maxlength="20"
               ref={this.passwordOneRef}
-              // value={this.state.password.data}
-               defaultValue={this.state.password}
-               onChange={(event) => this.handlePasswordChange(event)}
+              value={this.state.password.data}
+              defaultValue={this.state.password}
+              onChange={(event) => this.handlePasswordChange(event)}
             />
 
             <span onClick={this.togglePassword} ref={this.iconRevealPassword}>

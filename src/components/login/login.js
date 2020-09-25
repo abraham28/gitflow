@@ -35,12 +35,12 @@ class Login extends PureComponent {
         alert("error detected");
         console.log(errors);
       } else if (!data || data.users.length < 1) {
-        alert("incorrect email/password");
+        alert("welcome");
       } else {
         localStorage.setItem("user", JSON.stringify(data.users[0]));
         window.location.href = paths.dashboard;
       }  if (!data || data.admins.length < 1 ) {
-        alert ("incorrect email/password");
+        alert ("welcome");
       } 
       // else if  (!data || data.admins.length !== "active") {
       //   alert("inactive");
