@@ -11,6 +11,7 @@ class Login extends PureComponent {
       password: "",
       message: "Please fill up email and password",
       submitted: false,
+      active: false,
     };
     const userJSON = localStorage.getItem("user");
     if (userJSON !== null) {
@@ -42,12 +43,9 @@ class Login extends PureComponent {
       }  if (!data || data.admins.length < 1 ) {
         alert ("welcome");
       } 
-      // else if  (!data || data.admins.length !== "active") {
-      //   alert("inactive");
-      // }
       else {
         localStorage.setItem("user", JSON.stringify(data.admins[0]));
-        window.location.href = paths.dashboard;
+        window.location.href = paths.users;
       }
     } else {
       const message = this.state.message;

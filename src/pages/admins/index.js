@@ -1,9 +1,11 @@
 import React, { PureComponent } from "react";
 import { NavLink, Route, Switch, Redirect } from "react-router-dom";
 import "../pages.scss";
-import { getAdmin, deleteUser } from "../../graphqlAPI";
+import { getAdmin, deleteUsers } from "../../graphqlAPI";
 import AdminForm from "./admin-form";
 import paths from "../../resources/paths";
+import AdminEdit from "./edit";
+import View from "./view";
 import PageNotFound, { RedirectNotFound } from "../pagenotfound";
 
 const sortTypes = {
@@ -34,6 +36,7 @@ class Admins extends PureComponent {
           status: "",
           email: "",
           first_name: "",
+          middle_name: "",
           last_name: "",
           role: "",
           created_at: "",
@@ -97,6 +100,12 @@ class Admins extends PureComponent {
         <Route path={paths.adminsForm}>
           <AdminForm user={this.state.selectedUser} />
         </Route>
+        <Route path={paths.adminsEdit}>
+          <AdminEdit user={this.state.selectedUser} />
+        </Route>
+        <Route path={paths.viewsAdmin}>
+          <View user={this.state.selectedUser} />
+        </Route>
         <Route>
           {user.role.toString() === "system_admin" ? (
             <div className="super-container">
@@ -114,7 +123,7 @@ class Admins extends PureComponent {
               </div>
               <div className="tableData">
                 <h1 id="title">Admin Data</h1>
-                {tableUser.length > 0 ? ( 
+                {tableUser.length > 0 ? (
                   <table id="usersdata">
                     <thead>
                       <tr>
@@ -154,6 +163,7 @@ class Admins extends PureComponent {
                           const {
                             email,
                             first_name,
+                            middle_name,
                             last_name,
                             role,
                             status,
@@ -162,7 +172,7 @@ class Admins extends PureComponent {
                             <tr key={index}>
                               <td>{email}</td>
                               <td>
-                                {first_name} {last_name}
+                                {first_name} {middle_name} {last_name}
                               </td>
                               <td>{role}</td>
                               <td>{status}</td>
@@ -172,7 +182,18 @@ class Admins extends PureComponent {
                                   onClick={() => {
                                     this.setState({
                                       selectedUser: user,
-                                      redirect: paths.adminsForm,
+                                      redirect: paths.viewsAdmin,
+                                    });
+                                  }}
+                                >
+                                  View
+                                </button>
+                                <button
+                                  className="edit"
+                                  onClick={() => {
+                                    this.setState({
+                                      selectedUser: user,
+                                      redirect: paths.adminsEdit,
                                     });
                                   }}
                                 >
@@ -185,7 +206,7 @@ class Admins extends PureComponent {
                                       `are you sure you want to delete ${user.email}`
                                     );
                                     if (confirmed) {
-                                      deleteUser(user.email).then((result) => {
+                                      deleteUsers(user.email).then((result) => {
                                         if (result.errors) {
                                           alert(result.errors);
                                         } else if (
@@ -266,22 +287,40 @@ class Admins extends PureComponent {
                       {[...tableUser]
                         .sort(sortTypes[currentSort].fn)
                         .map((user, index) => {
-                          const { email, first_name, last_name, role,status } = user;
+                          const {
+                            email,
+                            first_name,
+                            middle_name,
+                            last_name,
+                            role,
+                            status,
+                          } = user;
                           return (
                             <tr key={index}>
                               <td>{email}</td>
                               <td>
-                                {first_name} {last_name}
+                                {first_name} {middle_name} {last_name}
                               </td>
                               <td>{role}</td>
-                          <td>{status}</td>
+                              <td>{status}</td>
                               <td className="btn-container">
                                 <button
                                   className="edit"
                                   onClick={() => {
                                     this.setState({
                                       selectedUser: user,
-                                      redirect: paths.adminsForm,
+                                      redirect: paths.viewsAdmin,
+                                    });
+                                  }}
+                                >
+                                  View
+                                </button>
+                                <button
+                                  className="edit"
+                                  onClick={() => {
+                                    this.setState({
+                                      selectedUser: user,
+                                      redirect: paths.adminsEdit,
                                     });
                                   }}
                                 >
@@ -294,7 +333,7 @@ class Admins extends PureComponent {
                                       `are you sure you want to delete ${user.email}`
                                     );
                                     if (confirmed) {
-                                      deleteUser(user.email).then((result) => {
+                                      deleteUsers(user.email).then((result) => {
                                         if (result.errors) {
                                           alert(result.errors);
                                         } else if (

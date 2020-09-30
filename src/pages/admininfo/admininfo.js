@@ -1,6 +1,5 @@
 import React, { PureComponent } from "react";
 import "../../components/layout/reset.scss";
-import "./userinfo.css";
 import "../../App.css";
 
 class Information extends PureComponent {
@@ -14,9 +13,7 @@ class Information extends PureComponent {
       last_name,
       email,
       gender,
-      position,
-      company: { name: companyName },
-      division: { name: divisionName },
+      role,
       skill,
     } = JSON.parse(localStorage.getItem("user"));
     const  user  = JSON.parse(localStorage.getItem("user"));
@@ -26,7 +23,7 @@ class Information extends PureComponent {
         
           <div className="user-container">
             <h1>
-              User &gt; {first_name} {last_name}
+              Admin &gt; {first_name} {last_name}
             </h1>
             <div className="flex-container">
               <div class="personal-info">
@@ -44,38 +41,13 @@ class Information extends PureComponent {
                     <td>{email}</td>
                   </tbody>
                   <tbody>
-                    <th>gender:</th>
-                    <td>{gender}</td>
+                    <th>Role:</th>
+                    <td>{role}</td>
                   </tbody>
                 </table>
-              </div>
-              <div class="company-info">
-                <p>Company Information</p>
-                <table>
-                  <tbody>
-                    <th>Position:</th>
-                    <td>{position}</td>
-                  </tbody>
-                  <tbody>
-                    <th>Company:</th>
-                    <td>{divisionName}</td>
-                  </tbody>
-                  <tbody>
-                    <th>Division:</th>
-                    <td>{companyName}</td>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="right-container">
-              <div className="skill-info">
-                <p>Skills:</p>
-                <p>{skill}</p>
               </div>
             </div>
           </div>
-        
       </div>
     );
   }

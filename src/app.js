@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import Login from "./components/login/login";
 import "./App.css";
+import "./reset.css";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Layout from "./components/layout/layout";
 import PageNotFound, { RedirectNotFound } from "./pages/pagenotfound";
@@ -10,6 +11,8 @@ import Divisions from "./pages/divisions";
 import Users from "./pages/users";
 import DashBoard from "./pages/dashboard/dashboard";
 import UserInfo from "./pages/userinfo/userinfo";
+import AdminInfo from "./pages/admininfo/admininfo";
+import Setting from "./pages/setting/setting";
 import paths from "./resources/paths";
 
 class App extends PureComponent {
@@ -28,28 +31,28 @@ class App extends PureComponent {
               <Route path={paths.dashboard}>
                 <DashBoard />
               </Route>
+              <Route path={paths.setting}>
+                <Setting />
+              </Route>
               <Route path={paths.admins}>
                 <Admins />
               </Route>
               <Route path={paths.companies}>
-                <div>
-                  <Companies />
-                </div>
+                <Companies />
               </Route>
               <Route path={paths.divisions}>
-                <div>
-                  <Divisions />
-                </div>
+                <Divisions />
               </Route>
               <Route path={paths.userinfo}>
-                <div>
-                  <UserInfo />
-                </div>
+                <UserInfo />
               </Route>
+
+              <Route path={paths.admininfo}>
+                <AdminInfo />
+              </Route>
+
               <Route path={paths.users}>
-                <div>
-                  <Users />
-                </div>
+                <Users />
               </Route>
               <Route path={paths.root} exact>
                 <Redirect to="/admins" />
@@ -60,14 +63,13 @@ class App extends PureComponent {
             </Switch>
           </Layout>
         </Switch>
-          {/* footer */}
-        <footer>
+        {/* footer */}
+        {/* <footer>
           <p className="footer-copyright mb-0">
             &copy; {new Date().getFullYear()} Copyright
           </p>
-        </footer>
+        </footer> */}
       </div>
-      
     );
   }
 }

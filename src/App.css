@@ -3,12 +3,11 @@ body {
   height: 100%;
 }
 footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background: #709ca673;
-  text-align: center;
+position: relative;
+width: 100%;
+text-align: center;
+z-index:-1;
+background: red;
 }
 .inner {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -37,7 +36,7 @@ a {
 }
 .logo h1 {
   font-size: 21px;
-  padding: 20px 27px;
+  padding: 20px 3px;
   font-weight: 700;
   text-align: center;
   color: #00ffc4;
@@ -51,4 +50,5 @@ a {
   padding: 7px 9px;
   background: #445b8f99;
   color: #fff6f6;
+  font-size: 14px;
 }

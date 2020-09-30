@@ -42,6 +42,7 @@ export function createAdmin(userModel) {
         role
         email
         first_name
+        middle_name
         last_name
         password
         status
@@ -62,6 +63,7 @@ export function getAdmin() {
     admins (where: {role: {_neq: user}}) {
       email
       first_name
+      middle_name
       last_name
       role
       status
@@ -86,6 +88,7 @@ export function updateAdmin(email, updateValues) {
       ) {
         email
         first_name
+        middle_name
         last_name
         password
         role
@@ -100,10 +103,24 @@ export function updateAdmin(email, updateValues) {
 /**
  * For deleting users
  */
-export function deleteUser(email) {
+export function deleteUsers(email) {
   const deleteUserMutation = `
     mutation deleteUser {
       delete_admins_by_pk(email: "${email}") {
+        email
+      }
+    }
+  `;
+  return fetchGraphQL(deleteUserMutation, "deleteUser", {});
+}
+
+/**
+ * For deleting users
+ */
+export function deleteUser(email) {
+  const deleteUserMutation = `
+    mutation deleteUser {
+      delete_users_by_pk(email: "${email}") {
         email
       }
     }
@@ -154,6 +171,21 @@ export function login(email, password) {
   return fetchGraphQL(getUsersQuery, "login", {});
 }
 
+export function updateLogin(email, updateValues) {
+  const operationsDoc = `
+    mutation updateLogin {
+      update_users_by_pk(
+        pk_columns: {email: "${email}"}, 
+        _set: {${createGqlObj(updateValues)}}
+      ) {
+        password
+      }
+    }
+  `;
+  return fetchGraphQL(operationsDoc, "updateLogin", {});
+}
+
+// getting Roles
 export function getRoles() {
   const deleteUserMutation = `
   query getRoles{
@@ -264,6 +296,7 @@ export function createDivision(divisionModel) {
       insert_divisions_one(object: {${createGqlObj(divisionModel)}}) {
         id
         name
+        description
         updated_at
         created_at
         company {
@@ -282,6 +315,7 @@ export function getDivisions() {
     divisions {
       id
       name
+      description
       updated_at
       created_at
       company_id
@@ -350,23 +384,6 @@ export function getGroups() {
   return fetchGraphQL(getGroupsQuery, "getGroups", {});
 }
 
-// export function updateCompany(companyId, updateValues) {
-//   const operationsDoc = `
-//     mutation updateCompany {
-//       update_companies_by_pk(
-//         pk_columns: {id: "${companyId}"},
-//         _set: {${createGqlObj(updateValues)}}
-//       ) {
-//         id
-//         name
-//         created_at
-//         updated_at
-//       }
-//     }
-//   `;
-//   return fetchGraphQL(operationsDoc, "updateCompany", {});
-// }
-
 export function createUser(userModel) {
   const { role, ...rest } = userModel;
   const createUserMutation = `
@@ -374,6 +391,7 @@ export function createUser(userModel) {
       insert_users_one(object: {${createGqlObj(rest)},role:user}) {
         email
         first_name
+        middle_name
         last_name
         password
         role
@@ -404,6 +422,7 @@ export function getUsers() {
     users(where: {role: {_eq: user}}) {
       email
       first_name
+      middle_name
       last_name
       company_id
       company {
@@ -434,6 +453,7 @@ export function updateUsers(email, updateValues) {
       ) {
         email
         first_name
+        middle_name
         last_name
         password
         position

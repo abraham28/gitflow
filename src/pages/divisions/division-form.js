@@ -26,14 +26,15 @@ class DivisionForm extends PureComponent {
       companies: [],
       name: props.division && props.division.name,
       company_id: props.division && props.division.company_id,
+      description: props.division && props.division.description,
       formErrors: {
-        name: '',
-        company_id: '',
+        name: "",
+        company_id: "",
       },
       isUpdate: Boolean(props.division),
     };
   }
-  
+
   // check if company data didMount
   async componentDidMount() {
     const result = await getCompanies();
@@ -48,11 +49,13 @@ class DivisionForm extends PureComponent {
         --SUBMITTING--
         Division Name: ${this.state.name}
         Company Name: ${this.state.company_id}
+        description: ${this.state.description}
       `);
       if (this.state.isUpdate) {
-        await updateDivision(this.props.division.id,  {
+        await updateDivision(this.props.division.id, {
           name: this.state.name,
-           company_id: this.state.company_id,
+          company_id: this.state.company_id,
+          description: this.state.description,
         })
           .then((result) => {
             if (result.errors) {
@@ -113,14 +116,12 @@ class DivisionForm extends PureComponent {
     const { formErrors } = this.state;
     return (
       <div className="form-container">
-        <form onSubmit={this.handleSubmit} >
-
+        <form onSubmit={this.handleSubmit}>
           {/* Name field */}
           <input
             type="text"
             placeholder="Division Name"
             name="name"
-            
             value={this.state.name}
             onChange={this.handleChange}
           />
@@ -128,7 +129,15 @@ class DivisionForm extends PureComponent {
             <span className="errorMessage">{formErrors.name}</span>
           )}
 
-           {/* option field */}
+          <textarea
+            placeholder="description"
+            type="text"
+            name="description"
+            value={this.state.description}
+            onChange={this.handleChange}
+          />
+
+          {/* option field */}
           <select
             onChange={this.handleChange}
             name="company_id"
@@ -140,10 +149,12 @@ class DivisionForm extends PureComponent {
             {this.state.companies.map(({ id, name }) => (
               <option value={id}>{name}</option>
             ))}
-          </select> 
+          </select>
           <div className="confirm-section">
-          <button type="submit">submit</button>
-          <p><Link to={paths.divisions}>cancel</Link></p>
+            <button type="submit">submit</button>
+            <p>
+              <Link to={paths.divisions}>cancel</Link>
+            </p>
           </div>
         </form>
       </div>

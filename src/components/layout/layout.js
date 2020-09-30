@@ -8,8 +8,6 @@ import IdleTimer from "react-idle-timer";
 import { IdleTimeOutModal } from "../Modal/modal";
 import Confirm from "./confirm";
 
-
-
 class Layout extends PureComponent {
   constructor(props) {
     super(props);
@@ -76,7 +74,10 @@ class Layout extends PureComponent {
     const { users } = this.props;
     const { loggedInStatus } = this.state;
     await login(users).then((result) => {
-      this.setState({ userLogin: result.data.users, userLogin: result.data.admins });
+      this.setState({
+        userLogin: result.data.users,
+        userLogin: result.data.admins,
+      });
     });
   }
 
@@ -85,7 +86,7 @@ class Layout extends PureComponent {
   render() {
     const user = JSON.parse(localStorage.getItem("user"));
     const activeClasses = this.state.activeClasses.slice();
-    // const { loggedInStatus } = this.state;
+    const { loggedInStatus } = this.state;
     // if (user && this.state.loggedInStatus === "inactive") {
     //   this.setState({
     //     loggedInStatus: "active",
@@ -95,10 +96,7 @@ class Layout extends PureComponent {
     //     loggedInStatus: "inactive",
     //   });
     // }
-
-    console.log(user);
     return (
-      
       <div className="layout">
         <IdleTimer
           ref={(ref) => {
@@ -115,20 +113,17 @@ class Layout extends PureComponent {
           <div className="dashboard-container">
             <div className="logo">
               <h1>
-                Admin <span>Management</span>
+                UMS <span>User Management System</span>
               </h1>
             </div>
-            <div className="name-holder">
-              <p className="userSec">{user.first_name}</p>
-              {user.role.toString() === "user" ? (
+            {/* <p className="userSec">{user.first_name}</p> */}
+            {user.role.toString() === "user" ? (
               <button variant="danger">
-              <NavLink to="/userinfo">User Info</NavLink>
-            </button>
-              ) : (
-                <div></div>
-              )}
-
-            </div>
+                <NavLink to="/userinfo">User Info</NavLink>
+              </button>
+            ) : (
+              <div></div>
+            )}
             <ul>
               <li
                 className={activeClasses[0] ? "active" : "inactive"}
@@ -237,34 +232,66 @@ class Layout extends PureComponent {
                 )}
               </li>
             </ul>
-
-            <Confirm
-              title="Confirm Logout"
-              description="Do you want to logout?"
-            >
-              {(confirm) => (
-                <form onSubmit={confirm(this.handleSubmit)}>
-                  <p className="logout">
-                    <button>
-                      <i className="fas fa-sign-out-alt"></i>Logout
-                    </button>
-                  </p>
-                </form>
-              )}
-            </Confirm>
             <div className="footer">
-            <p>Develop by TCAP 2020</p>
+              <p>Develop by TCAP 2020</p>
             </div>
           </div>
-          
-          <div className="content">{this.props.children}</div>
+
+          <div className="content">
+            <div className="header">
+              <ul>
+                <li className="userSec">Welcome {user.first_name}</li>
+                <li>
+                  <p className="logout settings">
+                    <NavLink to="/setting">
+                      <button>Settings</button>
+                    </NavLink>
+                  </p>
+                </li>
+                <li>
+                  {user.role.toString() === "user"  ? (
+                    <p className="logout settings">
+                    <NavLink to="/userinfo">
+                      <button>Information</button>
+                    </NavLink>
+                  </p>
+                  ): (user.role.toString() !== "user" ? (
+                    <p className="logout settings">
+                    <NavLink to="/admininfo">
+                      <button>Information</button>
+                    </NavLink>
+                  </p>
+                  ): (
+                    <div></div>
+                  )
+                  )} 
+
+                </li>
+                <li>
+                  {" "}
+                  <Confirm
+                    title="Confirm Logout"
+                    description="Do you want to logout?"
+                  >
+                    {(confirm) => (
+                      <form onSubmit={confirm(this.handleSubmit)}>
+                        <p className="logout">
+                          <button>Logout</button>
+                        </p>
+                      </form>
+                    )}
+                  </Confirm>
+                </li>
+              </ul>
+            </div>
+            {this.props.children}
+          </div>
         </div>
         <IdleTimeOutModal
           showModal={this.state.showModal}
           handleClose={this.handleClose}
           handleLogout={this.handleLogout}
         />
-        
       </div>
     );
   }

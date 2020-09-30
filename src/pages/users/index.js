@@ -5,7 +5,8 @@ import { getUsers, deleteUser } from "../../graphqlAPI";
 import paths from "../../resources/paths";
 import UserForm from "./user-form";
 import UserEdit from "./edit";
-import PageNotFound, { RedirectNotFound } from "../pagenotfound";
+import View from "./view";
+import Pagination from "./pagination";
 
 const sortTypes = {
   up: {
@@ -45,7 +46,7 @@ class Users extends PureComponent {
     super(props);
     this.state = {
       currentSort: "default",
-      loading: true,
+      pageOfItems: [],
       tableUser: [
         {
           email: "",
@@ -54,7 +55,6 @@ class Users extends PureComponent {
           role: "",
           companyName: "",
           divisionName: "",
-          mobile: "",
           created_at: "",
           updated_at: "",
         },
@@ -62,6 +62,12 @@ class Users extends PureComponent {
       selectedUser: null,
       redirect: null,
     };
+    this.onChangePage = this.onChangePage.bind(this);
+  }
+
+  onChangePage(pageOfItems) {
+    // update state with new page of items
+    this.setState({ pageOfItems: pageOfItems });
   }
 
   async componentDidMount() {
@@ -91,11 +97,12 @@ class Users extends PureComponent {
   };
 
   render() {
-    const { tableUser, currentSort, currentPage } = this.state;
-    const user = JSON.parse(localStorage.getItem("user"));
+    const { tableUser, currentSort, pageOfItems } = this.state;
+    // const user = JSON.parse(localStorage.getItem("user"));
     tableUser.sort((a, b) =>
       a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0
     );
+
     return (
       <Switch>
         {this.state.redirect &&
@@ -104,450 +111,170 @@ class Users extends PureComponent {
             this.setState({ redirect: null });
             return <Redirect to={this.state.redirect} push />;
           })()}
-        <Route path={paths.usersEdit}>
-          <UserEdit user={this.state.selectedUser} />
-        </Route>
         <Route path={paths.usersForm}>
           <UserForm user={this.state.selectedUser} />
         </Route>
+        <Route path={paths.usersEdit}>
+          <UserEdit user={this.state.selectedUser} />
+        </Route>
+        <Route path={paths.viewsUser}>
+          <View user={this.state.selectedUser} />
+        </Route>
         <Route>
-          {user.role.toString() === "system_admin" ? (
-            <div className="super-container">
-              <div className="block01">
-                <h2>USER PAGE</h2>
-                <p className="btn1">
-                  <NavLink
-                    to={paths.usersForm}
-                    
-                    onClick={() => this.setState({ selectedUser: null })}
-                  >
-                    ADD USER<i className="fas fa-plus"></i>
-                  </NavLink>
-                </p>
-              </div>
-              <div className="tableData">
-                <h1 id="title">User Data</h1>
-                <table id="usersdata">
-                  <thead>
-                    <tr>
-                      <th>
-                        Email
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>
-                        Full Name
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>
-                        Company
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>
-                        Division
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>Mobile</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tableUser.length > 0 ? (
-                      [...tableUser]
-                        .sort(sortTypes[currentSort].fn)
-                        .map((user, index) => {
-                          const {
-                            email,
-                            first_name,
-                            last_name,
-                            companyName,
-                            divisionName,
-                            mobile,
-                          } = user;
-                          return (
-                            <tr key={index}>
-                              <td>{email}</td>
-                              <td>
-                                {first_name} {last_name}
-                              </td>
-                              <td>{companyName}</td>
-                              <td>{divisionName}</td>
-                              <td>{mobile}</td>
-                              <td className="btn-container">
-                                <button
-                                  className="edit"
-                                  onClick={() => {
-                                    this.setState({
-                                      selectedUser: user,
-                                      redirect: paths.usersEdit,
-                                    });
-                                  }}
-                                >
-                                  edit
-                                </button>
-                                <button
-                                  className="delete"
-                                  onClick={async () => {
-                                    const confirmed = window.confirm(
-                                      `are you sure you want to delete ${user.email}`
-                                    );
-                                    if (confirmed) {
-                                      deleteUser(user.email).then((result) => {
-                                        if (result.errors) {
-                                          alert(result.errors);
-                                        } else if (
-                                          result.data.delete_users_by_pk ===
-                                          null
-                                        ) {
-                                          alert("no user has been deleted");
-                                        } else if (
-                                          result.data.delete_users_by_pk.email
-                                        ) {
-                                          this.componentDidMount();
-                                          alert(
-                                            `${result.data.delete_users_by_pk.email} has been deleted`
-                                          );
-                                        } else {
-                                          alert("unknown error");
-                                        }
-                                      });
-                                    }
-                                  }}
-                                >
-                                  delete
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })
-                    ) : (
-                      <tr>
-                        <td colSpan="6">No data to display...</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+          <div className="super-container">
+            <div className="block01">
+              <h2>USER PAGE</h2>
+              <p className="btn1">
+                <NavLink
+                  to={paths.usersForm}
+                  onClick={() => this.setState({ selectedUser: null })}
+                >
+                  ADD USER<i className="fas fa-plus"></i>
+                </NavLink>
+              </p>
             </div>
-          ) : user.role.toString() === "super_admin" ? (
-            <div className="super-container">
-              <div className="block01">
-                <h2>USER PAGE</h2>
-                <p className="btn1">
-                  <NavLink
-                    to={paths.UserForm}
-                    onClick={() => this.setState({ selectedUser: null })}
-                  >
-                    ADD USER<i className="fas fa-plus"></i>
-                  </NavLink>
-                </p>
-              </div>
-              <div className="tableData">
-                <h1 id="title">User Data</h1>
-                <table id="usersdata">
-                  <thead>
-                    <tr>
-                      <th>
-                        Email
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>
-                        Full Name
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>
-                        Company
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>
-                        Division
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>Mobile</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tableUser.length > 0 ? (
-                      [...tableUser]
-                        .sort(sortTypes[currentSort].fn)
-                        .map((user, index) => {
-                          const {
-                            email,
-                            first_name,
-                            last_name,
-                            companyName,
-                            divisionName,
-                            mobile,
-                          } = user;
-                          return (
-                            <tr key={index}>
-                              <td>{email}</td>
-                              <td>
-                                {first_name} {last_name}
-                              </td>
-                              <td>{companyName}</td>
-                              <td>{divisionName}</td>
-                              <td>{mobile}</td>
-                              <td className="btn-container">
-                                <button
-                                  className="edit"
-                                  onClick={() => {
-                                    this.setState({
-                                      selectedUser: user,
-                                      redirect: paths.usersEdit,
+            <div className="tableData">
+              <Pagination items={tableUser} onChangePage={this.onChangePage} />
+              <h1 id="title">User Data</h1>
+              <table id="usersdata">
+                <thead>
+                  <tr>
+                    <th>
+                      Email
+                      <button
+                        className="sort-button"
+                        onClick={this.onSortChange}
+                      >
+                        <i
+                          className={`fas fa-${sortTypes[currentSort].class}`}
+                        />
+                      </button>
+                    </th>
+                    <th>
+                      Full Name
+                      <button
+                        className="sort-button"
+                        onClick={this.onSortChange}
+                      >
+                        <i
+                          className={`fas fa-${sortTypes[currentSort].class}`}
+                        />
+                      </button>
+                    </th>
+                    <th>
+                      Company
+                      <button
+                        className="sort-button"
+                        onClick={this.onSortChange}
+                      >
+                        <i
+                          className={`fas fa-${sortTypes[currentSort].class}`}
+                        />
+                      </button>
+                    </th>
+                    <th>
+                      Division
+                      <button
+                        className="sort-button"
+                        onClick={this.onSortChange}
+                      >
+                        <i
+                          className={`fas fa-${sortTypes[currentSort].class}`}
+                        />
+                      </button>
+                    </th>
+                    <th>Mobile</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pageOfItems.length > 0 ? (
+                    [...pageOfItems]
+                      .sort(sortTypes[currentSort].fn)
+                      .map((user, index) => {
+                        const {
+                          email,
+                          first_name,
+                          last_name,
+                          role,
+                          companyName,
+                          divisionName,
+                        } = user;
+                        return (
+                          <tr key={index}>
+                            <td>{email}</td>
+                            <td>
+                              {first_name} {last_name}
+                            </td>
+                            <td>{companyName}</td>
+                            <td>{divisionName}</td>
+                            <td>{role}</td>
+                            <td className="btn-container">
+                              <button
+                                className="edit"
+                                onClick={() => {
+                                  this.setState({
+                                    selectedUser: user,
+                                    redirect: paths.viewsUser,
+                                  });
+                                }}
+                              >
+                                View
+                              </button>
+                              <button
+                                className="edit"
+                                onClick={() => {
+                                  this.setState({
+                                    selectedUser: user,
+                                    redirect: paths.usersEdit,
+                                  });
+                                }}
+                              >
+                                edit
+                              </button>
+                              <button
+                                className="delete"
+                                onClick={async () => {
+                                  const confirmed = window.confirm(
+                                    `are you sure you want to delete ${user.email}`
+                                  );
+                                  if (confirmed) {
+                                    deleteUser(user.email).then((result) => {
+                                      if (result.errors) {
+                                        alert(result.errors);
+                                      } else if (
+                                        result.data.delete_users_by_pk === null
+                                      ) {
+                                        alert("no user has been deleted");
+                                      } else if (
+                                        result.data.delete_users_by_pk.email
+                                      ) {
+                                        this.componentDidMount();
+                                        alert(
+                                          `${result.data.delete_users_by_pk.email} has been deleted`
+                                        );
+                                      } else {
+                                        alert("unknown error");
+                                      }
                                     });
-                                  }}
-                                >
-                                  edit
-                                </button>
-                                <button
-                                  className="delete"
-                                  onClick={async () => {
-                                    const confirmed = window.confirm(
-                                      `are you sure you want to delete ${user.email}`
-                                    );
-                                    if (confirmed) {
-                                      deleteUser(user.email).then((result) => {
-                                        if (result.errors) {
-                                          alert(result.errors);
-                                        } else if (
-                                          result.data.delete_users_by_pk ===
-                                          null
-                                        ) {
-                                          alert("no user has been deleted");
-                                        } else if (
-                                          result.data.delete_users_by_pk.email
-                                        ) {
-                                          this.componentDidMount();
-                                          alert(
-                                            `${result.data.delete_users_by_pk.email} has been deleted`
-                                          );
-                                        } else {
-                                          alert("unknown error");
-                                        }
-                                      });
-                                    }
-                                  }}
-                                >
-                                  delete
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })
-                    ) : (
-                      <tr>
-                        <td colSpan="6">No data to display...</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ) : user.role.toString() === "user" ? (
-            <div className="super-container">
-              <div className="block01">
-                <h2>USER PAGE</h2>
-                <p className="btn1">
-                  <NavLink
-                    to={paths.usersForm}
-                    onClick={() => this.setState({ selectedUser: null })}
-                  >
-                    ADD USER<i className="fas fa-plus"></i>
-                  </NavLink>
-                </p>
-              </div>
-              <div className="tableData">
-                <h1 id="title">User Data</h1>
-                <table id="usersdata">
-
-                  <thead>
+                                  }
+                                }}
+                              >
+                                delete
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                  ) : (
                     <tr>
-                      <th>
-                        Email
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>
-                        Full Name
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>
-                        Company
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>
-                        Division
-                        <button
-                          className="sort-button"
-                          onClick={this.onSortChange}
-                        >
-                          <i
-                            className={`fas fa-${sortTypes[currentSort].class}`}
-                          />
-                        </button>
-                      </th>
-                      <th>Mobile</th>
-                      <th>Actions</th>
+                      <td colSpan="6">No data to display...</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {tableUser.length > 0 ?  (
-                      [...tableUser]
-                        .sort(sortTypes[currentSort].fn)
-                        .map((user, index) => {
-                          const {
-                            email,
-                            first_name,
-                            last_name,
-                            companyName,
-                            divisionName,
-                            mobile,
-                          } = user;
-                          return (
-                            <tr key={index}>
-                              <td>{email}</td>
-                              <td>
-                                {first_name} {last_name}
-                              </td>
-                              <td>{companyName}</td>
-                              <td>{divisionName}</td>
-                              <td>{mobile}</td>
-                              <td className="btn-container">
-                                <button
-                                  className="edit"
-                                  onClick={() => {
-                                    this.setState({
-                                      selectedUser: user,
-                                      redirect: paths.usersEdit,
-                                    });
-                                  }}
-                                >
-                                  edit
-                                </button>
-                                <button
-                                  className="delete"
-                                  onClick={async () => {
-                                    const confirmed = window.confirm(
-                                      `are you sure you want to delete ${user.email}`
-                                    );
-                                    if (confirmed) {
-                                      deleteUser(user.email).then((result) => {
-                                        if (result.errors) {
-                                          alert(result.errors);
-                                        } else if (
-                                          result.data.delete_users_by_pk ===
-                                          null
-                                        ) {
-                                          alert("no user has been deleted");
-                                        } else if (
-                                          result.data.delete_users_by_pk.email
-                                        ) {
-                                          this.componentDidMount();
-                                          alert(
-                                            `${result.data.delete_users_by_pk.email} has been deleted`
-                                          );
-                                        } else {
-                                          alert("unknown error");
-                                        }
-                                      });
-                                    }
-                                  }}
-                                >
-                                  delete
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })
-                    ) : (
-                      <tr>
-                        <td colSpan="6">No data to display...</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                  )}
+                </tbody>
+              </table>
             </div>
-          ) : (
-            <p>User role only</p>
-          )}
+          </div>
         </Route>
       </Switch>
     );

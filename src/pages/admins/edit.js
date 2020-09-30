@@ -48,13 +48,6 @@ class AdminForm extends PureComponent {
       last_name: props.user && props.user.last_name,
       role: props.user && props.user.role,
       status: props.user && props.user.status,
-      password: "",
-      confirmpassword: "",
-      match: null,
-      charNumberValid: false,
-      specialCharValid: false,
-      uppercaseValid: false,
-      numberValid: false,
       formErrors: {
         first_name: "",
         middle_name: "",
@@ -66,95 +59,6 @@ class AdminForm extends PureComponent {
       isUpdate: Boolean(props.user),
     };
   }
-
-  // Check the length of the input
-  checkPassLength = (password) => {
-    if (password.length >= 8) {
-      this.setState({
-        charNumberValid: true,
-      });
-    } else {
-      this.setState({
-        charNumberValid: false,
-      });
-    }
-  };
-
-  // Check for special characters
-  checkSpecialCharacters = (password) => {
-    const pattern = /[ !@#$%^&*()_+\-=[\]{};':"\\|,.<>? ]/g;
-    if (pattern.test(password)) {
-      this.setState({
-        specialCharValid: true,
-      });
-    } else {
-      this.setState({
-        specialCharValid: false,
-      });
-    }
-  };
-
-  // Check for an uppercase character
-  checkUppercase = (password) => {
-    const pattern = /[A-Z]/;
-    if (pattern.test(password)) {
-      this.setState({
-        uppercaseValid: true,
-      });
-    } else {
-      this.setState({
-        uppercaseValid: false,
-      });
-    }
-  };
-
-  // Check for a number
-  checkNumber = (password) => {
-    const pattern = /[0-9]/;
-    if (pattern.test(password)) {
-      this.setState({
-        numberValid: true,
-      });
-    } else {
-      this.setState({
-        numberValid: false,
-      });
-    }
-  };
-
-  handlePasswordChange = (event) => {
-    this.setState({
-      password: event.target.value,
-    });
-
-    this.checkPassLength(event.target.value);
-    this.checkSpecialCharacters(event.target.value);
-    this.checkUppercase(event.target.value);
-    this.checkNumber(event.target.value);
-  };
-
-  handleConfirmPasswordChange = (event) => {
-    this.setState({
-      confirmpassword: event.target.value,
-      match: null,
-    });
-  };
-
-  comparePassword = () => {
-    if (this.state.password === this.state.confirmpassword) {
-      this.setState({
-        match: true,
-      });
-    } else {
-      this.setState({
-        match: false,
-      });
-    }
-  };
-
-  togglePassword = () => {
-    this.setState({ isPasswordReveal: !this.state.isPasswordReveal });
-  };
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -170,7 +74,6 @@ class AdminForm extends PureComponent {
         last_name,
         email,
         status,
-        password,
         role,
       } = this.state;
       console.log(`
@@ -181,7 +84,6 @@ class AdminForm extends PureComponent {
       Email: ${email}
       role: ${role}
       status: ${status}
-      Password: ${password}
       `);
       if (this.state.isUpdate) {
         await updateAdmin(this.state.email, {
@@ -190,7 +92,6 @@ class AdminForm extends PureComponent {
           last_name: last_name,
           email: email,
           status: status,
-          password: password,
           role: role,
         })
           .then((result) => {
@@ -214,7 +115,6 @@ class AdminForm extends PureComponent {
           last_name: last_name,
           email: email,
           status: status,
-          password: password,
           role: role,
         })
           .then((result) => {
@@ -276,15 +176,15 @@ class AdminForm extends PureComponent {
   };
 
   render() {
-    const { formErrors, isPasswordReveal } = this.state;
+    const { formErrors } = this.state;
     const user = JSON.parse(localStorage.getItem("user"));
     return (
       <div className="form-container">
         {user.role.toString() === "system_admin" ? (
           <div className="forms">
-            <h3>ADMIN &gt; Add Admin</h3>
+            <h3>ADMIN &gt; Edit Admin</h3>
             <div className="form-box">
-              <p className="form-title">Add Admin Form</p>
+              <p className="form-title">Edit Admin Form</p>
               <form onSubmit={this.handleSubmit}>
                 {/* name field first name, middle name, last name */}
                 <div className="form-input">
@@ -354,89 +254,6 @@ class AdminForm extends PureComponent {
                   <span className="errorMessage">{formErrors.email}</span>
                 )}
 
-                <label>Password</label>
-                <div className="password">
-                  <input
-                    placeholder="Password"
-                    type={isPasswordReveal ? "text" : "password"}
-                    name="password"
-                    maxlength="20"
-                    ref={this.passwordOneRef}
-                    value={this.state.password}
-                    onChange={(event) => this.handlePasswordChange(event)}
-                  />
-
-                  <span
-                    onClick={this.togglePassword}
-                    ref={this.iconRevealPassword}
-                  >
-                    <span>
-                      {isPasswordReveal ? (
-                        <i className="fas fa-eye"></i>
-                      ) : (
-                        <i className="fas fa-eye-slash"></i>
-                      )}
-                    </span>
-                  </span>
-                </div>
-
-                <div className="validation">
-                  <div className="validator">
-                    <i
-                      className={
-                        this.state.charNumberValid
-                          ? "fas fa-check success"
-                          : "fas fa-times error"
-                      }
-                    ></i>
-                    <p className="validation-item">8-20 characters</p>
-                  </div>
-                  <div className="validator">
-                    <i
-                      className={
-                        this.state.specialCharValid
-                          ? "fas fa-check success"
-                          : "fas fa-times error"
-                      }
-                    ></i>
-                    <p className="validation-item">1 special character</p>
-                  </div>
-                  <div className="validator">
-                    <i
-                      className={
-                        this.state.uppercaseValid
-                          ? "fas fa-check success"
-                          : "fas fa-times error"
-                      }
-                    ></i>
-                    <p className="validation-item">1 uppercase letter</p>
-                  </div>
-                  <div className="validator">
-                    <i
-                      className={
-                        this.state.numberValid
-                          ? "fas fa-check success"
-                          : "fas fa-times error"
-                      }
-                    ></i>
-                    <p className="validation-item">1 number</p>
-                  </div>
-                </div>
-
-                <label>Confirm Password</label>
-                <input
-                  className={`input${
-                    this.state.match === false ? "--error" : ""
-                  }`}
-                  placeholder="Confirm Password"
-                  type="password"
-                  name="confirmpassword"
-                  maxLength="20"
-                  required
-                  value={this.state.confirmpassword}
-                  onChange={(event) => this.handleConfirmPasswordChange(event)}
-                  onBlur={this.comparePassword}
-                />
                 <div className="form-input">
                   <label>Role</label>
                   <select
@@ -471,7 +288,7 @@ class AdminForm extends PureComponent {
                 </div>
 
                 <div className="confirm-section">
-                  <button type="submit">Add Admin</button>
+                  <button type="submit">Edit Admin</button>
                   <p>
                     <Link to={paths.admins}>cancel</Link>
                   </p>
@@ -552,90 +369,6 @@ class AdminForm extends PureComponent {
                 {formErrors.email.length > 0 && (
                   <span className="errorMessage">{formErrors.email}</span>
                 )}
-
-                <label>Password</label>
-                <div className="password">
-                  <input
-                    placeholder="Password"
-                    type={isPasswordReveal ? "text" : "password"}
-                    name="password"
-                    maxlength="20"
-                    ref={this.passwordOneRef}
-                    value={this.state.password}
-                    onChange={(event) => this.handlePasswordChange(event)}
-                  />
-
-                  <span
-                    onClick={this.togglePassword}
-                    ref={this.iconRevealPassword}
-                  >
-                    <span>
-                      {isPasswordReveal ? (
-                        <i className="fas fa-eye"></i>
-                      ) : (
-                        <i className="fas fa-eye-slash"></i>
-                      )}
-                    </span>
-                  </span>
-                </div>
-
-                <div className="validation">
-                  <div className="validator">
-                    <i
-                      className={
-                        this.state.charNumberValid
-                          ? "fas fa-check success"
-                          : "fas fa-times error"
-                      }
-                    ></i>
-                    <p className="validation-item">8-20 characters</p>
-                  </div>
-                  <div className="validator">
-                    <i
-                      className={
-                        this.state.specialCharValid
-                          ? "fas fa-check success"
-                          : "fas fa-times error"
-                      }
-                    ></i>
-                    <p className="validation-item">1 special character</p>
-                  </div>
-                  <div className="validator">
-                    <i
-                      className={
-                        this.state.uppercaseValid
-                          ? "fas fa-check success"
-                          : "fas fa-times error"
-                      }
-                    ></i>
-                    <p className="validation-item">1 uppercase letter</p>
-                  </div>
-                  <div className="validator">
-                    <i
-                      className={
-                        this.state.numberValid
-                          ? "fas fa-check success"
-                          : "fas fa-times error"
-                      }
-                    ></i>
-                    <p className="validation-item">1 number</p>
-                  </div>
-                </div>
-
-                <label>Confirm Password</label>
-                <input
-                  className={`input${
-                    this.state.match === false ? "--error" : ""
-                  }`}
-                  placeholder="Confirm Password"
-                  type="password"
-                  name="confirmpassword"
-                  maxLength="20"
-                  required
-                  value={this.state.confirmpassword}
-                  onChange={(event) => this.handleConfirmPasswordChange(event)}
-                  onBlur={this.comparePassword}
-                />
                 <div className="form-input">
                   <label>Role</label>
                   <select
@@ -670,7 +403,7 @@ class AdminForm extends PureComponent {
                 </div>
 
                 <div className="confirm-section">
-                  <button type="submit">Add Admin</button>
+                  <button type="submit">Edit Admin</button>
                   <p>
                     <Link to={paths.admins}>cancel</Link>
                   </p>

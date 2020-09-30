@@ -17,6 +17,7 @@ class Divisions extends PureComponent {
           // companyName: "",
           users: 0,
           companies: 0,
+          description: "",
         },
       ],
       selectedDivision: null,
@@ -72,9 +73,8 @@ class Divisions extends PureComponent {
                   <thead>
                     <tr>
                       <th>Division</th>
-                      {/* <th>Company Name</th> */}
+                      <th>Description</th>
                       <th>Users</th>
-                      <th>company</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -83,13 +83,13 @@ class Divisions extends PureComponent {
                       tableUser.map((divisions, index) => {
                         const {
                           name,
-                          companies,
+                          description,
                           users,
                         } = divisions;
                         return (
                           <tr key={index}>
                             <td>{name}</td>
-                        <td>{companies}</td>
+                        <td>{description}</td>
                             <td>{users.toString()}</td>
                             <td className="btn-container">
                               <button
@@ -171,7 +171,7 @@ class Divisions extends PureComponent {
                   <thead>
                     <tr>
                       <th>Division</th>
-                      {/* <th>Company Name</th> */}
+                      <th>Description</th>
                       <th>Users</th>
                       <th>Actions</th>
                     </tr>
@@ -182,12 +182,13 @@ class Divisions extends PureComponent {
                         const {
                           name,
                           // companyName,
+                          description,
                           users,
                         } = divisions;
                         return (
                           <tr key={index}>
                             <td>{name}</td>
-                            {/* <td> {companyName} </td> */}
+                            <td> {description} </td>
                             <td>{users.toString()}</td>
                             <td className="btn-container">
                               <button
@@ -269,7 +270,7 @@ class Divisions extends PureComponent {
                   <thead>
                     <tr>
                       <th>Division</th>
-                      {/* <th>Company Name</th> */}
+                      <th>Description</th>
                       <th>Users</th>
                       <th>Actions</th>
                     </tr>
@@ -281,11 +282,12 @@ class Divisions extends PureComponent {
                           name,
                           // companyName,
                           users,
+                          description
                         } = divisions;
                         return (
                           <tr key={index}>
                             <td>{name}</td>
-                            {/* <td> {companyName} </td> */}
+                            <td> {description} </td>
                             <td>{users.toString()}</td>
                             <td className="btn-container">
                               <button
