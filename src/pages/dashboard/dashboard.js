@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { dashData } from "../../graphqlAPI";
+import { dashData, dashAdmin } from "../../graphqlAPI";
 
 class DashBoard extends PureComponent {
   constructor(props) {
@@ -24,16 +24,22 @@ class DashBoard extends PureComponent {
       }
     });
     const dashboardData = await dashData();
+    const dashadminData = await dashAdmin();
     await dashData(dashboardData).then((result) => {
-      console.log(result);
       this.setState({
         dashboard: result.data.data,
         companies: result.data.companies_aggregate.aggregate.count,
         divisions: result.data.divisions_aggregate.aggregate.count,
         users: result.data.users_aggregate.aggregate.count,
-        admins: result.data.admins_aggregate.aggregate.count,
       });
     });
+
+    await dashAdmin(dashadminData).then((results => {
+      this.setState({
+        dashboard:results.data.data,
+        admins:results.data.users_aggregate.aggregate.count,
+      })
+    }))
   }
 
   fakeRequest = () => {

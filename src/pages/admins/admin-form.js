@@ -454,7 +454,7 @@ class AdminForm extends PureComponent {
                 </div>
 
                 <div className="form-input">
-                  <labe>Status</labe>
+                  <label>Status</label>
                   {/* Status */}
                   <select
                     onChange={this.handleChange}
@@ -480,7 +480,7 @@ class AdminForm extends PureComponent {
             </div>
           </div>
         ) : user.role.toString() === "super_admin" ? (
-          <div className="form-data">
+          <div className="forms">
             <h3>ADMIN &gt; Add Admin</h3>
             <div className="form-box">
               <p className="form-title">Add Admin Form</p>

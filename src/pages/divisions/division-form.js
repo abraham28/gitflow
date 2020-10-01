@@ -97,6 +97,10 @@ class DivisionForm extends PureComponent {
     }
   };
 
+  onChange = event => {
+    this.setState({ name: event.target.value.replace(/[^\w\s]/gi, "") });
+  };
+
   handleChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -124,7 +128,7 @@ class DivisionForm extends PureComponent {
             placeholder="Division Name"
             name="name"
             value={this.state.name}
-            onChange={this.handleChange}
+            onChange={this.onChange}
           />
           {formErrors.name.length > 0 && (
             <span className="errorMessage">{formErrors.name}</span>

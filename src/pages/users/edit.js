@@ -32,10 +32,16 @@ const positionLevel = [
   { value: "manager", label: "Manager" },
 ];
 
-// const Gender = [
-//   { value: "Female", label: "Female" },
-//   { value: "Male", label: "Male" },
-// ];
+const genderSelect = [
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+];
+
+const statusAdmin = [
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" },
+];
+
 class UserForm extends PureComponent {
   constructor(props) {
     super(props);
@@ -54,6 +60,7 @@ class UserForm extends PureComponent {
       position: props.user && props.user.position,
       company_id: props.user && props.user.company_id,
       division_id: props.user && props.user.division_id,
+      status: props.user && props.user.status,
       formErrors: {
         first_name: "",
         middle_name: "",
@@ -92,6 +99,7 @@ class UserForm extends PureComponent {
         birthdate,
         gender,
         skill,
+        status,
         mobile,
         position,
         company_id,
@@ -102,6 +110,7 @@ class UserForm extends PureComponent {
         First Name: ${first_name}
         Middle Name: ${middle_name}
         Last Name: ${last_name}
+        Status: ${status}
         Email: ${email}
         role: ${role}
         birthdate: ${birthdate}
@@ -111,6 +120,7 @@ class UserForm extends PureComponent {
         companies: ${company_id}
         divisions: ${division_id}
         Position: ${position}
+
       `);
 
       //for users update
@@ -120,6 +130,7 @@ class UserForm extends PureComponent {
           middle_name: middle_name,
           last_name: last_name,
           email: email,
+          status: status,
           role: role,
           birthdate: birthdate,
           gender: gender,
@@ -159,10 +170,10 @@ class UserForm extends PureComponent {
         formErrors.first_name =
           value.length < 2 ? "minimum 4 characters required" : "";
         break;
-        case "middle_name":
-          formErrors.middle_name =
-            value.length < 2 ? "minimum 4 characters required" : "";
-          break;
+      case "middle_name":
+        formErrors.middle_name =
+          value.length < 2 ? "minimum 4 characters required" : "";
+        break;
 
       case "last_name":
         formErrors.last_name =
@@ -187,10 +198,6 @@ class UserForm extends PureComponent {
       case "skills":
         formErrors.skill = value.length > 0 ? "" : "please add skill";
         break;
-      // case "gender":
-      //   formErrors.gender =
-      //     value.length < 4 ? "minimum 4 characters required" : "";
-      //   break;
       case "birthdate":
         formErrors.birthdate = value.length > 0 ? "" : "please add birthdate";
         break;
@@ -207,186 +214,206 @@ class UserForm extends PureComponent {
     const { formErrors } = this.state;
     return (
       <div className="form-container">
-      <form onSubmit={this.handleSubmit}>
-        <div className="forms">
-          <h3>USER &gt; Edit User</h3>
-          <div className="form-box">
-            <p className="form-title">Edit User Form</p>
-            <div className="form-input">
-              <label>First Name</label>
-              <input
-                className="namefield"
-                type="text"
-                placeholder="First Name"
-                name="first_name"
-                pattern="[A-Za-z\s]{2,17}"
-                value={this.state.first_name}
-                onChange={this.handleChange}
-              />
-              {formErrors.first_name.length > 0 && (
-                <span className="errorMessage">{formErrors.first_name}</span>
-              )}
-            </div>
-            <div className="form-input">
-              <label>Middle Name</label>
-              <input
-                className="namefield"
-                type="text"
-                placeholder="Middle Name"
-                name="middle_name"
-                pattern="[A-Za-z\s]{2,17}"
-                value={this.state.middle_name}
-                onChange={this.handleChange}
-              />
-              {formErrors.middle_name.length > 0 && (
-                <span className="errorMessage">{formErrors.middle_name}</span>
-              )}
-            </div>
-            <div className="form-input">
-              <label>Last Name</label>
-              <input
-                className="namefield"
-                placeholder="Last Name"
-                type="text"
-                name="last_name"
-                pattern="[A-Za-z\s]{2,17}"
-                value={this.state.last_name}
-                onChange={this.handleChange}
-              />
-              {formErrors.last_name.length > 0 && (
-                <span className="errorMessage">{formErrors.last_name}</span>
-              )}
-            </div>
-            <div className="display">
+        <form onSubmit={this.handleSubmit}>
+          <div className="forms">
+            <h3>USER &gt; Edit User</h3>
+            <div className="form-box">
+              <p className="form-title">Edit User Form</p>
               <div className="form-input">
-                <label>Email Address</label>
+                <label>First Name</label>
                 <input
-                  placeholder="Email Address"
-                  text="Email Address"
-                  type="email"
-                  name="email"
-                  required
-                  value={this.state.email}
-                  onChange={this.handleChange}
-                />
-                {formErrors.email.length > 0 && (
-                  <span className="errorMessage">{formErrors.email}</span>
-                )}
-              </div>
-              <div className="form-input">
-                <label>Mobile</label>
-                <input
-                  placeholder="Phone number"
-                  text="phone"
-                  name="mobile"
-                  required
-                  value={this.state.mobile}
-                  onChange={this.handleChange}
-                />
-                {formErrors.mobile.length > 0 && (
-                  <span className="errorMessage">{formErrors.mobile}</span>
-                )}
-              </div>
-            </div>
-
-            <div className="display">
-              <div className="form-input">
-                <input
-                  placeholder="Birthday"
-                  type="date"
-                  name="birthdate"
-                  pattern="\d{1,2}/\d{1,2}/\d{4}"
-                  value={this.state.birthdate}
-                  onChange={this.handleChange}
-                />
-                {formErrors.birthdate.length > 0 && (
-                  <span className="errorMessage">{formErrors.birthdate}</span>
-                )}
-              </div>
-              <div className="form-input">
-                <input
-                  placeholder="Gender"
+                  className="namefield"
                   type="text"
-                  name="gender"
-                  pattern="[A-Za-z\s]{2,6}"
-                  value={this.state.gender}
+                  placeholder="First Name"
+                  name="first_name"
+                  pattern="[A-Za-z\s]{2,17}"
+                  value={this.state.first_name}
                   onChange={this.handleChange}
                 />
-                {formErrors.gender.length > 0 && (
-                  <span className="errorMessage">{formErrors.gender}</span>
+                {formErrors.first_name.length > 0 && (
+                  <span className="errorMessage">{formErrors.first_name}</span>
                 )}
               </div>
-            </div>
+              <div className="form-input">
+                <label>Middle Name</label>
+                <input
+                  className="namefield"
+                  type="text"
+                  placeholder="Middle Name"
+                  name="middle_name"
+                  pattern="[A-Za-z\s]{2,17}"
+                  value={this.state.middle_name}
+                  onChange={this.handleChange}
+                />
+                {formErrors.middle_name.length > 0 && (
+                  <span className="errorMessage">{formErrors.middle_name}</span>
+                )}
+              </div>
+              <div className="form-input">
+                <label>Last Name</label>
+                <input
+                  className="namefield"
+                  placeholder="Last Name"
+                  type="text"
+                  name="last_name"
+                  pattern="[A-Za-z\s]{2,17}"
+                  value={this.state.last_name}
+                  onChange={this.handleChange}
+                />
+                {formErrors.last_name.length > 0 && (
+                  <span className="errorMessage">{formErrors.last_name}</span>
+                )}
+              </div>
+              <div className="display">
+                <div className="form-input">
+                  <label>Email Address</label>
+                  <input
+                    placeholder="Email Address"
+                    text="Email Address"
+                    type="email"
+                    name="email"
+                    required
+                    value={this.state.email}
+                    onChange={this.handleChange}
+                  />
+                  {formErrors.email.length > 0 && (
+                    <span className="errorMessage">{formErrors.email}</span>
+                  )}
+                </div>
+                <div className="form-input">
+                  <label>Mobile</label>
+                  <input
+                    placeholder="Phone number"
+                    text="phone"
+                    name="mobile"
+                    required
+                    value={this.state.mobile}
+                    onChange={this.handleChange}
+                  />
+                  {formErrors.mobile.length > 0 && (
+                    <span className="errorMessage">{formErrors.mobile}</span>
+                  )}
+                </div>
+              </div>
 
-            <textarea
-              placeholder="Skill"
-              type="text"
-              name="skill"
-              value={this.state.skill}
-              onChange={this.handleChange}
-            />
-            {formErrors.skill.length > 0 && (
-              <span className="errorMessage">{formErrors.skill}</span>
-            )}
+              <div className="display">
+                <div className="form-input">
+                  <input
+                    placeholder="Birthday"
+                    type="date"
+                    name="birthdate"
+                    pattern="\d{1,2}/\d{1,2}/\d{4}"
+                    value={this.state.birthdate}
+                    onChange={this.handleChange}
+                  />
+                  {formErrors.birthdate.length > 0 && (
+                    <span className="errorMessage">{formErrors.birthdate}</span>
+                  )}
+                </div>
+                <div className="form-input">
+                  <label>Gender</label>
+                  <select
+                    onChange={this.handleChange}
+                    name="gender"
+                    defaultValue={this.state.gender}
+                  >
+                    <option selected hidden disabled>
+                      ---Gender---
+                    </option>
+                    {genderSelect.map(({ value, label }) => (
+                      <option value={value}>{label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
-            {/* option field for company */}
-            <div className="form-input">
-              <labe>Company</labe>
-              <select
+              <textarea
+                placeholder="Skill"
+                type="text"
+                name="skill"
+                value={this.state.skill}
                 onChange={this.handleChange}
-                name="company_id"
-                value={this.state.company_id}
-              >
-                <option selected hidden disabled>
-                  ---Select Company---
-                </option>
-                {this.state.companies.map(({ id, name }) => (
-                  <option value={id}>{name}</option>
-                ))}
-              </select>
-            </div>
-            {/* option field for division */}
-            <div className="form-input">
-              <label>Division</label>
-              <select
-                onChange={this.handleChange}
-                name="division_id"
-                value={this.state.division_id}
-              >
-                <option selected hidden disabled>
-                  ---Select Division---
-                </option>
-                {this.state.divisions.map(({ id, name }) => (
-                  <option value={id}>{name}</option>
-                ))}
-              </select>
-            </div>
-            {/* option field for position */}
-            <div className="form-input">
-              <select
-                onChange={this.handleChange}
-                name="position"
-                defaultValue={this.state.position}
-              >
-                <option selected hidden disabled>
-                  ---Select Position---
-                </option>
-                {positionLevel.map(({ value, label }) => (
-                  <option value={value}>{label}</option>
-                ))}
-              </select>
-            </div>
+              />
+              {formErrors.skill.length > 0 && (
+                <span className="errorMessage">{formErrors.skill}</span>
+              )}
 
-            <div className="confirm-section">
-              <button type="submit">Edit User</button>
-              <p>
-                <Link to={paths.users}>cancel</Link>
-              </p>
+              {/* Option field for status */}
+              <div className="form-input">
+                <label>Status</label>
+                {/* Status */}
+                <select
+                  onChange={this.handleChange}
+                  name="status"
+                  value={this.state.status}
+                >
+                  <option selected hidden disabled>
+                    ---Status---
+                  </option>
+                  {statusAdmin.map(({ value, label }) => (
+                    <option value={value}>{label}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* option field for company */}
+              <div className="form-input">
+                <labe>Company</labe>
+                <select
+                  onChange={this.handleChange}
+                  name="company_id"
+                  value={this.state.company_id}
+                >
+                  <option selected hidden disabled>
+                    ---Select Company---
+                  </option>
+                  {this.state.companies.map(({ id, name }) => (
+                    <option value={id}>{name}</option>
+                  ))}
+                </select>
+              </div>
+              {/* option field for division */}
+              <div className="form-input">
+                <label>Division</label>
+                <select
+                  onChange={this.handleChange}
+                  name="division_id"
+                  value={this.state.division_id}
+                >
+                  <option selected hidden disabled>
+                    ---Select Division---
+                  </option>
+                  {this.state.divisions.map(({ id, name }) => (
+                    <option value={id}>{name}</option>
+                  ))}
+                </select>
+              </div>
+              {/* option field for position */}
+              <div className="form-input">
+                <select
+                  onChange={this.handleChange}
+                  name="position"
+                  defaultValue={this.state.position}
+                >
+                  <option selected hidden disabled>
+                    ---Select Position---
+                  </option>
+                  {positionLevel.map(({ value, label }) => (
+                    <option value={value}>{label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="confirm-section">
+                <button type="submit">Edit User</button>
+                <p>
+                  <Link to={paths.users}>cancel</Link>
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
     );
   }
 }

@@ -50,6 +50,7 @@ class Users extends PureComponent {
       tableUser: [
         {
           email: "",
+          status: "",
           first_name: "",
           last_name: "",
           role: "",
@@ -198,7 +199,7 @@ class Users extends PureComponent {
                           email,
                           first_name,
                           last_name,
-                          role,
+                          mobile,
                           companyName,
                           divisionName,
                         } = user;
@@ -210,7 +211,7 @@ class Users extends PureComponent {
                             </td>
                             <td>{companyName}</td>
                             <td>{divisionName}</td>
-                            <td>{role}</td>
+                        <td>{mobile}</td>
                             <td className="btn-container">
                               <button
                                 className="edit"

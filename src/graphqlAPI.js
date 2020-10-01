@@ -38,7 +38,7 @@ export function createAdmin(userModel) {
   const { role, ...rest } = userModel;
   const createUserMutation = `
     mutation createAdmin {
-      insert_admins_one(object: {${createGqlObj(rest)},role:${role}}) {
+      insert_users_one(object: {${createGqlObj(rest)},role:${role}}) {
         role
         email
         first_name
@@ -60,15 +60,13 @@ export function createAdmin(userModel) {
 export function getAdmin() {
   const getUsersQuery = `
   query getAdmin {
-    admins (where: {role: {_neq: user}}) {
+    users (where: {role: {_neq: user}}) {
       email
       first_name
       middle_name
       last_name
       role
       status
-      
-
     }
   }
   `;
@@ -82,7 +80,7 @@ export function updateAdmin(email, updateValues) {
   const { role, ...rest } = updateValues;
   const operationsDoc = `
     mutation updateAdmin {
-      update_admins_by_pk(
+      update_users_by_pk(
         pk_columns: {email: "${email}"}, 
         _set: {${createGqlObj(rest)}, role:${role}}
       ) {
@@ -134,31 +132,20 @@ export function deleteUser(email) {
 export function login(email, password) {
   const getUsersQuery = `
   query login {
-    users(where: {email: {_eq: "${email}"}, password: {_eq: "${password}"}}) {
+    users(where: { email: {_eq: "${email}"}, password: {_eq: "${password}"} } ) {
       role
       updated_at
       created_at
       email
+      status
       gender
       position
       skill
       first_name
+      middle_name
+      birthdate
+      mobile
       last_name
-      company {
-        name
-      }
-      division {
-        name
-      }
-    }
-
-    admins(where: {email: {_eq: "${email}"}, password: {_eq: "${password}"}}) {
-      created_at
-      updated_at
-      role
-      last_name
-      first_name
-      email
       company {
         name
       }
@@ -171,12 +158,33 @@ export function login(email, password) {
   return fetchGraphQL(getUsersQuery, "login", {});
 }
 
-export function updateLogin(email, updateValues) {
+// export function updateLoginInfo(email, updateValues) {
+//   const { role, ...rest } = updateValues;
+//   const operationsDoc = `
+//     mutation updateAdmin {
+//       update_users_by_pk(
+//         pk_columns: {email: "${email}"}, 
+//         _set: {${createGqlObj(rest)}, role:${role}}
+//       ) {
+//         email
+//         first_name
+//         middle_name
+//         last_name
+//         password
+//         role
+//         created_at
+//         updated_at
+//       }
+//     }
+//   `;
+//   return fetchGraphQL(operationsDoc, "updateAdmin", {});
+// }
+
+export function updateLogin(email) {
   const operationsDoc = `
     mutation updateLogin {
       update_users_by_pk(
         pk_columns: {email: "${email}"}, 
-        _set: {${createGqlObj(updateValues)}}
       ) {
         password
       }
@@ -401,6 +409,7 @@ export function createUser(userModel) {
         last_name
         password
         role
+        status
         position
         skill
         birthdate
@@ -430,6 +439,7 @@ export function getUsers() {
       first_name
       middle_name
       last_name
+      status
       company_id
       company {
         name
@@ -462,6 +472,7 @@ export function updateUsers(email, updateValues) {
         middle_name
         last_name
         password
+        status
         position
         role
         created_at
@@ -477,7 +488,11 @@ export function dashData() {
   const dashDataQuery = `
   query getDash {
 
-    
+    users_aggregate(where: {role: {_eq: user}}) {
+      aggregate {
+        count
+      }
+    }
       companies_aggregate {
         aggregate {
         count
@@ -488,13 +503,16 @@ export function dashData() {
          count
         }
      }
-     users_aggregate {
-       aggregate {
-         count
-       }
-     }
+   
+  }
+  `;
+  return fetchGraphQL(dashDataQuery, "getDash", {});
+}
 
-     admins_aggregate {
+export function dashAdmin() {
+  const dashDataQuery = `
+  query getDash {
+    users_aggregate(where: {role: {_neq: user}}) {
       aggregate {
         count
       }

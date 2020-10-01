@@ -74,7 +74,7 @@ class Admins extends PureComponent {
     console.log(users);
     await getAdmin(users).then((result) => {
       this.setState({
-        tableUser: result.data.admins,
+        tableUser: result.data.users,
         isLoading: true,
         result,
       });

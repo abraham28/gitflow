@@ -7,6 +7,8 @@ class Login extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      role: "",
+      status: "",
       email: "",
       password: "",
       message: "Please fill up email and password",
@@ -36,21 +38,17 @@ class Login extends PureComponent {
         alert("error detected");
         console.log(errors);
       } else if (!data || data.users.length < 1) {
-        alert("welcome");
+        alert("incorrect email/password");
       } else {
+        alert("Welcome back");
         localStorage.setItem("user", JSON.stringify(data.users[0]));
         window.location.href = paths.dashboard;
-      }  if (!data || data.admins.length < 1 ) {
-        alert ("welcome");
-      } 
-      else {
-        localStorage.setItem("user", JSON.stringify(data.admins[0]));
-        window.location.href = paths.users;
       }
     } else {
       const message = this.state.message;
       alert(message);
     }
+
   };
 
   render() {

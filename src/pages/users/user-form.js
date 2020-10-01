@@ -38,7 +38,17 @@ const positionLevel = [
   { value: "supervisor", label: "Supervisor" },
   { value: "manager", label: "Manager" },
 ];
+//status
+const statusAdmin = [
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" },
+];
 
+//gender
+const genderSelect = [
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+];
 class UserForm extends PureComponent {
   constructor(props) {
     super(props);
@@ -51,6 +61,7 @@ class UserForm extends PureComponent {
       first_name: props.user && props.user.first_name,
       middle_name: props.user && props.user.middle_name,
       last_name: props.user && props.user.last_name,
+      status: props.user && props.user.status,
       role: props.user && props.user.role,
       birthdate: props.user && props.user.birthdate,
       gender: props.user && props.user.gender,
@@ -239,6 +250,7 @@ class UserForm extends PureComponent {
         email,
         role,
         birthdate,
+        status,
         gender,
         skill,
         mobile,
@@ -252,6 +264,7 @@ class UserForm extends PureComponent {
         First Name: ${first_name}
         Middle Name: ${middle_name}
         Last Name: ${last_name}
+        Status: ${status}
         Email: ${email}
         role: ${role}
         birthdate: ${birthdate}
@@ -270,6 +283,7 @@ class UserForm extends PureComponent {
           first_name: first_name,
           middle_name: middle_name,
           last_name: last_name,
+          status: status,
           email: email,
           password: password,
           role: role,
@@ -303,6 +317,7 @@ class UserForm extends PureComponent {
           first_name: first_name,
           middle_name: middle_name,
           last_name: last_name,
+          status: status,
           email: email,
           role: role,
           birthdate: birthdate,
@@ -493,17 +508,19 @@ class UserForm extends PureComponent {
                   )}
                 </div>
                 <div className="form-input">
-                  <input
-                    placeholder="Gender"
-                    type="text"
-                    name="gender"
-                    pattern="[A-Za-z\s]{2,6}"
-                    value={this.state.gender}
+                  <label>Gender</label>
+                  <select
                     onChange={this.handleChange}
-                  />
-                  {formErrors.gender.length > 0 && (
-                    <span className="errorMessage">{formErrors.gender}</span>
-                  )}
+                    name="gender"
+                    defaultValue={this.state.gender}
+                  >
+                    <option selected hidden disabled>
+                      ---Gender---
+                    </option>
+                    {genderSelect.map(({ value, label }) => (
+                      <option value={value}>{label}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -581,6 +598,25 @@ class UserForm extends PureComponent {
                   ))}
                 </select>
               </div>
+              
+              {/* Option field for status */}
+              <div className="form-input">
+                <label>Status</label>
+                {/* Status */}
+                <select
+                  onChange={this.handleChange}
+                  name="status"
+                  value={this.state.status}
+                >
+                  <option selected hidden disabled>
+                    ---Status---
+                  </option>
+                  {statusAdmin.map(({ value, label }) => (
+                    <option value={value}>{label}</option>
+                  ))}
+                </select>
+              </div>
+
               <div className="password">
                 <input
                   placeholder="Password"

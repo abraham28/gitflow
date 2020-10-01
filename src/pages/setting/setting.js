@@ -19,7 +19,9 @@ class Setting extends PureComponent {
       specialCharValid: false,
       uppercaseValid: false,
       numberValid: false,
+      isUpdate: Boolean(props.user),
     };
+    
   }
   // Check the length of the input
   checkPasswordLength = (password) => {
@@ -139,27 +141,27 @@ class Setting extends PureComponent {
       return null;
     }
 
-    if (this.state.isUpdate) {
-      await updateLogin(this.state.email, {
-        password: password,
-      })
-        .then((result) => {
-          if (result.errors) {
-            const uniq = new RegExp("Uniqueness violation");
-            if (uniq.test(result.errors[0].message)) {
-              alert("Company Name already exists");
-            } else {
-              alert(result.errors[0].message);
-            }
-          } else {
-            alert(`${this.state.name} Updated!`);
-            window.location.href = paths.companies;
-          }
-        })
-        .catch((e) => console.log(e));
-    } else {
-      alert("FORM INVALID COMPLETE THE FORM");
-    }
+    // if (this.state.isUpdate) {
+    //   await updateLogin(this.state.email, {
+    //     password: password,
+    //   })
+    //     .then((result) => {
+    //       if (result.errors) {
+    //         const uniq = new RegExp("Uniqueness violation");
+    //         if (uniq.test(result.errors[0].message)) {
+    //           alert("Company Name already exists");
+    //         } else {
+    //           alert(result.errors[0].message);
+    //         }
+    //       } else {
+    //         alert(`${this.state.name} Updated!`);
+    //         window.location.href = paths.companies;
+    //       }
+    //     })
+    //     .catch((e) => console.log(e));
+    // } else {
+    //   alert("FORM INVALID COMPLETE THE FORM");
+    // }
   };
 
   componentDidMount() {

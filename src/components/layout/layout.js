@@ -87,16 +87,6 @@ class Layout extends PureComponent {
   render() {
     const user = JSON.parse(localStorage.getItem("user"));
     const activeClasses = this.state.activeClasses.slice();
-    const { loggedInStatus } = this.state;
-    // if (user && this.state.loggedInStatus === "inactive") {
-    //   this.setState({
-    //     loggedInStatus: "active",
-    //   });
-    // } else if (!user & (this.state.loggedInStatus === "active")) {
-    //   this.setState({
-    //     loggedInStatus: "inactive",
-    //   });
-    // }
     return (
       <div className="layout">
         <IdleTimer
@@ -117,14 +107,6 @@ class Layout extends PureComponent {
                 UMS <span>User Management System</span>
               </h1>
             </div>
-            {/* <p className="userSec">{user.first_name}</p> */}
-            {user.role.toString() === "user" ? (
-              <button variant="danger">
-                <NavLink to="/userinfo">User Info</NavLink>
-              </button>
-            ) : (
-              <div></div>
-            )}
             <ul>
               <li
                 className={activeClasses[0] ? "active" : "inactive"}
@@ -249,17 +231,17 @@ class Layout extends PureComponent {
                     </NavLink>
                   </p>
                 </li>
-                <li>
+                {/* <li>
                   {user.role.toString() === "user"  ? (
                     <p className="logout settings">
                     <NavLink to="/userinfo">
-                      <button>Information</button>
+                      <button>Profile</button>
                     </NavLink>
                   </p>
                   ): (user.role.toString() !== "user" ? (
                     <p className="logout settings">
                     <NavLink to="/admininfo">
-                      <button>Information</button>
+                      <button>Profile</button>
                     </NavLink>
                   </p>
                   ): (
@@ -267,7 +249,7 @@ class Layout extends PureComponent {
                   )
                   )} 
 
-                </li>
+                </li> */}
                 <li>
                   {" "}
                   <Confirm
