@@ -6,7 +6,7 @@ import paths from "../../resources/paths";
 import UserForm from "./user-form";
 import UserEdit from "./edit";
 import View from "./view";
-import Pagination from "./pagination";
+import Pagination from "../../components/pagination/pagination";
 
 const sortTypes = {
   up: {
@@ -124,7 +124,10 @@ class Users extends PureComponent {
           <div className="super-container">
             <div className="block01">
               <h2>USER PAGE</h2>
-              <p className="btn1">
+            </div>
+            <div className="table-header">
+              <p className="table-title">Users List</p>
+              <p className="btnAdd">
                 <NavLink
                   to={paths.usersForm}
                   onClick={() => this.setState({ selectedUser: null })}
@@ -133,9 +136,8 @@ class Users extends PureComponent {
                 </NavLink>
               </p>
             </div>
-            <div className="tableData">
+            <div className="table-main">
               <Pagination items={tableUser} onChangePage={this.onChangePage} />
-              <h1 id="title">User Data</h1>
               <table id="usersdata">
                 <thead>
                   <tr>

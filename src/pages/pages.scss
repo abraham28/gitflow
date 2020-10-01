@@ -4,6 +4,34 @@
   align-items: center;
   margin: 20px 0;
 }
+.table-header {
+  border: 1px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.btnAdd a {
+  display: inline-block;
+  background: #d3e9d4;
+  padding: 10px;
+  color: black;
+  font-size: 14px;
+}
+.btnAdd a:hover {
+  text-decoration: none;
+  background: #9ee99e;
+}
+.btnAdd a i {
+  margin-left: 4px;
+}
+.table-title {
+  padding: 10px;
+}
+.table-main {
+  border: 1px solid;
+  border-top: none;
+  overflow: hidden;
+}
 .btn1 a {
   display: inline-block;
   background: #148dfe;
@@ -342,7 +370,7 @@ p {
   background-size: 100% 100%;
 }
 .col-md-8 {
-  max-width: 60%;
+  max-width: 100%;
 }
 
 .loader {
@@ -371,9 +399,9 @@ p {
   display: flex;
 }
 .pagination {
-  display: inline-block;
+  float: right;
   padding-left: 0;
-  margin: 20px 0;
+  margin: 5px 0;
   border-radius: 4px;
 }
 .pagination > li {

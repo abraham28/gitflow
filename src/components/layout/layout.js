@@ -19,6 +19,7 @@ class Layout extends PureComponent {
       select: "open",
       loggedInStatus: "inactive",
       userLogin: {},
+      adminLogin: {},
       activeClasses: [false, false, false],
       timeout: 900000,
       showModal: false,
@@ -76,7 +77,7 @@ class Layout extends PureComponent {
     await login(users).then((result) => {
       this.setState({
         userLogin: result.data.users,
-        userLogin: result.data.admins,
+        adminLogin: result.data.admins,
       });
     });
   }

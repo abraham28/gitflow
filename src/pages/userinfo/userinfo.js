@@ -4,10 +4,6 @@ import "./userinfo.css";
 import "../../App.css";
 
 class Information extends PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const {
       first_name,

@@ -6,6 +6,7 @@ import AdminForm from "./admin-form";
 import paths from "../../resources/paths";
 import AdminEdit from "./edit";
 import View from "./view";
+import Pagination from "../../components/pagination/pagination";
 import PageNotFound, { RedirectNotFound } from "../pagenotfound";
 
 const sortTypes = {
@@ -31,6 +32,7 @@ class Admins extends PureComponent {
       isLoading: false,
       content: "",
       currentSort: "default",
+      pageOfItems: [],
       tableUser: [
         {
           status: "",
@@ -46,6 +48,12 @@ class Admins extends PureComponent {
       selectedUser: null,
       redirect: null,
     };
+    this.onChangePage = this.onChangePage.bind(this);
+  }
+
+  onChangePage(pageOfItems) {
+    // update state with new page of items
+    this.setState({ pageOfItems: pageOfItems });
   }
 
   onSortChange = () => {
@@ -67,28 +75,28 @@ class Admins extends PureComponent {
     await getAdmin(users).then((result) => {
       this.setState({
         tableUser: result.data.admins,
-        isLoading: false,
+        isLoading: true,
         result,
       });
     });
   }
   render() {
-    const { tableUser, currentSort, loggedInStatus } = this.state;
+    const { tableUser, currentSort, pageOfItems, loggedInStatus } = this.state;
 
     tableUser.sort((a, b) =>
       a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0
     );
     const user = JSON.parse(localStorage.getItem("user"));
-    if (user && this.state.loggedInStatus === "inactive") {
-      this.setState({
-        loggedInStatus: "active",
-      });
-    } else if (!user & (this.state.loggedInStatus === "active")) {
-      this.setState({
-        loggedInStatus: "inactive",
-      });
-    }
-    console.log(loggedInStatus);
+    // if (user && this.state.loggedInStatus === "inactive") {
+    //   this.setState({
+    //     loggedInStatus: "active",
+    //   });
+    // } else if (!user & (this.state.loggedInStatus === "active")) {
+    //   this.setState({
+    //     loggedInStatus: "inactive",
+    //   });
+    // }
+    // console.log(loggedInStatus);
     return (
       <Switch>
         {this.state.redirect &&
@@ -110,9 +118,11 @@ class Admins extends PureComponent {
           {user.role.toString() === "system_admin" ? (
             <div className="super-container">
               <div className="block01">
-                <h2>ADMIN PAGE</h2>
-                {loggedInStatus}
-                <p className="btn1">
+                <h2>ADMIN</h2>
+              </div>
+              <div className="table-header">
+                <p className="table-title">Admin List</p>
+                <p className="btnAdd">
                   <NavLink
                     to={paths.adminsForm}
                     onClick={() => this.setState({ selectedUser: null })}
@@ -121,9 +131,12 @@ class Admins extends PureComponent {
                   </NavLink>
                 </p>
               </div>
-              <div className="tableData">
-                <h1 id="title">Admin Data</h1>
-                {tableUser.length > 0 ? (
+              <div className="table-main">
+                <Pagination
+                  items={tableUser}
+                  onChangePage={this.onChangePage}
+                />
+                {pageOfItems.length > 0 ? (
                   <table id="usersdata">
                     <thead>
                       <tr>
@@ -139,25 +152,17 @@ class Admins extends PureComponent {
                           </button>
                         </th>
 
-                        <th>
-                          Full Name
-                          <button
-                            className="sort-button"
-                            onClick={this.onSortChange}
-                          >
-                            <i
-                              className={`fas fa-${sortTypes[currentSort].class}`}
-                            />
-                          </button>
-                        </th>
+                        <th>Full Name</th>
 
                         <th>Role</th>
+
                         <th>Status</th>
+
                         <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {[...tableUser]
+                      {[...pageOfItems]
                         .sort(sortTypes[currentSort].fn)
                         .map((user, index) => {
                           const {
@@ -246,8 +251,11 @@ class Admins extends PureComponent {
           ) : user.role.toString() === "super_admin" ? (
             <div className="super-container">
               <div className="block01">
-                <h2>ADMIN PAGE</h2>
-                <p className="btn1">
+                <h2>ADMIN</h2>
+              </div>
+              <div className="table-header">
+                <p className="table-title">Admin List</p>
+                <p className="btnAdd">
                   <NavLink
                     to={paths.adminsForm}
                     onClick={() => this.setState({ selectedUser: null })}
@@ -256,9 +264,12 @@ class Admins extends PureComponent {
                   </NavLink>
                 </p>
               </div>
-              <div className="tableData">
-                <h1 id="title">Admin Data</h1>
-                {tableUser.length > 0 ? (
+              <div className="table-main">
+                <Pagination
+                  items={tableUser}
+                  onChangePage={this.onChangePage}
+                />
+                {pageOfItems.length > 0 ? (
                   <table id="usersdata">
                     <thead>
                       <tr>
@@ -284,7 +295,7 @@ class Admins extends PureComponent {
                       </tr>
                     </thead>
                     <tbody>
-                      {[...tableUser]
+                      {[...pageOfItems]
                         .sort(sortTypes[currentSort].fn)
                         .map((user, index) => {
                           const {

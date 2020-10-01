@@ -239,6 +239,9 @@ export function getCompanies() {
     companies {
       id
       name
+      company_address
+      contact_person
+      contact_details
       updated_at
       created_at
       divisions_aggregate {
@@ -268,6 +271,9 @@ export function updateCompany(companyId, updateValues) {
         name
         updated_at
         created_at
+        company_address
+        contact_person
+        contact_details
         users_aggregate {
           aggregate {
             count

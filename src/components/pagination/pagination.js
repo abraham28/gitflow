@@ -52,8 +52,8 @@ class Pagination extends PureComponent {
     // default to first page
     currentPage = currentPage || 1;
 
-    // default page size is 10
-    pageSize = pageSize || 5;
+    // default page size is 3
+    pageSize = pageSize || 3;
 
     // calculate total pages
     var totalPages = Math.ceil(totalItems / pageSize);

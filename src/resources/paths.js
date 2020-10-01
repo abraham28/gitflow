@@ -2,6 +2,7 @@ export const root = "/";
 export const login = "/login";
 export const pageNotFound = "/404";
 export const admins = "/admins";
+export const pagination = "/pagination";
 export const companies = "/companies";
 export const divisions = "/divisions";
 export const userinfo = "/userinfo";
@@ -27,6 +28,7 @@ export default {
   divisions,
   groups,
   setting,
+  pagination,
   userinfo,
   admininfo,
   dashboard,

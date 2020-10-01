@@ -4,11 +4,13 @@ import "../pages.scss";
 import { getDivisions, deleteDivision } from "../../graphqlAPI";
 import DivisionForm from "./division-form";
 import paths from "../../resources/paths";
+import Pagination from "../../components/pagination/pagination";
 
 class Divisions extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      pageOfItems: [],
       tableUser: [
         {
           id: "",
@@ -23,6 +25,12 @@ class Divisions extends PureComponent {
       selectedDivision: null,
       redirect: null,
     };
+    this.onChangePage = this.onChangePage.bind(this);
+  }
+
+  onChangePage(pageOfItems) {
+    // update state with new page of items
+    this.setState({ pageOfItems: pageOfItems });
   }
 
   async componentDidMount() {
@@ -37,10 +45,8 @@ class Divisions extends PureComponent {
   }
 
   render() {
-    const { tableUser } = this.state;
-    tableUser.sort((a, b) =>
-    a.name > b.name ? 1 : b.name > a.name ? -1 : 0
-  );
+    const { tableUser, pageOfItems } = this.state;
+    tableUser.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
     const user = JSON.parse(localStorage.getItem("user"));
     return (
       <Switch>
@@ -58,7 +64,10 @@ class Divisions extends PureComponent {
             <div className="super-container">
               <div className="block01">
                 <h2>DIVISION PAGE</h2>
-                <p className="btn1">
+              </div>
+              <div className="table-header">
+                <p className="table-title">Divisions List</p>
+                <p className="btnAdd">
                   <NavLink
                     to={paths.divisionsForm}
                     onClick={() => this.setState({ selectedDivision: null })}
@@ -67,8 +76,11 @@ class Divisions extends PureComponent {
                   </NavLink>
                 </p>
               </div>
-              <div className="tableData">
-                <h1 id="title">Division Data</h1>
+              <div className="table-main">
+                <Pagination
+                  items={tableUser}
+                  onChangePage={this.onChangePage}
+                />
                 <table id="usersdata">
                   <thead>
                     <tr>
@@ -79,17 +91,13 @@ class Divisions extends PureComponent {
                     </tr>
                   </thead>
                   <tbody>
-                    {tableUser.length > 0 ? (
-                      tableUser.map((divisions, index) => {
-                        const {
-                          name,
-                          description,
-                          users,
-                        } = divisions;
+                    {pageOfItems.length > 0 ? (
+                      pageOfItems.map((divisions, index) => {
+                        const { name, description, users } = divisions;
                         return (
                           <tr key={index}>
                             <td>{name}</td>
-                        <td>{description}</td>
+                            <td>{description}</td>
                             <td>{users.toString()}</td>
                             <td className="btn-container">
                               <button
@@ -156,7 +164,10 @@ class Divisions extends PureComponent {
             <div className="super-container">
               <div className="block01">
                 <h2>DIVISION PAGE</h2>
-                <p className="btn1">
+              </div>
+              <div className="table-header">
+                <p className="table-title">Divisions List</p>
+                <p className="btnAdd">
                   <NavLink
                     to={paths.divisionsForm}
                     onClick={() => this.setState({ selectedDivision: null })}
@@ -165,8 +176,11 @@ class Divisions extends PureComponent {
                   </NavLink>
                 </p>
               </div>
-              <div className="tableData">
-                <h1 id="title">Division Data</h1>
+              <div className="table-main">
+                <Pagination
+                  items={tableUser}
+                  onChangePage={this.onChangePage}
+                />
                 <table id="usersdata">
                   <thead>
                     <tr>
@@ -177,18 +191,13 @@ class Divisions extends PureComponent {
                     </tr>
                   </thead>
                   <tbody>
-                    {tableUser.length > 0 ? (
-                      tableUser.map((divisions, index) => {
-                        const {
-                          name,
-                          // companyName,
-                          description,
-                          users,
-                        } = divisions;
+                    {pageOfItems.length > 0 ? (
+                      pageOfItems.map((divisions, index) => {
+                        const { name, description, users } = divisions;
                         return (
                           <tr key={index}>
                             <td>{name}</td>
-                            <td> {description} </td>
+                            <td>{description}</td>
                             <td>{users.toString()}</td>
                             <td className="btn-container">
                               <button
@@ -255,7 +264,10 @@ class Divisions extends PureComponent {
             <div className="super-container">
               <div className="block01">
                 <h2>DIVISION PAGE</h2>
-                <p className="btn1">
+              </div>
+              <div className="table-header">
+                <p className="table-title">Divisions List</p>
+                <p className="btnAdd">
                   <NavLink
                     to={paths.divisionsForm}
                     onClick={() => this.setState({ selectedDivision: null })}
@@ -264,8 +276,11 @@ class Divisions extends PureComponent {
                   </NavLink>
                 </p>
               </div>
-              <div className="tableData">
-                <h1 id="title">Division Data</h1>
+              <div className="table-main">
+                <Pagination
+                  items={tableUser}
+                  onChangePage={this.onChangePage}
+                />
                 <table id="usersdata">
                   <thead>
                     <tr>
@@ -276,18 +291,13 @@ class Divisions extends PureComponent {
                     </tr>
                   </thead>
                   <tbody>
-                    {tableUser.length > 0 ? (
-                      tableUser.map((divisions, index) => {
-                        const {
-                          name,
-                          // companyName,
-                          users,
-                          description
-                        } = divisions;
+                    {pageOfItems.length > 0 ? (
+                      pageOfItems.map((divisions, index) => {
+                        const { name, description, users } = divisions;
                         return (
                           <tr key={index}>
                             <td>{name}</td>
-                            <td> {description} </td>
+                            <td>{description}</td>
                             <td>{users.toString()}</td>
                             <td className="btn-container">
                               <button

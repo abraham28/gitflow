@@ -480,7 +480,7 @@ class AdminForm extends PureComponent {
             </div>
           </div>
         ) : user.role.toString() === "super_admin" ? (
-          <div className="forms">
+          <div className="form-data">
             <h3>ADMIN &gt; Add Admin</h3>
             <div className="form-box">
               <p className="form-title">Add Admin Form</p>

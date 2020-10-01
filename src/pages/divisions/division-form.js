@@ -74,6 +74,7 @@ class DivisionForm extends PureComponent {
       } else {
         await createDivision({
           name: this.state.name,
+          description:this.state.description,
           company_id: this.state.company_id,
         })
           .then((result) => {
